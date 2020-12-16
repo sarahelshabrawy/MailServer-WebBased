@@ -1,15 +1,18 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+<!--  <Register></Register>-->
+  <Login></Login>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+// eslint-disable-next-line no-unused-vars
+import Register from './components/Register.vue'
+import Login from './components/Login.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    // Register,
+    Login
   }
 }
 </script>
