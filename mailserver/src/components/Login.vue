@@ -85,6 +85,7 @@ h1{
   cursor: pointer;
   width: 100%;
   opacity: 0.9;
+  outline: none;
   border-radius: 30px;
 }
 
@@ -97,9 +98,5 @@ a {
   color: #f5d5e0;
 }
 
-/* Set a grey background color and center the text of the "sign in" section */
-.signin {
-  text-align: center;
-}
 
 </style>
