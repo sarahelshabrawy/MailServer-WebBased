@@ -39,7 +39,8 @@ name: "Register"
   margin: 0;
   padding: 0;
   color: white;
-   }
+  z-index: 99999999999;
+  }
 
 #background{
   position: absolute;

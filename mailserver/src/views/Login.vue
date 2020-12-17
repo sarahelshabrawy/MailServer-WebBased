@@ -12,7 +12,7 @@
       <p>New here ? <router-link to="/register">Register</router-link>.</p>
 
       <hr>
-      <button type="submit" class="registerbtn" >Sign in</button>
+      <button type="submit" class="registerbtn"><router-link to="/home">Sign in</router-link></button>
 
     </div>
 
@@ -39,6 +39,7 @@ export default {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  z-index: 99999999999;
 }
 
 #background{
