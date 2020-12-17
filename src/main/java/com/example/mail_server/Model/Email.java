@@ -9,6 +9,16 @@ public class Email {
     private int priority;
     private String[] attachments;
 
+    public Email(String subject, String body, String sender, String[] receivers, String date, int priority, String[] attachments) {
+        this.subject = subject;
+        this.body = body;
+        this.sender = sender;
+        this.receivers = receivers;
+        this.date = date;
+        this.priority = priority;
+        this.attachments = attachments;
+    }
+
     public String getSubject() {
         return subject;
     }
