@@ -9,6 +9,7 @@
 
       <label for="psw"></label>
       <input type="password" placeholder="Password" name="psw" id="psw" required>
+      <p>New here ? <router-link to="/register">Register</router-link>.</p>
 
       <hr>
       <button type="submit" class="registerbtn" >Sign in</button>

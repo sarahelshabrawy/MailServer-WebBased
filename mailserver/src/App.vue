@@ -2,7 +2,7 @@
   <div id="app">
     <div id="nav">
       <router-link to="/">Login</router-link> |
-      <router-link to="/about">Register</router-link>
+      <router-link to="/register">Register</router-link>
     </div>
     <router-view/>
   </div>
@@ -28,5 +28,6 @@
 
 #nav a.router-link-exact-active {
   color: #42b983;
+  background: crimson;
 }
 </style>
