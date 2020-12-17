@@ -1,21 +1,12 @@
 <template>
-<!--  <Register></Register>-->
-  <Login></Login>
+  <div id="app">
+    <div id="nav">
+      <router-link to="/">Login</router-link> |
+      <router-link to="/about">Register</router-link>
+    </div>
+    <router-view/>
+  </div>
 </template>
-
-<script>
-// eslint-disable-next-line no-unused-vars
-import Register from './components/Register.vue'
-import Login from './components/Login.vue'
-
-export default {
-  name: 'App',
-  components: {
-    // Register,
-    Login
-  }
-}
-</script>
 
 <style>
 #app {
@@ -24,6 +15,18 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+}
+
+#nav {
+  padding: 30px;
+}
+
+#nav a {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+#nav a.router-link-exact-active {
+  color: #42b983;
 }
 </style>

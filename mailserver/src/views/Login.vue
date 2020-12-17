@@ -11,7 +11,7 @@
       <input type="password" placeholder="Password" name="psw" id="psw" required>
 
       <hr>
-      <button type="submit" class="registerbtn">Sign in</button>
+      <button type="submit" class="registerbtn" >Sign in</button>
 
     </div>
 
@@ -19,8 +19,16 @@
 </template>
 
 <script>
+
 export default {
-  name: "Register"
+  name: "Register",
+  data(){
+    return{
+    }
+  },
+  methods(){
+
+  }
 }
 </script>
 
