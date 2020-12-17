@@ -5,10 +5,13 @@
       <hr>
 
       <label for="email"></label>
-      <input type="text" placeholder="Enter Email" name="email" id="email" required>
+      <input type="text" placeholder="Email" name="email" id="email" required>
+
+      <label for="username"></label>
+      <input type="text" placeholder="User Name" name="username" id="username" required>
 
       <label for="psw"></label>
-      <input type="password" placeholder="Enter Password" name="psw" id="psw" required>
+      <input type="password" placeholder="Password" name="psw" id="psw" required>
 
       <label for="psw-repeat"></label>
       <input type="password" placeholder="Repeat Password" name="psw-repeat" id="psw-repeat" required>
@@ -58,7 +61,6 @@ name: "Register"
 
 /* Full-width input fields */
 input[type=text], input[type=password] {
-  text-align: center;
   width: 100%;
   padding: 10px;
   margin: 5px 0 22px 0;
