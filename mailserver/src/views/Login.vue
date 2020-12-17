@@ -15,20 +15,26 @@
       <button type="submit" class="registerbtn"><router-link to="/home">Sign in</router-link></button>
 
     </div>
-
-  </div>
+    <button id="show-modal" @click="showModal = true">Show Modal</button>
+    <add-contact v-if="showModal" @close="showModal = false">
+    </add-contact>  </div>
 </template>
 
 <script>
+import AddContact from '../components/Add Contact'
 
 export default {
   name: "Register",
   data(){
     return{
+      showModal: false
     }
   },
   methods(){
 
+  },
+  components:{
+    AddContact
   }
 }
 </script>
@@ -39,7 +45,8 @@ export default {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  z-index: 99999999999;
+  /*mo2akkatan bas*/
+  /*z-index: 99999999999;*/
 }
 
 #background{
@@ -103,7 +110,6 @@ h1{
   opacity:1;
 }
 
-/* Add a blue text color to links */
 a {
   color: #f5d5e0;
 }
