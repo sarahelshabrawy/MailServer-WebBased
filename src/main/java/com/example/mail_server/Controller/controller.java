@@ -1,6 +1,7 @@
 package com.example.mail_server.Controller;
 
 import com.example.mail_server.Model.Email;
+import com.example.mail_server.Model.User;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,6 +13,7 @@ public class controller {
         @CrossOrigin
         @PostMapping("/compose")
     public void compose(@RequestBody Email email){
-
+            User user = new User();
+            user.Compose(email);
         }
 }
