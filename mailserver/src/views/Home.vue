@@ -17,7 +17,7 @@
               </div>
             </div>
           </div>
-          <div href = "#" id="sign-out">Sign out&nbsp; <i class="fas fa-sign-out-alt"></i></div>
+          <div id="sign-out"><router-link id="sign-out-link" to="/register">Sign out</router-link>&nbsp; <i class="fas fa-sign-out-alt"></i></div>
         </div>
     </div>
     <div id="upper-bar"> 
@@ -80,6 +80,7 @@
       <div id="menu"> hi
       </div>
       <div id="content">
+        <mail-view :maillist = "Mails"></mail-view>
       </div>
     </div>
     <div id="side-bar">
@@ -91,11 +92,119 @@
 </template>
 
 <script>
-
+import MailView from '../components/MailView.vue'
 export default {
   name: 'Home',
   components: {
+    MailView
   },
+  data()
+  {
+      return{
+      Mails : [
+      {
+        id:"0",
+        Subject : "Hello World",
+        Sender : "Google",
+        Recievers :[],
+        Content: "jhlghkggkuffuyfhyfpppppyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+        Attachments:[],
+        Date:"12/12/2010"
+      },
+      {
+        id:"1",
+        Subject : "Hello World",
+        Sender : "Google",
+        Recievers :[],
+        Content: "jhlghkggkuffuyfhyfpppppyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+        Attachments:[],
+        Date:"12/12/2010"
+      },
+       {
+        id:"2",
+        Subject : "Hello World",
+        Sender : "Google",
+        Recievers :[],
+        Content: "jhlghkggkuffuyfhyfpppppyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+        Attachments:[],
+        Date:"12/12/2010"
+      },
+       {
+        id:"3",
+        Subject : "Hello World",
+        Sender : "Google",
+        Recievers :[],
+        Content: "jhlghkggkuffuyfhyfpppppyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+        Attachments:[],
+        Date:"12/12/2010"
+      },
+       {
+        id:"4",
+        Subject : "Hello World",
+        Sender : "Google",
+        Recievers :[],
+        Content: "jhlghkggkuffuyfhyfpppppyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+        Attachments:[],
+        Date:"12/12/2010"
+      },
+       {
+        id:"5",
+        Subject : "Hello World",
+        Sender : "Google",
+        Recievers :[],
+        Content: "jhlghkggkuffuyfhyfpppppyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+        Attachments:[],
+        Date:"12/12/2010"
+      },
+       {
+        id:"6",
+        Subject : "Hello World",
+        Sender : "Google",
+        Recievers :[],
+        Content: "jhlghkggkuffuyfhyfpppppyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+        Attachments:[],
+        Date:"12/12/2010"
+      },
+       {
+        id:"7",
+        Subject : "Hello World",
+        Sender : "Google",
+        Recievers :[],
+        Content: "jhlghkggkuffuyfhyfpppppyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+        Attachments:[],
+        Date:"12/12/2010"
+      },
+       {
+        id:"8",
+        Subject : "Hello World",
+        Sender : "Google",
+        Recievers :[],
+        Content: "jhlghkggkuffuyfhyfpppppyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+        Attachments:[],
+        Date:"12/12/2010"
+      },
+       {
+        id:"9",
+        Subject : "Hello World",
+        Sender : "Google",
+        Recievers :[],
+        Content: "jhlghkggkuffuyfhyfpppppyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+        Attachments:[],
+        Date:"12/12/2010"
+      },
+
+      ],
+      mail:{
+        Subject : "Hello World",
+        Sender : "Google",
+        Recievers :[],
+        Content: "jhlghkggkuffuyfhyfpppppyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+        Attachments:["../assets/logo.png"],
+        Date:"12/12/2010"
+      }
+    }
+  }
+  ,
   methods : {
     searchBar() {
       var myvalue =  document.getElementById("text").value ;
@@ -205,6 +314,10 @@ export default {
   letter-spacing: 1px;
   margin-top: 8px;
 }
+#sign-out-link {
+  text-decoration: none;
+  color: white;
+}
 #account {
   height: 50px;
   width: 50px;
@@ -278,6 +391,7 @@ export default {
   background-color: white;
   height: 650px;
   width: 1500px;
+  padding-top: 25px;
 }
 #side-bar {
   position: absolute;
@@ -374,7 +488,7 @@ export default {
   z-index: 9999999999999;
 }
 #filter {
-  background-color: #f39f7e;
+  background-color: #fabaa0;
   width: 150px;
   height: 25px;
   font-size: 18px;
