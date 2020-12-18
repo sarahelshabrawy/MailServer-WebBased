@@ -1,6 +1,7 @@
 package com.example.mail_server.Model;
 
-public class Email {
+public class Mail {
+
     private String subject;
     private String body;
     private String sender;
@@ -9,7 +10,7 @@ public class Email {
     private int priority;
     private String[] attachments;
 
-    public Email(String subject, String body, String sender, String[] receivers, String date, int priority, String[] attachments) {
+    public Mail(String subject, String body, String sender, String[] receivers, String date, int priority, String[] attachments) {
         this.subject = subject;
         this.body = body;
         this.sender = sender;

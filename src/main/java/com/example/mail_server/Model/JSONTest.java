@@ -14,10 +14,10 @@ import java.nio.file.Paths;
 public class JSONTest {
 
     public static void main(String[] args) {
-        Email email = new Email("A","B","C", new String[]{"A", "B"},"45",6,new String[]{"SAD","HAPPY"});
+        Mail mail = new Mail("A","B","C", new String[]{"A", "B"},"45",6,new String[]{"SAD","HAPPY"});
         String filePath = "output.json";
         JSONTest j = new JSONTest();
-        j.saveJsonFile(email,filePath);
+        j.saveJsonFile(mail,filePath);
 
     }
     public void saveJsonFile(Object object,String filePath){
