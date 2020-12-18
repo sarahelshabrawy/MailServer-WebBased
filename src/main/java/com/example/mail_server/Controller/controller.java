@@ -47,4 +47,12 @@ public class controller {
             return true;
         return false;
     }
+    @CrossOrigin
+    @RequestMapping("/signIn")
+    @ResponseBody
+    public boolean signIn( @RequestParam(value = "email") String email, @RequestParam(value = "password") String password) throws IOException {
+        if(user.signIn(email, password))
+            return true;
+        return false;
+    }
 }

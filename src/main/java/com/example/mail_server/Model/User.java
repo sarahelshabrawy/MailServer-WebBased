@@ -23,7 +23,8 @@ public class User {
         currentUser = builder.build(name, email, password);
         return true;
     }
-    public boolean signIn(String email, String password){
+
+    public boolean signIn(String email, String password) throws IOException {
         currentUser = proxy.checkPassword(email, password);
         if(currentUser == null)
             return false;
