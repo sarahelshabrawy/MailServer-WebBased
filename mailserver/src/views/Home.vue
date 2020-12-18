@@ -394,12 +394,12 @@ export default {
   padding-top: 25px;
 }
 #side-bar {
-  position: absolute;
+  position: fixed;
   display: flex;
 	width:1500px;
 	height:25px;
-  left: 278px;
-  top: 165px;
+  left: 16.3%;
+  top: 20.6%;
   color: white;
 	background-color: #6f6d72;
   font-family: 'Open sans', serif;

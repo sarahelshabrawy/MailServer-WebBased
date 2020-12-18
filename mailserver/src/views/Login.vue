@@ -46,7 +46,7 @@ export default {
   margin: 0;
   padding: 0;
   /*mo2akkatan bas*/
-  /*z-index: 99999999999;*/
+  z-index: 99999999999;
 }
 
 #background{

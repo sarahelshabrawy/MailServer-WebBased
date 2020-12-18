@@ -17,7 +17,7 @@
       <input type="password" placeholder="Repeat Password" name="psw-repeat" id="psw-repeat" required>
       <hr>
 
-      <button type="submit" class="registerbtn">Register</button>
+      <button type="submit" class="registerbtn" id="register" @click="createAccount">Register</button>
     </div>
 
     <div class="container signin">
@@ -27,8 +27,36 @@
 </template>
 
 <script>
+import axios from 'axios'
+const apiLink = 'http://localhost:8085/register'
 export default {
-name: "Register"
+  name: "Register",
+  methods :{
+    createAccount(){
+      var password = document.getElementById("psw").value;
+      var repeatPass = document.getElementById("psw-repeat").value;
+      if(password !== repeatPass)
+      {
+        return false;
+      }
+      var name = document.getElementById("username").value;
+      var email = document.getElementById("email").value;
+      /*var data = {
+        name : name,
+        email: email,
+        password: password 
+      }*/
+      axios.get(apiLink + '/createAccount', {params:{ name : name,
+        email: email,
+        password: password }})
+      .then(function(response) {
+          console.log(response.data);
+      })
+      .catch(function (error) {
+          console.log(error);
+      });
+    },
+  }      
 }
 </script>
 
