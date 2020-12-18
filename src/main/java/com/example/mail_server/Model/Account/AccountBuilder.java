@@ -22,8 +22,12 @@ public class AccountBuilder {
     }
 
     public void buildDirectories(){
-
-
+        String path = "./Accounts/" + account.getEmail();
+        directory.createFolder(path);
+        directory.createFolder(path + "/inbox");
+        directory.createFolder(path + "/sent");
+        directory.createFolder(path + "/draft");
+        directory.createFolder(path + "/trash");
     }
     public Account build(String name ,String email ,String password) throws IOException {
         account.setName(name);

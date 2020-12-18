@@ -9,9 +9,8 @@ import java.io.File;
 public class MailServerApplication {
 
     public static void main(String[] args) {
-        File folder = new File("/Accounts");
+        File folder = new File("./Accounts");
         System.out.println(folder.mkdir());
-
         SpringApplication.run(MailServerApplication.class, args);
     }
 

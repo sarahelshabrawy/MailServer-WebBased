@@ -16,7 +16,7 @@ import java.nio.file.Paths;
 public class FileManager {
 
     public void addAccount(Account account) throws IOException {
-        String path = "/Account/Accounts.json";
+        String path = "./Accounts/Accounts.json";
         JSONArray accounts = listJsonObjects(path);
 
         JSONObject new_account = new JSONObject();
@@ -41,24 +41,24 @@ public class FileManager {
         File index = new File(path);
         FileWriter writer = new FileWriter(index);
         writer.write(array.toJSONString());
+        writer.close();
     }
 
     public JSONArray listJsonObjects(String path) throws IOException{
         File index = new File(path);
-        FileWriter writer = new FileWriter(index);
-
+        FileWriter writer;
         if(!index.exists()) {
             index.createNewFile();
             JSONArray array = new JSONArray();
+            writer = new FileWriter(index);
             writer.write(array.toJSONString());
+            writer.close();
+            System.out.println("created xxxxxxxxxxxxxxxxxxxxxxxxxxx");
             return array;
         }
-
         JSONParser jsonParser = new JSONParser();
         try {
-            Object obj = jsonParser.parse( new FileReader(path) );
-            JSONArray jsonArray = (JSONArray) obj;
-
+            JSONArray jsonArray= (JSONArray) jsonParser.parse( new FileReader(path) );
             System.out.println(jsonArray);
             return jsonArray;
         }
