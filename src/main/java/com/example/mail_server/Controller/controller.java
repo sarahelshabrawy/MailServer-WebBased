@@ -42,6 +42,8 @@ public class controller {
     @ResponseBody
     public boolean createAccount(@RequestParam (value = "name") String name, @RequestParam(value = "email") String email, @RequestParam(value = "password") String password)
     {
-        return true;
+        if(user.signUp(name, email, password))
+            return true;
+        return false;
     }
 }

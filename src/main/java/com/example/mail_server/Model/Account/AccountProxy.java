@@ -6,8 +6,8 @@ public class AccountProxy {
         return false;
     }
 
-    public boolean checkPassword(String password){
-        return false;
+    public Account checkPassword(String email, String password){
+        return null;
     }
 
 }

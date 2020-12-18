@@ -1,15 +1,31 @@
 package com.example.mail_server.Model;
 
 import com.example.mail_server.Model.Account.Account;
+import com.example.mail_server.Model.Account.AccountBuilder;
+import com.example.mail_server.Model.Account.AccountProxy;
 
 public class User {
 
     private Account currentUser;
-
-//    public Account register(){}
-//
-//    public boolean signIn(){}
-//
+    private AccountProxy proxy;
+    private AccountBuilder builder;
+    public User()
+    {
+        proxy = new AccountProxy();
+        builder = new AccountBuilder();
+    }
+    public boolean signUp(String name, String email, String password){
+        if(proxy.checkEmail(email))
+            return false;
+        currentUser = builder.build(name, email, password);
+        return true;
+    }
+    public boolean signIn(String email, String password){
+        currentUser = proxy.checkPassword(email, password);
+        if(currentUser == null)
+            return false;
+        return true;
+    }
     public void Compose(Mail mail){
         JSONTest json = new JSONTest();
         //add here method to get user's path instead

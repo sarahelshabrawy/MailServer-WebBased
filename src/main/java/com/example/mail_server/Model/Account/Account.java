@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 public class Account {
-    private String id;
     private String name;
     private String email;
     private String password;
@@ -60,14 +59,6 @@ public class Account {
 
     public void setTrash(LinkedList<Mail> trash) {
         this.trash = trash;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getName() {
