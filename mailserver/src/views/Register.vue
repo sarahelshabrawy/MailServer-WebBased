@@ -18,6 +18,7 @@
       <hr>
 
       <button type="submit" class="registerbtn" id="register" @click="createAccount">Register</button>
+      <div id="message"></div>
     </div>
 
     <div class="container signin">
@@ -28,29 +29,42 @@
 
 <script>
 import axios from 'axios'
-const apiLink = 'http://localhost:8085/register'
+const apiLink = 'http://localhost:8085'
 export default {
   name: "Register",
+  data(){
+    return{
+    }
+  },
   methods :{
     createAccount(){
       var password = document.getElementById("psw").value;
       var repeatPass = document.getElementById("psw-repeat").value;
-      if(password !== repeatPass)
-      {
-        return false;
-      }
       var name = document.getElementById("username").value;
       var email = document.getElementById("email").value;
-      /*var data = {
-        name : name,
-        email: email,
-        password: password 
-      }*/
+      var text = document.getElementById("message");
+      if(password ==='' || name === '' || email ==='')
+      {
+        text.innerHTML = "You should fill all fields!";
+        return;
+      }
+      else if(password !== repeatPass)
+      {
+        text.innerHTML = "The two passwords are not identical!"
+        return;
+      }
       axios.get(apiLink + '/createAccount', {params:{ name : name,
         email: email,
         password: password }})
-      .then(function(response) {
-          console.log(response.data);
+      .then(response => {
+          if(!response.data)
+          {
+            text.innerHTML = "The Email Already Exists! Try another one."
+          }
+          else
+          {
+            this.$router.push({ name: 'Home' });
+          }
       })
       .catch(function (error) {
           console.log(error);
@@ -128,6 +142,13 @@ h1{
 
 .registerbtn:hover {
   opacity:1;
+}
+
+#message {
+  color: white;
+  font-family: 'Open sans', serif;
+  font-size: 14px;
+  margin-top: 30px;
 }
 
 /* Add a blue text color to links */
