@@ -12,7 +12,8 @@
       <p>New here ? <router-link to="/register">Register</router-link>.</p>
 
       <hr>
-      <button type="submit" class="registerbtn"><router-link to="/home">Sign in</router-link></button>
+      <button type="submit" class="registerbtn" @click="signIn">Sign in</button>
+      <div id="message"></div>
 
     </div>
     <button id="show-modal" @click="showModal = true">Show Modal</button>
@@ -22,6 +23,8 @@
 
 <script>
 import AddContact from '../components/Add Contact'
+import axios from 'axios'
+const apiLink = 'http://localhost:8085'
 
 export default {
   name: "Register",
@@ -30,7 +33,37 @@ export default {
       showModal: false
     }
   },
-  methods(){
+  methods:{
+    signIn(){
+      var password = document.getElementById("psw").value;
+      var email = document.getElementById("email").value;
+      var text = document.getElementById("message");
+      if(password ==='' || email ==='')
+      {
+        text.innerHTML = "You should fill all fields!";
+        return;
+      }
+      axios.get(apiLink + '/signIn', {
+        params:
+        {
+          email: email,
+          password: password 
+        }
+      })
+      .then(response => {
+          if(!response.data)
+          {
+            text.innerHTML = "Incorrect Password or E-mail! "
+          }
+          else
+          {
+            this.$router.push({ name: 'Home' });
+          }
+      })
+      .catch(function (error) {
+          console.log(error);
+      });
+    },
 
   },
   components:{
@@ -104,6 +137,12 @@ h1{
   opacity: 0.9;
   outline: none;
   border-radius: 30px;
+}
+#message {
+  color: black;
+  font-family: 'Open sans', serif;
+  font-size: 14px;
+  margin-top: 30px;
 }
 
 .registerbtn:hover {
