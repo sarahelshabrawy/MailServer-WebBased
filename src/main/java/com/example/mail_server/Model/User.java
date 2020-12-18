@@ -3,6 +3,9 @@ package com.example.mail_server.Model;
 import com.example.mail_server.Model.Account.Account;
 import com.example.mail_server.Model.Account.AccountBuilder;
 import com.example.mail_server.Model.Account.AccountProxy;
+import com.example.mail_server.Model.DataManagement.FileManager;
+
+import java.io.IOException;
 
 public class User {
 
@@ -14,7 +17,7 @@ public class User {
         proxy = new AccountProxy();
         builder = new AccountBuilder();
     }
-    public boolean signUp(String name, String email, String password){
+    public boolean signUp(String name, String email, String password) throws IOException {
         if(proxy.checkEmail(email))
             return false;
         currentUser = builder.build(name, email, password);
@@ -27,7 +30,7 @@ public class User {
         return true;
     }
     public void Compose(Mail mail){
-        JSONTest json = new JSONTest();
+        FileManager json = new FileManager();
         //add here method to get user's path instead
         json.saveJsonFile(mail, mail.getSender());
         for (String receiver: mail.getReceivers()) {

@@ -1,15 +1,14 @@
 package com.example.mail_server.Model.DataManagement;
 
-public class Directory implements IDirectory{
+import com.example.mail_server.Model.Account.Account;
+
+public class Directory{
 
 
-    @Override
-    public boolean add() {
-        return false;
+    public void addAccount(Account account) {
     }
 
 
-    @Override
     public boolean move() {
         return false;
     }

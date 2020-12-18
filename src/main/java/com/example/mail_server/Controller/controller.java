@@ -9,6 +9,8 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import java.io.IOException;
+
 @Configuration
 @Deprecated
 class MyConfiguration {
@@ -40,8 +42,7 @@ public class controller {
     @CrossOrigin
     @RequestMapping("/createAccount")
     @ResponseBody
-    public boolean createAccount(@RequestParam (value = "name") String name, @RequestParam(value = "email") String email, @RequestParam(value = "password") String password)
-    {
+    public boolean createAccount(@RequestParam (value = "name") String name, @RequestParam(value = "email") String email, @RequestParam(value = "password") String password) throws IOException {
         if(user.signUp(name, email, password))
             return true;
         return false;
