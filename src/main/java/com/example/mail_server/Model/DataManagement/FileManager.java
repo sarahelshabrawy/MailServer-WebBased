@@ -1,6 +1,7 @@
 package com.example.mail_server.Model.DataManagement;
 
 import com.example.mail_server.Model.Account.Account;
+import com.example.mail_server.Model.Mail;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.json.simple.parser.JSONParser;
@@ -18,7 +19,6 @@ public class FileManager {
     public void addAccount(Account account) throws IOException {
         String path = "./Accounts/Accounts.json";
         JSONArray accounts = listJsonObjects(path);
-
         JSONObject new_account = new JSONObject();
         new_account.put("name",account.getName());
         new_account.put("email",account.getEmail());
@@ -26,7 +26,17 @@ public class FileManager {
 
         accounts.add(new_account);
         addObjectToJson(path,accounts);
-
+    }
+    public void addMailToIndex(Mail mail, String path) throws IOException {
+        JSONArray mails = listJsonObjects(path);
+        JSONObject newMail = new JSONObject();
+        newMail.put("id",mail.getId());
+        newMail.put("sender",mail.getSender());
+        newMail.put("receiver", mail.getReceivers()[0]);
+        newMail.put("subject", mail.getSubject());
+        newMail.put("date", mail.getDate());
+        mails.add(newMail);
+        addObjectToJson(path,mails);
     }
 
     public boolean move() {
@@ -76,5 +86,15 @@ public class FileManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    public void setNewID(Mail mail, String path) throws IOException {
+        JSONArray list = listJsonObjects(path);
+        if(list.size() == 0)
+        {
+            return;
+        }
+        JSONObject lastMail = (JSONObject) list.get(list.size() - 1);
+        Long id = Long.parseLong((String)lastMail.get("id")) + 1;
+        mail.setId(id.toString());
     }
 }

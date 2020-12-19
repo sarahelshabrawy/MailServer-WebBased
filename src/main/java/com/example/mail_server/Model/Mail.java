@@ -9,6 +9,7 @@ public class Mail {
     private String date;
     private String priority;
     private String[] attachments;
+    private String id = "0" ;
 
     public Mail(String subject, String body, String sender, String[] receivers, String date, String priority) {
         this.subject = subject;
@@ -76,4 +77,11 @@ public class Mail {
         this.attachments = attachments;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 }

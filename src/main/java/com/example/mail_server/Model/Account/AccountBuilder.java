@@ -3,6 +3,7 @@ package com.example.mail_server.Model.Account;
 import com.example.mail_server.Model.DataManagement.Directory;
 import com.example.mail_server.Model.DataManagement.FileManager;
 
+import java.io.File;
 import java.io.IOException;
 
 public class AccountBuilder {

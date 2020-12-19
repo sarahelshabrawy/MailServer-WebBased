@@ -30,20 +30,34 @@ public class User {
             return false;
         return true;
     }
-    public boolean Compose(Mail mail){
+    public boolean Compose(Mail mail) throws IOException {
         for (String receiver: mail.getReceivers()) {
             if(!proxy.checkEmail(receiver)){
                 return false;
             }
         }
+        mail.setSender(currentUser.getEmail());
         FileManager json = new FileManager();
-
-      String path="./Accounts/"+currentUser.getEmail()+"/sent/"+mail.getReceivers()[0]+".json";
+        String myPath = "./Accounts/"+currentUser.getEmail()+"/sent/index.json";
+        json.setNewID(mail, myPath);
+        String path="./Accounts/"+currentUser.getEmail()+"/sent/"+mail.getId()+".json";
         json.saveJsonFile(mail, path);
+        json.addMailToIndex(mail, myPath);
         for (String receiver: mail.getReceivers()) {
-           path="./Accounts/"+receiver+"/inbox/"+currentUser.getEmail()+".json";
+            myPath = "./Accounts/"+receiver+"/inbox/index.json";
+            json.setNewID(mail, myPath);
+            path="./Accounts/"+receiver+"/inbox/"+mail.getId()+".json";
             json.saveJsonFile(mail,path);
+            json.addMailToIndex(mail, myPath);
         }
         return true;
+    }
+
+    public Account getCurrentUser() {
+        return currentUser;
+    }
+
+    public void setCurrentUser(Account currentUser) {
+        this.currentUser = currentUser;
     }
 }

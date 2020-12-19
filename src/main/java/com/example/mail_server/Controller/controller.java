@@ -1,5 +1,6 @@
 package com.example.mail_server.Controller;
 
+import com.example.mail_server.Model.Account.Account;
 import com.example.mail_server.Model.Mail;
 import com.example.mail_server.Model.User;
 import org.springframework.context.annotation.Bean;
@@ -35,9 +36,14 @@ public class controller {
     }
     @CrossOrigin
     @PostMapping("/compose")
-    public boolean compose(@RequestBody Mail mail){
+    public boolean compose(@RequestBody Mail mail) throws IOException {
+        Account acc= new Account();
+        acc.setName("Youka");
+        acc.setEmail("ayaelsayed52092@gmail.com");
+        acc.setPassword("i");
+        user.setCurrentUser(acc);
         System.out.println(mail.getBody());
-       return user.Compose(mail);
+        return user.Compose(mail);
     }
 
     @CrossOrigin

@@ -9,18 +9,6 @@ import java.io.IOException;
 
 public class AccountProxy {
 
-    public boolean checkEmail(String email){
-        File folder = new File("./Accounts");
-        File[] list = folder.listFiles();
-        for(File file : list)
-        {
-            if(file.getName().equals(email))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
     public Account checkPassword(String email, String password) throws IOException {
         FileManager manager = new FileManager();
         JSONArray array = manager.listJsonObjects("./Accounts/Accounts.json");
@@ -37,6 +25,18 @@ public class AccountProxy {
             }
         }
         return null;
+    }
+    public boolean checkEmail(String email){
+        File folder = new File("./Accounts");
+        File[] list = folder.listFiles();
+        for(File file : list)
+        {
+            if(file.getName().equals(email))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
 }
