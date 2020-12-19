@@ -11,6 +11,8 @@ public class Mail {
     private String[] attachments;
     private String id = "0" ;
 
+    public Mail(){}
+
     public Mail(String subject, String body, String sender, String[] receivers, String date, String priority) {
         this.subject = subject;
         this.body = body;

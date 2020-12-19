@@ -35,6 +35,7 @@ public class FileManager {
         newMail.put("receiver", mail.getReceivers()[0]);
         newMail.put("subject", mail.getSubject());
         newMail.put("date", mail.getDate());
+        newMail.put("body", mail.getBody());
         mails.add(newMail);
         addObjectToJson(path,mails);
     }

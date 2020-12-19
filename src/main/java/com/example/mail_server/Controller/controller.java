@@ -11,6 +11,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import java.io.IOException;
+import java.util.LinkedList;
 
 @Configuration
 @Deprecated
@@ -33,15 +34,15 @@ public class controller {
 
     public controller(){
         user = new User();
+        Account acc= new Account();
+        acc.setName("radwa");
+        acc.setEmail("es-radwa.mahmoud2019@alexu.edu.eg");
+        acc.setPassword("123456");
+        user.setCurrentUser(acc);
     }
     @CrossOrigin
     @PostMapping("/compose")
     public boolean compose(@RequestBody Mail mail) throws IOException {
-        Account acc= new Account();
-        acc.setName("Youka");
-        acc.setEmail("ayaelsayed52092@gmail.com");
-        acc.setPassword("i");
-        user.setCurrentUser(acc);
         System.out.println(mail.getBody());
         return user.Compose(mail);
     }
@@ -61,5 +62,14 @@ public class controller {
         if(user.signIn(email, password))
             return true;
         return false;
+    }
+
+    @CrossOrigin
+    @RequestMapping("/getMails")
+    @ResponseBody
+    public LinkedList<Mail> getListMails(@RequestParam(value = "folderName") String folderName) throws IOException {
+        Account acc = user.getCurrentUser();
+        LinkedList<Mail> mails = acc.loadFolder(folderName);
+        return mails;
     }
 }
