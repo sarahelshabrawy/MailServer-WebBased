@@ -30,13 +30,20 @@ public class User {
             return false;
         return true;
     }
-    public void Compose(Mail mail){
-        FileManager json = new FileManager();
-        //add here method to get user's path instead
-        json.saveJsonFile(mail, mail.getSender());
+    public boolean Compose(Mail mail){
         for (String receiver: mail.getReceivers()) {
-            //add here method to get user's path instead
-            json.saveJsonFile(mail,receiver);
+            if(!proxy.checkEmail(receiver)){
+                return false;
+            }
         }
+        FileManager json = new FileManager();
+
+      String path="./Accounts/"+currentUser.getEmail()+"/sent/"+mail.getReceivers()[0]+".json";
+        json.saveJsonFile(mail, path);
+        for (String receiver: mail.getReceivers()) {
+           path="./Accounts/"+receiver+"/inbox/"+currentUser.getEmail()+".json";
+            json.saveJsonFile(mail,path);
+        }
+        return true;
     }
 }

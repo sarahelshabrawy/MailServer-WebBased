@@ -35,8 +35,9 @@ public class controller {
     }
     @CrossOrigin
     @PostMapping("/compose")
-    public void compose(@RequestBody Mail mail){
-        user.Compose(mail);
+    public boolean compose(@RequestBody Mail mail){
+        System.out.println(mail.getBody());
+       return user.Compose(mail);
     }
 
     @CrossOrigin

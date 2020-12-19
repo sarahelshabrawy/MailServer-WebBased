@@ -7,17 +7,17 @@ public class Mail {
     private String sender;
     private String[] receivers;
     private String date;
-    private int priority;
+    private String priority;
     private String[] attachments;
 
-    public Mail(String subject, String body, String sender, String[] receivers, String date, int priority, String[] attachments) {
+    public Mail(String subject, String body, String sender, String[] receivers, String date, String priority) {
         this.subject = subject;
         this.body = body;
         this.sender = sender;
         this.receivers = receivers;
         this.date = date;
         this.priority = priority;
-        this.attachments = attachments;
+        //this.attachments = attachments;
     }
 
     public String getSubject() {
@@ -60,11 +60,11 @@ public class Mail {
         this.date = date;
     }
 
-    public int getPriority() {
+    public String getPriority() {
         return priority;
     }
 
-    public void setPriority(int priority) {
+    public void setPriority(String priority) {
         this.priority = priority;
     }
 

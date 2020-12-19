@@ -15,11 +15,11 @@ import java.nio.file.Paths;
 public class JSONTest {
 
     public static void main(String[] args) {
-        Mail mail = new Mail("A","B","C", new String[]{"A", "B"},"45",6,new String[]{"SAD","HAPPY"});
-        String filePath = "output.json";
+        Mail mail = new Mail("A","B","C", new String[]{"A", "B"},"45","");
+        String filePath = "./Accounts/output.json";
         FileManager j = new FileManager();
         j.saveJsonFile(mail,filePath);
-        mail = new Mail("A","B","C", new String[]{"A", "B"},"45",6,new String[]{"SAD","HAPPY"});
+        mail = new Mail("A","B","C", new String[]{"A", "B"},"45","6");
         j.saveJsonFile(mail,filePath);
 
     }
