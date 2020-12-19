@@ -80,7 +80,8 @@
       <div id="menu"> hi
       </div>
       <div id="content">
-        <mail-view :maillist = "Mails"></mail-view>
+        <!--<mail-view :maillist = "Mails"></mail-view>-->
+        <compose></compose>
       </div>
     </div>
     <div id="side-bar">
@@ -92,11 +93,13 @@
 </template>
 
 <script>
-import MailView from '../components/MailView.vue'
+import compose from '../components/Compose.vue'
+//import MailView from '../components/MailView.vue'
 export default {
   name: 'Home',
   components: {
-    MailView
+   // MailView
+   compose
   },
   data()
   {
@@ -488,7 +491,7 @@ export default {
   z-index: 9999999999999;
 }
 #filter {
-  background-color: #fabaa0;
+  background-color: #f8c4af;
   width: 150px;
   height: 25px;
   font-size: 18px;
