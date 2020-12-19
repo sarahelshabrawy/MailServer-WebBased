@@ -95,17 +95,6 @@ export default {
       },
       console.log(mail)
       axios.post('http://localhost:8085//compose',mail)
-      /* axios.get('http://localhost:8085' + '//compose', {
-        data:
-        {
-        receivers:this.Receivers,
-        subject:this.subject,
-        body:this.body,
-       // attachments:this.files,
-        date:this.date,
-        priority:this.importance
-        }
-      })
       .then(response => {
         console.log(response.data)
         
@@ -114,7 +103,6 @@ export default {
           console.log(error);
       });
      
-      */
     }
    
 

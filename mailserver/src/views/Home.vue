@@ -80,8 +80,7 @@
       <div id="menu"> hi
       </div>
       <div id="content">
-        <!--<mail-view :maillist = "Mails"></mail-view>-->
-        <compose></compose>
+        <mail-view  :maillist = "Mails" ></mail-view>
       </div>
     </div>
     <div id="side-bar">
@@ -93,122 +92,46 @@
 </template>
 
 <script>
-import compose from '../components/Compose.vue'
-//import MailView from '../components/MailView.vue'
+import MailView from '../components/MailView.vue'
+import axios from 'axios'
+let apiUrl = 'http://localhost:8085'
 export default {
   name: 'Home',
   components: {
-   // MailView
-   compose
+    MailView
   },
   data()
   {
-      return{
-      Mails : [
-      {
-        id:"0",
-        Subject : "Hello World",
-        Sender : "Google",
-        Recievers :[],
-        Content: "jhlghkggkuffuyfhyfpppppyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
-        Attachments:[],
-        Date:"12/12/2010"
-      },
-      {
-        id:"1",
-        Subject : "Hello World",
-        Sender : "Google",
-        Recievers :[],
-        Content: "jhlghkggkuffuyfhyfpppppyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
-        Attachments:[],
-        Date:"12/12/2010"
-      },
-       {
-        id:"2",
-        Subject : "Hello World",
-        Sender : "Google",
-        Recievers :[],
-        Content: "jhlghkggkuffuyfhyfpppppyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
-        Attachments:[],
-        Date:"12/12/2010"
-      },
-       {
-        id:"3",
-        Subject : "Hello World",
-        Sender : "Google",
-        Recievers :[],
-        Content: "jhlghkggkuffuyfhyfpppppyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
-        Attachments:[],
-        Date:"12/12/2010"
-      },
-       {
-        id:"4",
-        Subject : "Hello World",
-        Sender : "Google",
-        Recievers :[],
-        Content: "jhlghkggkuffuyfhyfpppppyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
-        Attachments:[],
-        Date:"12/12/2010"
-      },
-       {
-        id:"5",
-        Subject : "Hello World",
-        Sender : "Google",
-        Recievers :[],
-        Content: "jhlghkggkuffuyfhyfpppppyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
-        Attachments:[],
-        Date:"12/12/2010"
-      },
-       {
-        id:"6",
-        Subject : "Hello World",
-        Sender : "Google",
-        Recievers :[],
-        Content: "jhlghkggkuffuyfhyfpppppyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
-        Attachments:[],
-        Date:"12/12/2010"
-      },
-       {
-        id:"7",
-        Subject : "Hello World",
-        Sender : "Google",
-        Recievers :[],
-        Content: "jhlghkggkuffuyfhyfpppppyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
-        Attachments:[],
-        Date:"12/12/2010"
-      },
-       {
-        id:"8",
-        Subject : "Hello World",
-        Sender : "Google",
-        Recievers :[],
-        Content: "jhlghkggkuffuyfhyfpppppyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
-        Attachments:[],
-        Date:"12/12/2010"
-      },
-       {
-        id:"9",
-        Subject : "Hello World",
-        Sender : "Google",
-        Recievers :[],
-        Content: "jhlghkggkuffuyfhyfpppppyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
-        Attachments:[],
-        Date:"12/12/2010"
-      },
-
-      ],
-      mail:{
-        Subject : "Hello World",
-        Sender : "Google",
-        Recievers :[],
-        Content: "jhlghkggkuffuyfhyfpppppyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
-        Attachments:["../assets/logo.png"],
-        Date:"12/12/2010"
-      }
+    return{
+      Mails:[],
+      currentFolder:"inbox"
     }
-  }
-  ,
+  },
+  mounted(){
+  },
   methods : {
+    getMails(){
+      axios.get(apiUrl + "/getMails", {
+        params:{
+          folderName : this.currentFolder
+        }
+      }).then(Response => {
+        this.Mails = [];
+        let indices = Object.keys( Response.data )
+        for(let i = 0 ;i < indices.length ; i++){
+          this.Mails[i] = {
+            id : Response.data[indices[i]].id,
+            subject : Response.data[indices[i]].subject,
+            sender : Response.data[indices[i]].sender,
+            body : Response.data[indices[i]].body,
+            date : Response.data[indices[i]].date,
+            receiver : Response.data[indices[i]].receiver
+          }
+          console.log(this.Mails[i])
+        }
+      })
+    },
+
     searchBar() {
       var myvalue =  document.getElementById("text").value ;
       if(myvalue == "Search In Your Emails"){
@@ -491,7 +414,7 @@ export default {
   z-index: 9999999999999;
 }
 #filter {
-  background-color: #f8c4af;
+  background-color: #fabaa0;
   width: 150px;
   height: 25px;
   font-size: 18px;

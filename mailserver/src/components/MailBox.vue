@@ -4,10 +4,10 @@
       <div>
       <input type="checkbox" >
       </div>
-      <div class = "sender">{{mail.Sender}}</div>
-      <div class = "subject">{{mail.Subject + "  - "}}</div>
-      <div class = "content">{{ mail.Content}}</div>
-      <div class = "date" >{{mail.Date}}</div>
+      <div class = "sender">{{mail.sender}}</div>
+      <div class = "subject">{{mail.subject + "  - "}}</div>
+      <div class = "content">{{ mail.body}}</div>
+      <div class = "date" >{{mail.date}}</div>
       </div>
   </div>
 </template>
@@ -71,15 +71,18 @@ div {
     width: 50%;
     color:gray;
     margin: 0;
+    height: 20px;
 }
 .date{
     margin-left: 50px;
     width: 10%;
     text-align: right;
+    height: 20px;
 }
 .sender{
     font-weight:600;
     width: 15%;
+    height: 20px;
     left: 10%;
     margin-left:20px ;
     letter-spacing: 2px;
@@ -88,6 +91,8 @@ div {
 .subject{
     width: 8.5%;
     margin: 0;
+    height: 20px;
+
 }
 
 </style>

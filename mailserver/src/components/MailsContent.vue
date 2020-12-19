@@ -10,15 +10,15 @@
         </label>
       </div>
       <label class="important">Important:</label> 
-      <h1>{{mail.Subject}}</h1>
+      <h1>{{mail.subject}}</h1>
     </div>   
     <a v-for="attach in mail.Attachments" :key="attach.id" :href="attach" >
       <img :src= "attach" :alt= "attach" download >
       <img src="../assets/logo.png">
     </a>
     
-    <div class="sender">{{"from : " + mail.Sender}}</div>
-    <h3>{{mail.Content}}</h3>
+    <div class="sender">{{"from : " + mail.sender}}</div>
+    <h3>{{mail.body}}</h3>
   </div>
 </template>
 
