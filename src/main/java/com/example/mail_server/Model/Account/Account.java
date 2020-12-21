@@ -13,10 +13,7 @@ public class Account {
     private String name;
     private String email;
     private String password;
-    private LinkedList<Mail> inbox ;
-    private LinkedList<Mail> sent;
-    private LinkedList<Mail> draft;
-    private LinkedList<Mail> trash;
+    private LinkedList<Mail> currentFolderMails ;
     private HashMap<String,LinkedList<Mail>> userFolders;
     private FileManager fileManager;
 
@@ -47,6 +44,7 @@ public class Account {
             mail.setReceivers(receivers);
             mailList.add(mail);
         }
+        currentFolderMails=mailList;
         return mailList;
     }
 
