@@ -1,11 +1,11 @@
-package Filter;
+package com.example.mail_server.Model.Filter;
 
 import com.example.mail_server.Model.Mail;
 
 import java.util.LinkedList;
 
 
-public class SubjectField implements FilterType {
+public class SubjectField implements FilterField {
     private  String subject;
 
     @Override

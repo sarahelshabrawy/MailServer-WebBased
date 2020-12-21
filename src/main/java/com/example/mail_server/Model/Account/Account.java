@@ -17,6 +17,9 @@ public class Account {
     private HashMap<String,LinkedList<Mail>> userFolders;
     private FileManager fileManager;
 
+
+
+
     public Account(){
 
         userFolders = new HashMap<String,LinkedList<Mail>>();
@@ -51,6 +54,9 @@ public class Account {
         return userFolders.get(folderName);
     }
 
+    public LinkedList<Mail> getCurrentFolderMails() {
+        return currentFolderMails;
+    }
 
     public String getName() {
         return name;
