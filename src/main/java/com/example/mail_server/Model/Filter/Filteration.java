@@ -8,8 +8,7 @@ import java.util.LinkedList;
 public class Filteration implements FilterField{
     private FilterField senderFilter;
     private FilterField subjectFilter;
-    private String subject;
-    private String sender;
+
 
 
 
