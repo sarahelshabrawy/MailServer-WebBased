@@ -10,12 +10,12 @@
             <input type="text" placeholder="Name" name="name" id="name" required>
           <div id="mails">
             <label for="email"></label>
-            <input type="text" placeholder="Primary Email" name="email" id="email" required>
+            <input type="text" placeholder="Primary Email" name="email" id="primaryEmail" required>
           </div>
           <button class="add-secondary-mail" v-on:click="addMail">
             + Add secondary mail
           </button>
-            <button class="modal-default-button" v-on:click="$emit('close')">
+            <button class="modal-default-button" v-on:click="$emit('close'), sendContact()">
                 OK
               </button>
           </div>
@@ -25,6 +25,8 @@
 </template>
 
 <script>
+let contact= {};
+import axios from 'axios'
 export default {
   name : "AddContact",
   data() {
@@ -37,11 +39,37 @@ export default {
       const input = document.createElement("input");
       input.type = "text";
       input.name = "email" ;
+      input.id= "Secondary Mail "+ (parseInt(this.secondaryMailsCount) + 1 );
       input.placeholder = "Secondary Mail "+ (parseInt(this.secondaryMailsCount) + 1 )
       this.secondaryMailsCount ++
       mailsContainer.appendChild(input);
       mailsContainer.appendChild(document.createElement("br"));
+    },
+
+    
+    sendContact(){
+       var email =[];
+       var name = document.getElementById("name").value;
+       email[0]=document.getElementById("primaryEmail").value;
+       for(var i = 0;i<this.secondaryMailsCount;i++){
+          email[i+1]=document.getElementById("Secondary Mail "+ (parseInt(i) + 1 )).value;
+       }
+       contact={
+         name:name,
+         email:email
+
+       }
+        axios.post('http://localhost:8085//addContact',contact)
+      .then(response => {
+        console.log(response.data)
+        
+      })
+      .catch(function (error) {
+          console.log(error);
+      });
+
     }
+    
   }
 }
 </script>
