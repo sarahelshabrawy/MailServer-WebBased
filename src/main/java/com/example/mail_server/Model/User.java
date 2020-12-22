@@ -4,8 +4,13 @@ import com.example.mail_server.Model.Account.Account;
 import com.example.mail_server.Model.Account.AccountBuilder;
 import com.example.mail_server.Model.Account.AccountProxy;
 import com.example.mail_server.Model.DataManagement.FileManager;
+import com.example.mail_server.Model.Filter.FilterField;
+import com.example.mail_server.Model.Filter.Filteration;
+import com.example.mail_server.Model.Filter.SenderField;
+import com.example.mail_server.Model.Filter.SubjectField;
 
 import java.io.IOException;
+import java.util.LinkedList;
 
 public class User {
 
@@ -58,6 +63,20 @@ public class User {
         }
         return true;
     }
+
+    public LinkedList<Mail> filter(String senderField,String subjectField){
+        LinkedList<Mail> mails = currentUser.getCurrentFolderMails();
+        FilterField sender= new SenderField();
+        sender.setFilter(senderField);
+        FilterField subject= new SubjectField();
+        subject.setFilter(subjectField);
+        FilterField totalFilter= new Filteration(sender,subject);
+        mails=totalFilter.filter(mails);
+
+        return mails;
+
+    }
+
 
     public Account getCurrentUser() {
         return currentUser;
