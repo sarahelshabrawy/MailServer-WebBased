@@ -1,6 +1,7 @@
 package com.example.mail_server.Model.DataManagement;
 
 import com.example.mail_server.Model.Account.Account;
+import com.example.mail_server.Model.Contact;
 import com.example.mail_server.Model.Mail;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -16,6 +17,20 @@ import java.nio.file.Paths;
 
 public class FileManager {
 
+
+    public void addContact(Contact contact,String path) throws IOException {
+        JSONArray contacts = listJsonObjects(path);
+        JSONArray Emails=new JSONArray();
+        for(String email:contact.getEmail()){
+            Emails.add(email);
+        }
+        JSONObject new_contact = new JSONObject();
+        new_contact.put("name",contact.getName());
+        new_contact.put("email",Emails);
+        contacts.add(new_contact);
+        addObjectToJson(path,contacts);
+    }
+
     public void addAccount(Account account) throws IOException {
         String path = "./Accounts/Accounts.json";
         JSONArray accounts = listJsonObjects(path);
@@ -27,6 +42,7 @@ public class FileManager {
         accounts.add(new_account);
         addObjectToJson(path,accounts);
     }
+
     public void addMailToIndex(Mail mail, String path) throws IOException {
         JSONArray mails = listJsonObjects(path);
         JSONObject newMail = new JSONObject();
@@ -97,5 +113,20 @@ public class FileManager {
         JSONObject lastMail = (JSONObject) list.get(list.size() - 1);
         Long id = Long.parseLong((String)lastMail.get("id")) + 1;
         mail.setId(id.toString());
+    }
+    public Mail getMailContent(String path) throws IOException, ParseException {
+        FileReader reader = new FileReader(path);
+        JSONParser parser = new JSONParser();
+        JSONObject jsonobject = (JSONObject) parser.parse(reader);
+        reader.close();
+        Mail mail = new Mail();
+        mail.setBody(jsonobject.get("body").toString());
+        mail.setSubject(jsonobject.get("subject").toString());
+        mail.setSender(jsonobject.get("sender").toString());
+        mail.setDate(jsonobject.get("date").toString());
+        mail.setId(jsonobject.get("id").toString());
+        mail.setPriority(jsonobject.get("priority").toString());
+//        mail.setAttachments(jsonobject.get(""));
+        return mail;
     }
 }
