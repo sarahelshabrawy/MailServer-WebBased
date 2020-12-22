@@ -6,17 +6,17 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-import java.util.Date;
-import java.util.Locale;
+import java.util.*;
 
 public class SortDate implements ISortMail {
-
     @Override
-    public void Sort(Mail[] mails) {
+    public List<Mail> Sort(LinkedList<Mail> mails) {
         try {
-            divide(mails, 0, mails.length);
+            return divide((Mail[]) mails.toArray(), 0, mails.size());
         }
-        catch (ParseException ignored){}
+        catch (ParseException ignored){
+            return null;
+        }
     }
 
     void merge(Mail[] arr, int l, int m, int r) throws ParseException {
@@ -70,7 +70,7 @@ public class SortDate implements ISortMail {
 
     // Main function that sorts arr[l..r] using
     // merge()
-    void divide(Mail[] arr, int l, int r) throws ParseException {
+    List<Mail> divide(Mail[] arr, int l, int r )throws ParseException {
         if (l < r) {
             // Find the middle point
             int m = (l + r) / 2;
@@ -82,9 +82,13 @@ public class SortDate implements ISortMail {
             // Merge the sorted halves
             merge(arr, l, m, r);
         }
+        return Arrays.asList(arr);
+
     }
     Date formatDate(String string) throws ParseException {
         DateFormat format = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
         return format.parse(string);
     }
+
+
 }
