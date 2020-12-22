@@ -73,7 +73,7 @@
         <i class="fas fa-search searching"></i>
       </div>
     </div>
-    <a href="#" class="float" id="compose">
+    <a href="#" class="float" id = "compose" @click="component = 'compose'" >
     <i class="fas fa-bars my-float"></i>
     </a>
     <div id="body">
@@ -85,8 +85,9 @@
           <ul id="inbox-menu">TRASH</ul>
         </li>
       </div>
-      <div id="content">
-        <!--<mail-view :maillist = "Mails"></mail-view>-->
+      <div id="content" >
+        <!-- <component v-bind:is="component"  v-bind="Mails"></component> -->
+        <mail-view  :maillist = "Mails" ></mail-view>
       </div>
     </div>
     <div id="side-bar">
@@ -98,14 +99,52 @@
 </template>
 
 <script>
+import MailView from '../components/MailView.vue'
+// import MailsContent from '../components/MailsContent.vue'
+// import Compose from '../components/Compose.vue'
+import axios from 'axios'
+let apiUrl = 'http://localhost:8085'
 export default {
   name: 'Home',
   components: {
+    // 'mails-content':MailsContent,
+    'mail-view':MailView,
+    // 'compose':Compose
   },
   data()
-  {}
-  ,
+  {
+    return{
+      component:'mail-view',
+      Mails:[],
+      prop:this.Mails,
+      currentFolder:"inbox"
+    }
+  },
+  beforeMount(){
+  },
   methods : {
+    getMails(){
+      axios.get(apiUrl + "/getMails", {
+        params:{
+          folderName : this.currentFolder
+        }
+      }).then(Response => {
+        this.Mails = [];
+        let indices = Object.keys( Response.data )
+        for(let i = 0 ;i < indices.length ; i++){
+          this.Mails[i] = {
+            id : Response.data[indices[i]].id,
+            subject : Response.data[indices[i]].subject,
+            sender : Response.data[indices[i]].sender,
+            body : Response.data[indices[i]].body,
+            date : Response.data[indices[i]].date,
+            receiver : Response.data[indices[i]].receiver
+          }
+          console.log(this.Mails[i])
+        }
+      })
+    },
+
     searchBar() {
       var myvalue =  document.getElementById("text").value ;
       if(myvalue == "Search In Your Emails"){
@@ -388,7 +427,7 @@ export default {
   z-index: 9999999999999;
 }
 #filter {
-  background-color: #f8c4af;
+  background-color: #fabaa0;
   width: 150px;
   height: 25px;
   font-size: 18px;
