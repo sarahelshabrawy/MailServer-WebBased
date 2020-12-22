@@ -93,15 +93,14 @@
     </div>
     <div id="side-bar">
         <div id="mycheck"><input type="checkbox" value="all" id="selectAll">Select all</div>
-        <div id="trash"><i class="fas fa-trash-alt"></i> Delete</div>
-        <div id="move"><i class="fas fa-folder-open"></i>  Move E-mails</div>
+        <div id="trash"><i class="fas fa-trash-alt"></i>Delete</div>
+        <div id="move"><i class="fas fa-folder-open"></i>Move E-mails</div>
     </div>
   </div>
 </template>
 
 <script>
 import MailView from '../components/MailView.vue'
-// import MailsContent from '../components/MailsContent.vue'
 import Compose from '../components/Compose.vue'
 import AddFolder from '../components/Add Folder.vue'
 import axios from 'axios'
@@ -109,7 +108,6 @@ let apiUrl = 'http://localhost:8085'
 export default {
   name: 'Home',
   components: {
-    // 'mails-content':MailsContent,
     'mail-view':MailView,
     'compose':Compose,
     AddFolder
