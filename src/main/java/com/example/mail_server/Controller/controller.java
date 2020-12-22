@@ -35,12 +35,7 @@ public class controller {
 
 
     public controller(){
-        user = new User();
-        Account acc= new Account();
-        acc.setName("radwa");
-        acc.setEmail("es-radwa.mahmoud2019@alexu.edu.eg");
-        acc.setPassword("123456");
-        user.setCurrentUser(acc);
+        user = User.getInstance();
     }
     @CrossOrigin
     @PostMapping("/compose")
@@ -72,6 +67,7 @@ public class controller {
     public LinkedList<Mail> getListMails(@RequestParam(value = "folderName") String folderName) throws IOException {
         Account acc = user.getCurrentUser();
         LinkedList<Mail> mails = acc.loadFolder(folderName);
+        //n7awwel l array ?
         return mails;
     }
 
