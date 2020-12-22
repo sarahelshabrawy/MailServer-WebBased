@@ -14,7 +14,6 @@
     </div>   
     <a v-for="attach in mail.Attachments" :key="attach.id" :href="attach" >
       <img :src= "attach" :alt= "attach" download >
-      <img src="../assets/logo.png">
     </a>
     
     <div class="sender">{{"from : " + mail.sender}}</div>
@@ -26,9 +25,12 @@
 export default {
   name: 'MailsContent',
   props: {
-    mail: Object
+    id:String
   },
   methods:{
+    getMailContent(){
+      
+    }
 
   },
   mounted() {

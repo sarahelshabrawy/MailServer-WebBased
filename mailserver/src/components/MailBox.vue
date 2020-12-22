@@ -1,14 +1,14 @@
 <template>
   <div id ="hi">
-      <div id = "new" class="MailBox"  @click="callMailContent()">
-      <div>
-      <input type="checkbox" >
-      </div>
-      <div class = "sender">{{mail.sender}}</div>
-      <div class = "subject">{{mail.subject + "  - "}}</div>
-      <div class = "content">{{ mail.body}}</div>
-      <div class = "date" >{{mail.date}}</div>
-      </div>
+    <div id = "new" class="MailBox"  @click="callMailContent()">
+        <div>
+            <input type="checkbox" >
+        </div>
+        <div class = "sender">{{mail.sender}}</div>
+        <div class = "subject">{{mail.subject + "  - "}}</div>
+        <div class = "content">{{ mail.body}}</div>
+        <div class = "date" >{{mail.date}}</div>
+    </div>
   </div>
 </template>
 
