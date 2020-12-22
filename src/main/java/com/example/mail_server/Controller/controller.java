@@ -65,6 +65,7 @@ public class controller {
     public LinkedList<Mail> getListMails(@RequestParam(value = "folderName") String folderName) throws IOException {
         Account acc = user.getCurrentUser();
         LinkedList<Mail> mails = acc.loadFolder(folderName);
+        //n7awwel l array ?
         return mails;
     }
 }
