@@ -46,26 +46,21 @@ public class controller {
     @RequestMapping("/createAccount")
     @ResponseBody
     public boolean createAccount(@RequestParam (value = "name") String name, @RequestParam(value = "email") String email, @RequestParam(value = "password") String password) throws IOException {
-        if(user.signUp(name, email, password))
-            return true;
-        return false;
+        return user.signUp(name, email, password);
     }
     @CrossOrigin
     @RequestMapping("/signIn")
     @ResponseBody
     public boolean signIn( @RequestParam(value = "email") String email, @RequestParam(value = "password") String password) throws IOException {
-        if(user.signIn(email, password))
-            return true;
-        return false;
+        return user.signIn(email, password);
     }
 
     @CrossOrigin
     @RequestMapping("/getMails")
     @ResponseBody
-    public LinkedList<Mail> getListMails(@RequestParam(value = "folderName") String folderName) throws IOException {
+    public LinkedList<Mail> getListMails(@RequestParam(value = "folderName") String folderName,@RequestParam(value = "sort")String sort) throws IOException {
         Account acc = user.getCurrentUser();
-        LinkedList<Mail> mails = acc.loadFolder(folderName);
         //n7awwel l array ?
-        return mails;
+        return acc.loadFolder(folderName,sort);
     }
 }
