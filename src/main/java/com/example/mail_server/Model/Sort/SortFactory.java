@@ -1,5 +1,9 @@
 package com.example.mail_server.Model.Sort;
 
+import com.example.mail_server.Model.Sort.SortText.SortBody;
+import com.example.mail_server.Model.Sort.SortText.SortSender;
+import com.example.mail_server.Model.Sort.SortText.SortSubject;
+
 public class SortFactory {
     public ISortMail sortMails(String sortAccordingTo){
         if(sortAccordingTo.equalsIgnoreCase("subject"))
