@@ -1,6 +1,6 @@
 <template>
   <div id ="hi">
-    <div id = "new" class="MailBox"  @click="callMailContent()">
+    <div id = "new" class="MailBox">
         <div>
             <input type="checkbox" >
         </div>

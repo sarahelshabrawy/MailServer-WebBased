@@ -86,7 +86,7 @@
         </li>
       </div>
       <div id="content" >
-        <component :is="component" v-bind:maillist="Mails"></component>
+        <component :is="component" v-bind:maillist="Mails" :currentFolder="currentFolder"></component>
       </div>
     </div>
     <div id="side-bar">

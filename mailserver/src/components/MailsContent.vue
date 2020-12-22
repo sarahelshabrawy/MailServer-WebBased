@@ -22,14 +22,33 @@
 </template>
 
 <script>
+import axios from 'axios'
+let apiUrl = 'http://localhost:8085'
 export default {
   name: 'MailsContent',
   props: {
-    id:String
+    id:String,
+    currentFolder:String
+  },
+  data(){
+    return{
+      beforeMount:true
+    }
+  },
+  beforeMount(){
+    this.getMailContent()
   },
   methods:{
     getMailContent(){
-      
+      axios.get(apiUrl + "/openMail", {
+        params:{
+          id:this.id,
+          currentFolder:this.currentFolder
+        }
+      }).then(Response =>{
+        console.log(Response.data)
+      })
+      this.beforeMount = true
     }
 
   },

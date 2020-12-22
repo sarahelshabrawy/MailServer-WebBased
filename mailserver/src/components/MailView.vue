@@ -2,7 +2,7 @@
   <div>
     <div id = "mails_view" class="Mails"  v-for="male in maillist" :key="male.id" >
       <!-- <mail-box  :mail= "male" :id= "male.id" ></mail-box>  -->
-      <component @click="component = 'mails-content'" :is="component" v-bind:id = "male.id" :mail="male"  ></component>
+      <component @click="component = 'mails-content'" :is="component" v-bind:id = "male.id" :mail="male" :currentFolder="currentFolder" ></component>
     </div>
   </div>
 </template>
@@ -17,7 +17,8 @@ export default {
   },
   name: 'MailView',
   props: {
-    maillist: Array
+    maillist: Array,
+    currentFolder:String
   },
   data(){
     return{
