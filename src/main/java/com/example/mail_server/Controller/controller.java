@@ -86,12 +86,20 @@ public class controller {
 
         return mails;
     }
+
+    @CrossOrigin
+    @RequestMapping("/search")
+    @ResponseBody
+    public LinkedList<Mail> getsearchedMails(@RequestParam(value = "sender") String senderField,@RequestParam(value = "subject") String subjectField) {
+        LinkedList<Mail> mails= user.filter(senderField,subjectField);
+
+        return mails;
+    }
     @CrossOrigin
     @PostMapping("/addContact")
     public boolean  addContact(@RequestBody Contact contact) throws IOException {
         return user.addContact(contact);
     }
-
 
     @CrossOrigin
     @RequestMapping("/getContacts")

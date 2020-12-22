@@ -32,9 +32,7 @@ public class Account {
     public LinkedList<Contact> loadContacts() throws IOException {
         String path = "./Accounts/" + email+ "/" + "contacts.json";
         JSONArray contacts = fileManager.listJsonObjects(path);
-        System.out.println(contacts);
         LinkedList<Contact> contactList = new LinkedList<Contact>();
-        System.out.println(contacts.size());
         for ( int i = 0 ;i < contacts.size();i++){
             JSONObject obj = (JSONObject) contacts.get(i);
            Contact contact=new Contact();
@@ -52,7 +50,7 @@ public class Account {
             contactList.add(contact);
         }
 
-
+       this.contacts=contactList;
         return contactList;
     }
     public LinkedList<Mail> loadFolder(String folderName) throws IOException {
@@ -72,7 +70,7 @@ public class Account {
             mail.setReceivers(receivers);
             mailList.add(mail);
         }
-        currentFolderMails=mailList;
+        this.currentFolderMails=mailList;
         return mailList;
     }
 
@@ -113,5 +111,5 @@ public class Account {
     public LinkedList<Contact> getContacts() {
         return contacts;
     }
-    
+
 }
