@@ -79,15 +79,14 @@
     <div id="body">
       <div id="menu">
         <li id="menuList">
-          <ul id="inbox-menu">INBOX</ul>
-          <ul id="inbox-menu">DRAFT</ul>
-          <ul id="inbox-menu">SENT</ul>
-          <ul id="inbox-menu">TRASH</ul>
+          <ul id="inbox-menu" @click="setFolder('inbox')">INBOX</ul>
+          <ul id="inbox-menu" @click="setFolder('draft')">DRAFT</ul>
+          <ul id="inbox-menu" @click="setFolder('sent')">SENT</ul>
+          <ul id="inbox-menu" @click="setFolder('trash')">TRASH</ul>
         </li>
       </div>
       <div id="content" >
-        <!-- <component v-bind:is="component"  v-bind="Mails"></component> -->
-        <mail-view :maillist = "Mails" ></mail-view>
+        <component :is="component" v-bind:maillist="Mails"></component>
       </div>
     </div>
     <div id="side-bar">
@@ -101,7 +100,7 @@
 <script>
 import MailView from '../components/MailView.vue'
 // import MailsContent from '../components/MailsContent.vue'
-// import Compose from '../components/Compose.vue'
+import Compose from '../components/Compose.vue'
 import axios from 'axios'
 let apiUrl = 'http://localhost:8085'
 export default {
@@ -109,7 +108,7 @@ export default {
   components: {
     // 'mails-content':MailsContent,
     'mail-view':MailView,
-    // 'compose':Compose
+    'compose':Compose
   },
   data()
   {
@@ -126,6 +125,12 @@ export default {
       this.getMails()
   },
   methods : {
+    setFolder(folder)
+    {
+      this.currentFolder = folder;
+      this.component = 'mail-view';
+      this.getMails();
+    },
     getMails(){
       axios.get(apiUrl + "/getMails", {
         params:{
