@@ -15,18 +15,14 @@ public class Account {
     private String name;
     private String email;
     private String password;
-    private LinkedList<Mail> inbox ;
-    private LinkedList<Mail> sent;
-    private LinkedList<Mail> draft;
-    private LinkedList<Mail> trash;
+    private LinkedList<Mail> currentFolderMails ;
     private HashMap<String,LinkedList<Mail>> userFolders;
     private FileManager fileManager;
 
+
+
+
     public Account(){
-        inbox = new LinkedList<>();
-        sent = new LinkedList<Mail>();
-        draft = new LinkedList<Mail>();
-        trash = new LinkedList<Mail>();
         userFolders = new HashMap<String,LinkedList<Mail>>();
         fileManager = new FileManager();
     }
@@ -52,6 +48,7 @@ public class Account {
         SortFactory sortFactory = new SortFactory();
         ISortMail sortMail = sortFactory.sortMails(sort);
         mailList = (LinkedList<Mail>) sortMail.Sort(mailList);
+        currentFolderMails=mailList;
         return mailList;
     }
 
@@ -61,36 +58,8 @@ public class Account {
         return userFolders.get(folderName);
     }
 
-    public LinkedList<Mail> getInbox() {
-        return inbox;
-    }
-
-    public void setInbox(LinkedList<Mail> inbox) {
-        this.inbox = inbox;
-    }
-
-    public LinkedList<Mail> getSent() {
-        return sent;
-    }
-
-    public void setSent(LinkedList<Mail> sent) {
-        this.sent = sent;
-    }
-
-    public LinkedList<Mail> getDraft() {
-        return draft;
-    }
-
-    public void setDraft(LinkedList<Mail> draft) {
-        this.draft = draft;
-    }
-
-    public LinkedList<Mail> getTrash() {
-        return trash;
-    }
-
-    public void setTrash(LinkedList<Mail> trash) {
-        this.trash = trash;
+    public LinkedList<Mail> getCurrentFolderMails() {
+        return currentFolderMails;
     }
 
     public String getName() {

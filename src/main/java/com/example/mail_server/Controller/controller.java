@@ -5,6 +5,7 @@ import com.example.mail_server.Model.Mail;
 import com.example.mail_server.Model.User;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -31,6 +32,7 @@ class MyConfiguration {
 @CrossOrigin
 public class controller {
     private User user;
+
 
     public controller(){
         user = User.getInstance();
@@ -62,5 +64,14 @@ public class controller {
         Account acc = user.getCurrentUser();
         //n7awwel l array ?
         return acc.loadFolder(folderName,sort);
+    }
+
+    @CrossOrigin
+    @RequestMapping("/filter")
+    @ResponseBody
+    public LinkedList<Mail> getFilteredMails(@RequestParam(value = "sender") String senderField,@RequestParam(value = "subject") String subjectField) {
+      LinkedList<Mail> mails= user.filter(senderField,subjectField);
+
+        return mails;
     }
 }
