@@ -73,13 +73,14 @@
         <i class="fas fa-search searching"></i>
       </div>
     </div>
-    <a href="#" class="float">
+    <a href="#" class="float" id = "compose" @click="component = 'compose'" >
     <i class="fas fa-bars my-float"></i>
     </a>
     <div id="body">
       <div id="menu"> hi
       </div>
-      <div id="content">
+      <div id="content" >
+        <!-- <component v-bind:is="component"  v-bind="Mails"></component> -->
         <mail-view  :maillist = "Mails" ></mail-view>
       </div>
     </div>
@@ -93,21 +94,27 @@
 
 <script>
 import MailView from '../components/MailView.vue'
+// import MailsContent from '../components/MailsContent.vue'
+// import Compose from '../components/Compose.vue'
 import axios from 'axios'
 let apiUrl = 'http://localhost:8085'
 export default {
   name: 'Home',
   components: {
-    MailView
+    // 'mails-content':MailsContent,
+    'mail-view':MailView,
+    // 'compose':Compose
   },
   data()
   {
     return{
+      component:'mail-view',
       Mails:[],
+      prop:this.Mails,
       currentFolder:"inbox"
     }
   },
-  mounted(){
+  beforeMount(){
   },
   methods : {
     getMails(){
