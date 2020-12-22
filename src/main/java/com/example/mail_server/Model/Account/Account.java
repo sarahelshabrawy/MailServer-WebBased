@@ -110,5 +110,8 @@ public class Account {
         this.password = password;
     }
 
-
+    public LinkedList<Contact> getContacts() {
+        return contacts;
+    }
+    
 }
