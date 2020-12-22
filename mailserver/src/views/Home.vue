@@ -73,8 +73,8 @@
         <i class="fas fa-search searching"></i>
       </div>
     </div>
-    <a href="#" class="float" id = "compose" @click="component = 'compose'" >
-    <i class="fas fa-bars my-float"></i>
+    <a href="#" class="float" id = "compose" @click="component = 'compose'" v-on:click="hideComposeBtn" >
+    <i class="fas fa-plus my-float"></i> Compose
     </a>
     <div id="body">
       <div id="menu">
@@ -83,8 +83,10 @@
           <ul id="inbox-menu" @click="setFolder('draft')">DRAFT</ul>
           <ul id="inbox-menu" @click="setFolder('sent')">SENT</ul>
           <ul id="inbox-menu" @click="setFolder('trash')">TRASH</ul>
+          <ul id="add-folder" @click="addFolder = true">ADD FOLDER</ul>
         </li>
       </div>
+      <AddFolder v-if="addFolder" @closeFolder="closeFolder"></AddFolder>
       <div id="content" >
         <component :is="component" v-bind:maillist="Mails"></component>
       </div>
@@ -101,6 +103,7 @@
 import MailView from '../components/MailView.vue'
 // import MailsContent from '../components/MailsContent.vue'
 import Compose from '../components/Compose.vue'
+import AddFolder from '../components/Add Folder.vue'
 import axios from 'axios'
 let apiUrl = 'http://localhost:8085'
 export default {
@@ -108,7 +111,8 @@ export default {
   components: {
     // 'mails-content':MailsContent,
     'mail-view':MailView,
-    'compose':Compose
+    'compose':Compose,
+    AddFolder
   },
   data()
   {
@@ -117,7 +121,9 @@ export default {
       Mails:[],
       prop:this.Mails,
       currentFolder:"inbox",
-      beforeMount : true
+      beforeMount : true,
+      addFolder: false,
+      folderName:String
     }
   },
   beforeMount(){
@@ -125,10 +131,22 @@ export default {
       this.getMails()
   },
   methods : {
+    hideComposeBtn(e)
+    {
+      e.target.style.display = "none";
+    },
+    closeFolder(name)
+    {
+      this.addFolder = false;
+      this.folderName = name;
+      console.log(this.folderName)
+    },
     setFolder(folder)
     {
       this.currentFolder = folder;
       this.component = 'mail-view';
+      var btn = document.getElementById("compose");
+      btn.style.display = "block";
       this.getMails();
     },
     getMails(){
@@ -280,23 +298,31 @@ export default {
   margin-right: -15px;
 }
 .float{
+  display: block;
 	position:fixed;
-	width:60px;
-	height:60px;
-  top: 150px;
-  left: 90px;
-  color: #4a478a;
-	background-color:white;
+	width:130px;
+	height:40px;
+  top: 85%;
+  left: 87%;
+  background-color: #fabaa0;
+  color: white;
 	border-radius:50px;
-	text-align:center;
-	box-shadow: 2px 2px 3px #999;
+	box-shadow: 2px 2px 3px rgb(31, 28, 28);
+  text-decoration: none;
+  font-size: 20px;
+  padding-left: 15px;
+  padding-top: 10px;
+  font-weight: 600;
+  font-family: 'Open sans', serif;
+  text-shadow: 1px 2px #3f3e3e;
 }
 .my-float {
-  margin-top: 20px;
+  margin-right: 6px;
+  margin-top: 5px;
 }
 .float:hover {
-  background-color:  #da8a8b;
-  color: white;
+  color: #fabaa0;
+	background-color:white;
 }
 #upper-bar {
   display: flex;
