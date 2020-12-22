@@ -98,4 +98,19 @@ public class FileManager {
         Long id = Long.parseLong((String)lastMail.get("id")) + 1;
         mail.setId(id.toString());
     }
+    public Mail getMailContent(String path) throws IOException, ParseException {
+        FileReader reader = new FileReader(path);
+        JSONParser parser = new JSONParser();
+        JSONObject jsonobject = (JSONObject) parser.parse(reader);
+        reader.close();
+        Mail mail = new Mail();
+        mail.setBody(jsonobject.get("body").toString());
+        mail.setSubject(jsonobject.get("subject").toString());
+        mail.setSender(jsonobject.get("sender").toString());
+        mail.setDate(jsonobject.get("date").toString());
+        mail.setId(jsonobject.get("id").toString());
+        mail.setPriority(jsonobject.get("priority").toString());
+//        mail.setAttachments(jsonobject.get(""));
+        return mail;
+    }
 }
