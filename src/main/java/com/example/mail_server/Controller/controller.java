@@ -33,12 +33,7 @@ public class controller {
     private User user;
 
     public controller(){
-        user = new User();
-        Account acc= new Account();
-        acc.setName("radwa");
-        acc.setEmail("es-radwa.mahmoud2019@alexu.edu.eg");
-        acc.setPassword("123456");
-        user.setCurrentUser(acc);
+        user = User.getInstance();
     }
     @CrossOrigin
     @PostMapping("/compose")

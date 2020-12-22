@@ -10,12 +10,18 @@ import java.io.IOException;
 public class User {
 
     private Account currentUser;
-    private AccountProxy proxy;
-    private AccountBuilder builder;
-    public User()
+    private static AccountProxy proxy;
+    private static AccountBuilder builder;
+    private static User firstInstance;
+    private User() {}
+    public static User getInstance()
     {
-        proxy = new AccountProxy();
-        builder = new AccountBuilder();
+        if(firstInstance == null){
+            firstInstance = new User();
+            proxy = new AccountProxy();
+            builder = new AccountBuilder();
+        }
+        return firstInstance;
     }
     public boolean signUp(String name, String email, String password) throws IOException {
         if(proxy.checkEmail(email))
