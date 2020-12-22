@@ -81,7 +81,7 @@
       </div>
       <div id="content" >
         <!-- <component v-bind:is="component"  v-bind="Mails"></component> -->
-        <mail-view  :maillist = "Mails" ></mail-view>
+        <mail-view :maillist = "Mails" ></mail-view>
       </div>
     </div>
     <div id="side-bar">
@@ -111,10 +111,13 @@ export default {
       component:'mail-view',
       Mails:[],
       prop:this.Mails,
-      currentFolder:"inbox"
+      currentFolder:"inbox",
+      beforeMount : true
     }
   },
   beforeMount(){
+    if(this.beforeMount)
+      this.getMails()
   },
   methods : {
     getMails(){
@@ -137,6 +140,7 @@ export default {
           console.log(this.Mails[i])
         }
       })
+      this.beforeMount = false
     },
 
     searchBar() {
