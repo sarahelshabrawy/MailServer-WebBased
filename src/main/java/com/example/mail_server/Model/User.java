@@ -76,12 +76,7 @@ public class User {
         return mails;
 
     }
-    public LinkedList<Mail> search(String){
-        LinkedList<Mail> mails = currentUser.getCurrentFolderMails();
 
-        return mails;
-
-    }
 
     public Account getCurrentUser() {
         return currentUser;
