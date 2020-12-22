@@ -73,15 +73,20 @@
         <i class="fas fa-search searching"></i>
       </div>
     </div>
-    <a href="#" class="float">
+    <a href="#" class="float" id="compose">
     <i class="fas fa-bars my-float"></i>
     </a>
     <div id="body">
-      <div id="menu"> hi
+      <div id="menu">
+        <li id="menuList">
+          <ul id="inbox-menu">INBOX</ul>
+          <ul id="inbox-menu">DRAFT</ul>
+          <ul id="inbox-menu">SENT</ul>
+          <ul id="inbox-menu">TRASH</ul>
+        </li>
       </div>
       <div id="content">
         <!--<mail-view :maillist = "Mails"></mail-view>-->
-        <compose></compose>
       </div>
     </div>
     <div id="side-bar">
@@ -93,120 +98,12 @@
 </template>
 
 <script>
-import compose from '../components/Compose.vue'
-//import MailView from '../components/MailView.vue'
 export default {
   name: 'Home',
   components: {
-   // MailView
-   compose
   },
   data()
-  {
-      return{
-      Mails : [
-      {
-        id:"0",
-        Subject : "Hello World",
-        Sender : "Google",
-        Recievers :[],
-        Content: "jhlghkggkuffuyfhyfpppppyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
-        Attachments:[],
-        Date:"12/12/2010"
-      },
-      {
-        id:"1",
-        Subject : "Hello World",
-        Sender : "Google",
-        Recievers :[],
-        Content: "jhlghkggkuffuyfhyfpppppyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
-        Attachments:[],
-        Date:"12/12/2010"
-      },
-       {
-        id:"2",
-        Subject : "Hello World",
-        Sender : "Google",
-        Recievers :[],
-        Content: "jhlghkggkuffuyfhyfpppppyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
-        Attachments:[],
-        Date:"12/12/2010"
-      },
-       {
-        id:"3",
-        Subject : "Hello World",
-        Sender : "Google",
-        Recievers :[],
-        Content: "jhlghkggkuffuyfhyfpppppyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
-        Attachments:[],
-        Date:"12/12/2010"
-      },
-       {
-        id:"4",
-        Subject : "Hello World",
-        Sender : "Google",
-        Recievers :[],
-        Content: "jhlghkggkuffuyfhyfpppppyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
-        Attachments:[],
-        Date:"12/12/2010"
-      },
-       {
-        id:"5",
-        Subject : "Hello World",
-        Sender : "Google",
-        Recievers :[],
-        Content: "jhlghkggkuffuyfhyfpppppyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
-        Attachments:[],
-        Date:"12/12/2010"
-      },
-       {
-        id:"6",
-        Subject : "Hello World",
-        Sender : "Google",
-        Recievers :[],
-        Content: "jhlghkggkuffuyfhyfpppppyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
-        Attachments:[],
-        Date:"12/12/2010"
-      },
-       {
-        id:"7",
-        Subject : "Hello World",
-        Sender : "Google",
-        Recievers :[],
-        Content: "jhlghkggkuffuyfhyfpppppyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
-        Attachments:[],
-        Date:"12/12/2010"
-      },
-       {
-        id:"8",
-        Subject : "Hello World",
-        Sender : "Google",
-        Recievers :[],
-        Content: "jhlghkggkuffuyfhyfpppppyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
-        Attachments:[],
-        Date:"12/12/2010"
-      },
-       {
-        id:"9",
-        Subject : "Hello World",
-        Sender : "Google",
-        Recievers :[],
-        Content: "jhlghkggkuffuyfhyfpppppyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
-        Attachments:[],
-        Date:"12/12/2010"
-      },
-
-      ],
-      mail:{
-        Subject : "Hello World",
-        Sender : "Google",
-        Recievers :[],
-        Content: "jhlghkggkuffuyfhyfpppppyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
-        Attachments:["../assets/logo.png"],
-        Date:"12/12/2010"
-      }
-    }
-  }
+  {}
   ,
   methods : {
     searchBar() {
@@ -542,5 +439,9 @@ export default {
 #email, #name {
   color: #081448;
   font-weight: 600;
+}
+#menuList > ul {
+  font-size: 15px;
+  background-color: pink;
 }
 </style>
