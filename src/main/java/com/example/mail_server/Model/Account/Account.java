@@ -1,5 +1,6 @@
 package com.example.mail_server.Model.Account;
 
+import com.example.mail_server.Model.Contact;
 import com.example.mail_server.Model.DataManagement.FileManager;
 import com.example.mail_server.Model.Mail;
 import org.json.simple.JSONArray;
@@ -14,6 +15,7 @@ public class Account {
     private String email;
     private String password;
     private LinkedList<Mail> currentFolderMails ;
+    private LinkedList<Contact> contacts;
     private HashMap<String,LinkedList<Mail>> userFolders;
     private FileManager fileManager;
 
@@ -21,12 +23,38 @@ public class Account {
 
 
     public Account(){
-
+        currentFolderMails=new LinkedList<Mail>();
+        contacts=new LinkedList<Contact>();
         userFolders = new HashMap<String,LinkedList<Mail>>();
         fileManager = new FileManager();
     }
 
+    public LinkedList<Contact> loadContacts() throws IOException {
+        String path = "./Accounts/" + email+ "/" + "contacts.json";
+        JSONArray contacts = fileManager.listJsonObjects(path);
+        System.out.println(contacts);
+        LinkedList<Contact> contactList = new LinkedList<Contact>();
+        System.out.println(contacts.size());
+        for ( int i = 0 ;i < contacts.size();i++){
+            JSONObject obj = (JSONObject) contacts.get(i);
+           Contact contact=new Contact();
+           contact.setName((String) obj.get("name"));
+            JSONArray Emails=new JSONArray();
+            Emails= (JSONArray) obj.get("email");
+           System.out.println( Emails.size());
+            String[] Contact_Email=new String[Emails.size()];
+            for ( int j = 0 ;j< Emails.size();j++){
 
+                Contact_Email[j]=(String) Emails.get(j);
+
+            }
+            contact.setEmail(Contact_Email);
+            contactList.add(contact);
+        }
+
+
+        return contactList;
+    }
     public LinkedList<Mail> loadFolder(String folderName) throws IOException {
         String path = "./Accounts/" + email + "/" + folderName + "/index.json";
         JSONArray mails = fileManager.listJsonObjects(path);

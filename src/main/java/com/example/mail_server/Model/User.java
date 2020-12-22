@@ -64,6 +64,19 @@ public class User {
         return true;
     }
 
+    public boolean addContact(Contact contact) throws IOException {
+        for (String email: contact.getEmail()) {
+            if(!proxy.checkEmail(email)){
+                return false; }
+        }
+        System.out.println("aaaaaaaaaaaaaaa");
+        FileManager json = new FileManager();
+        String path="./Accounts/"+"tosahassan97@gmail.com"+"/contacts.json";
+        json.addContact(contact,path);
+
+        return true;
+    }
+
     public LinkedList<Mail> filter(String senderField,String subjectField){
         LinkedList<Mail> mails = currentUser.getCurrentFolderMails();
         FilterField sender= new SenderField();
