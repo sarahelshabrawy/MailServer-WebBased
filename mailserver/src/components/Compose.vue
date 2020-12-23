@@ -78,12 +78,26 @@ export default {
       
     },
     setImportance(){
-      this.importance=document.getElementById("priority").value;
+      var priority=document.getElementById("priority").value;
+    
+      if(priority=="Very Important"){
+        this.importance=1;
+      }
+      else if(priority=="Important"){
+        this.importance=2;
+      }
+      else if(priority=="Normal"){
+        this.importance=3;
+      }
+       else {
+        this.importance=4;
+      }
       console.log(this.importance)
 
     },
     setmail(){
       this.setDate();
+      this.setImportance();
       mail={
         receivers:this.Receivers,
         subject:this.subject,
