@@ -184,7 +184,7 @@ public class FileManager {
         mail.setSender(jsonobject.get("sender").toString());
         mail.setDate(jsonobject.get("date").toString());
         mail.setId(jsonobject.get("id").toString());
-        mail.setPriority((int)jsonobject.get("priority"));
+        mail.setPriority(((Long) jsonobject.get("priority")).intValue());
 //        mail.setAttachments(jsonobject.get(""));
         return mail;
     }
