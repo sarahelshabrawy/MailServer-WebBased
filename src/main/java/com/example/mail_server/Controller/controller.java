@@ -110,11 +110,11 @@ public class controller {
         return contacts;
     }
     @CrossOrigin
-    @PostMapping ("/delete")
+    @PostMapping ("/move")
     @ResponseBody
-    public LinkedList<Mail> deleteMails(@RequestBody String[] id) throws IOException {
+    public LinkedList<Mail> moveMails(@RequestBody String[] id,String folderName) throws IOException {
 
-           return user.deleteMail(id);
+           return user.moveMail(id,folderName);
     }
 
 }

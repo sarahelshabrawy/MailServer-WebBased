@@ -98,14 +98,14 @@ public class User {
         }
         return true;
     }
-    public LinkedList<Mail> deleteMail(String[] id) throws IOException {
+    public LinkedList<Mail> moveMail(String[] id,String folderName) throws IOException {
         FileManager json=new FileManager();
         LinkedList<Mail> mails=currentUser.getCurrentFolderMails();
         for(int i=0;i<id.length;i++){
             for(Mail mail: mails){
                 if(mail.getId().equalsIgnoreCase(id[i])){
                     mails.remove(mail);
-                    json.deleteMail(id[i],currentUser,mail);
+                    json.moveMail(id[i],currentUser,mail,folderName);
 
                     break;
                 }
