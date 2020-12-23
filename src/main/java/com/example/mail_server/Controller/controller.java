@@ -2,8 +2,10 @@ package com.example.mail_server.Controller;
 
 import com.example.mail_server.Model.Account.Account;
 import com.example.mail_server.Model.Contact;
+import com.example.mail_server.Model.DataManagement.FileManager;
 import com.example.mail_server.Model.Mail;
 import com.example.mail_server.Model.User;
+import org.json.simple.parser.ParseException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
@@ -100,6 +102,16 @@ public class controller {
         Account acc = user.getCurrentUser();
         LinkedList<Contact> contacts = acc.loadContacts();
         return contacts;
+    }
+
+    @CrossOrigin
+    @RequestMapping("/openMail")
+    @ResponseBody
+    public Mail openMail(@RequestParam(value = "id") String id, @RequestParam(value = "currentFolder") String currentFolder) throws IOException, ParseException, ParseException {
+        String path = "./Accounts/" + user.getCurrentUser().getEmail() + "/" + currentFolder + "/" + id + ".json";
+        FileManager fileManager = new FileManager();
+        Mail mail = fileManager.getMailContent(path);
+        return mail;
     }
 
 }
