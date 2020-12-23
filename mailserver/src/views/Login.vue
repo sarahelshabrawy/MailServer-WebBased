@@ -1,7 +1,9 @@
 <template>
   <div id="background">
     <div class="container">
-      <h1>Login</h1>
+      <h1 id = "highlighttest">
+       Login
+      </h1>
       <hr>
 
       <label for="email"></label>
@@ -32,6 +34,8 @@ export default {
     return{
       showModal: false
     }
+  },mounted() {
+    this.highlight()
   },
   methods:{
     signIn(){
@@ -63,7 +67,16 @@ export default {
       .catch(function (error) {
           console.log(error);
       });
-    },
+    },highlight(){
+      const inputText = document.getElementById("highlighttest");
+      let innerHTML = inputText.innerHTML;
+      console.log(innerHTML)
+      innerHTML = innerHTML.substring(0,2) + "<span style='background-color: " + "yellow" + ";'>"
+          + innerHTML.substring(2,5) + "</span>" + innerHTML.substring(5);
+      inputText.innerHTML = innerHTML;
+      console.log(inputText.innerHTML)
+
+    }
 
   },
   components:{
@@ -81,7 +94,13 @@ export default {
   /*mo2akkatan bas*/
   z-index: 99999999999;
 }
-
+/*#highlighttest{*/
+/*  background-color: bisque;*/
+/*}*/
+.highlight {
+  background: yellow;
+  border: rebeccapurple solid;
+}
 #background{
   position: absolute;
   top: 0; right: 0; bottom: 0; left: 0;
