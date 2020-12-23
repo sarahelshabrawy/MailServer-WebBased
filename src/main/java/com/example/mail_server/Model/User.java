@@ -37,9 +37,7 @@ public class User {
 
     public boolean signIn(String email, String password) throws IOException {
         currentUser = proxy.checkPassword(email, password);
-        if(currentUser == null)
-            return false;
-        return true;
+        return currentUser != null;
     }
     public boolean Compose(Mail mail) throws IOException {
         for (String receiver: mail.getReceivers()) {
