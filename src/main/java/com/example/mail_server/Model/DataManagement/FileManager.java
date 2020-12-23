@@ -87,20 +87,19 @@ public class FileManager {
         addObjectToJson(path,mails);
     }
 
-    public boolean move() {
-        return false;
-    }
 
-    public boolean deleteMail(String id,Account account,Mail mail) throws IOException {
+
+    public boolean moveMail(String id,Account account,Mail mail,String folderName) throws IOException {
         Directory directory=new Directory();
         String sourcePath="./Accounts/"+account.getEmail()+"/"+account.getCurrentFolderName()+"/"+id;
-        String path="./Accounts/"+account.getEmail()+"/trash/index.json";
+        String path="./Accounts/"+account.getEmail()+"/"+folderName+"/index.json";
         this.setNewID(mail,path);
         this.addMailToIndex(mail,path);
         this.deleteFromIndex("./Accounts/"+account.getEmail()+"/"+account.getCurrentFolderName()+"/index.json",id);
-        path="./Accounts/"+account.getEmail()+"/trash/"+mail.getId();
+        path="./Accounts/"+account.getEmail()+"/"+folderName+"/"+mail.getId();
         directory.createFolder(path);
-        directory.move(new File(sourcePath),new File(path));
+        directory.CopyFolder(new File(sourcePath),new File(path),mail.getId());
+        directory.DeleteFolder(new File(sourcePath));
 
 
         return true;

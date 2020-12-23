@@ -15,24 +15,65 @@ public class Directory{
         File folder = new File(path);
         System.out.println(folder.mkdir());
     }
-    public boolean move(File sourceFile, File destFile)
-    {
-        if (sourceFile.isDirectory())
-        {
-            for (File file : sourceFile.listFiles())
-            {
-                move(file, new File(file.getPath().substring("temp".length()+1)));
+    public void CopyFolder(File source ,File target,String id){
+        try {
+            if(source.isDirectory()) {
+                copy(source,target,id);
+            }else {
+                System.out.println(target.getName()+"&"+source.getParentFile().getName());
+                if(target.getName().equalsIgnoreCase(source.getParentFile().getName()+".json")){
+                    target=new File(target.getParent()+"/"+id+".json");
+                }
+                Files.copy(source.toPath(), target.toPath());
+
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        else
-        {
-            try {
-                Files.move(Paths.get(sourceFile.getPath()), Paths.get(destFile.getPath()), StandardCopyOption.REPLACE_EXISTING);
-                return true;
-            } catch (IOException e) {
-                return false;
-            }
-        }
-        return false;
+
     }
+    public void copy(File source,File target,String id) throws IOException{
+        try {
+            if(source.exists()) {
+                if(!target.exists()) {
+                    target.mkdir();
+                }
+                for(String child : source.list()) {
+                    CopyFolder(new File(source,child),new File(target,child),id);
+                }
+            }else {
+                throw new RuntimeException("File to be copied doesn't exist");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void DeleteFolder(File file) { // to delete folders and files but not txt
+        if (file.exists()) {
+            for (File subFile : file.listFiles()) {
+                if (subFile.isDirectory()) {
+                    DeleteFolder(subFile);
+                } else {
+                    subFile.delete();
+                }
+            }
+            file.delete();
+
+        } else {
+            throw new RuntimeException("Folder to be deleted doesn't exist");
+        }
+    }
+
+    public boolean createUserFolder(String folderName, Account account)
+    {
+        String path = "./Accounts/" + account.getEmail() + "/" + folderName;
+        File folder = new File(path);
+        if(folder.exists())
+            return false;
+        folder.mkdir();
+        return true;
+    }
+
 }
