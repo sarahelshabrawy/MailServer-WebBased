@@ -8,7 +8,6 @@ import com.example.mail_server.Model.User;
 import org.json.simple.parser.ParseException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.FilterType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -39,12 +38,12 @@ public class controller {
 
     public controller(){
         user = User.getInstance();
-            Account acc= new Account();
+         /*   Account acc= new Account();
             acc.setName("radwa");
             acc.setEmail("tosahassan97@gmail.com");
             acc.setPassword("123456");
             user.setCurrentUser(acc);
-
+*/
     }
     @CrossOrigin
     @PostMapping("/compose")
@@ -57,17 +56,13 @@ public class controller {
     @RequestMapping("/createAccount")
     @ResponseBody
     public boolean createAccount(@RequestParam (value = "name") String name, @RequestParam(value = "email") String email, @RequestParam(value = "password") String password) throws IOException {
-        if(user.signUp(name, email, password))
-            return true;
-        return false;
+        return user.signUp(name, email, password);
     }
     @CrossOrigin
     @RequestMapping("/signIn")
     @ResponseBody
     public boolean signIn( @RequestParam(value = "email") String email, @RequestParam(value = "password") String password) throws IOException {
-        if(user.signIn(email, password))
-            return true;
-        return false;
+        return user.signIn(email, password);
     }
 
     @CrossOrigin
@@ -75,16 +70,32 @@ public class controller {
     @ResponseBody
     public LinkedList<Mail> getListMails(@RequestParam(value = "folderName") String folderName) throws IOException {
         Account acc = user.getCurrentUser();
-        LinkedList<Mail> mails = acc.loadFolder(folderName);
-        //n7awwel l array ?
-        return mails;
+        return acc.loadFolder(folderName);
     }
+
+    @CrossOrigin
+    @RequestMapping("/sortMails")
+    @ResponseBody
+    public LinkedList<Mail> sortMails(@RequestParam(value = "sort") String sort) {
+        //new ??
+        Account acc = user.getCurrentUser();
+        return acc.sortFolder(sort);
+    }
+
 
     @CrossOrigin
     @RequestMapping("/filter")
     @ResponseBody
     public LinkedList<Mail> getFilteredMails(@RequestParam(value = "sender") String senderField,@RequestParam(value = "subject") String subjectField) {
       LinkedList<Mail> mails= user.filter(senderField,subjectField);
+      return mails;
+    }
+
+    @CrossOrigin
+    @RequestMapping("/search")
+    @ResponseBody
+    public LinkedList<Mail> getsearchedMails(@RequestParam(value = "sender") String senderField,@RequestParam(value = "subject") String subjectField) {
+        LinkedList<Mail> mails= user.filter(senderField,subjectField);
 
         return mails;
     }
@@ -103,7 +114,27 @@ public class controller {
         LinkedList<Contact> contacts = acc.loadContacts();
         return contacts;
     }
+    @CrossOrigin
+    @PostMapping ("/move")
+    @ResponseBody
+    public LinkedList<Mail> moveMails(@RequestBody String[] id,String folderName) throws IOException {
 
+           return user.moveMail(id,folderName);
+    }
+
+    @CrossOrigin
+    @RequestMapping("/addFolder")
+    @ResponseBody
+    public boolean addFolder(@RequestParam(value = "folderName") String folderName) throws IOException {
+      return User.getInstance().createNewFolder(folderName);
+    }
+
+    @CrossOrigin
+    @RequestMapping("/getUserFolders")
+    @ResponseBody
+    public String[] getUserFolders(){
+        return User.getInstance().getUserFoldersList();
+    }
     @CrossOrigin
     @RequestMapping("/openMail")
     @ResponseBody

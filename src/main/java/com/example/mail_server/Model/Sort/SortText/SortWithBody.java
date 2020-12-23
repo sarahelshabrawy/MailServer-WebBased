@@ -1,8 +1,8 @@
-package com.example.mail_server.Model.Sort;
+package com.example.mail_server.Model.Sort.SortText;
 
 import com.example.mail_server.Model.Mail;
 
-public class SortBody extends SortText {
+public class SortWithBody extends SortText {
 
     @Override
     String getStringAttribute(Mail mail) {

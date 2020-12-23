@@ -14,6 +14,7 @@ import org.junit.Assert;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Collections;
 
 public class FileManager {
 
@@ -21,9 +22,7 @@ public class FileManager {
     public void addContact(Contact contact,String path) throws IOException {
         JSONArray contacts = listJsonObjects(path);
         JSONArray Emails=new JSONArray();
-        for(String email:contact.getEmail()){
-            Emails.add(email);
-        }
+        Collections.addAll(Emails, contact.getEmail());
         JSONObject new_contact = new JSONObject();
         new_contact.put("name",contact.getName());
         new_contact.put("email",Emails);
@@ -52,18 +51,42 @@ public class FileManager {
         newMail.put("subject", mail.getSubject());
         newMail.put("date", mail.getDate());
         newMail.put("body", mail.getBody());
+        newMail.put("priority",mail.getPriority());
         mails.add(newMail);
         addObjectToJson(path,mails);
     }
 
-    public boolean move() {
-        return false;
+
+
+    public boolean moveMail(String id,Account account,Mail mail,String folderName) throws IOException {
+        Directory directory=new Directory();
+        String sourcePath="./Accounts/"+account.getEmail()+"/"+account.getCurrentFolderName()+"/"+id;
+        String path="./Accounts/"+account.getEmail()+"/"+folderName+"/index.json";
+        this.setNewID(mail,path);
+        this.addMailToIndex(mail,path);
+        this.deleteFromIndex("./Accounts/"+account.getEmail()+"/"+account.getCurrentFolderName()+"/index.json",id);
+        path="./Accounts/"+account.getEmail()+"/"+folderName+"/"+mail.getId();
+        directory.createFolder(path);
+        directory.CopyFolder(new File(sourcePath),new File(path),mail.getId());
+        directory.DeleteFolder(new File(sourcePath));
+
+
+        return true;
     }
 
-    public boolean delete() {
-        return false;
-    }
+    public void deleteFromIndex(String path ,String id) throws IOException {
+        JSONObject mail=new JSONObject();
+        JSONArray list = listJsonObjects(path);
+        for(int i=0;i<list.size();i++){
+             mail = (JSONObject) list.get(i);
+            if(((String)mail.get("id")).equalsIgnoreCase(id)){
+                break;
+            }
+        }
+        list.remove(mail);
+        addObjectToJson(path,list);
 
+    }
     public void addObjectToJson(String path, JSONArray array) throws IOException{
         File index = new File(path);
         FileWriter writer = new FileWriter(index);
@@ -108,11 +131,12 @@ public class FileManager {
         JSONArray list = listJsonObjects(path);
         if(list.size() == 0)
         {
+            mail.setId("0");
             return;
         }
         JSONObject lastMail = (JSONObject) list.get(list.size() - 1);
-        Long id = Long.parseLong((String)lastMail.get("id")) + 1;
-        mail.setId(id.toString());
+        long id = Long.parseLong((String)lastMail.get("id")) + 1;
+        mail.setId(Long.toString(id));
     }
     public Mail getMailContent(String path) throws IOException, ParseException {
         FileReader reader = new FileReader(path);
@@ -125,7 +149,7 @@ public class FileManager {
         mail.setSender(jsonobject.get("sender").toString());
         mail.setDate(jsonobject.get("date").toString());
         mail.setId(jsonobject.get("id").toString());
-        mail.setPriority(jsonobject.get("priority").toString());
+        mail.setPriority((int)jsonobject.get("priority"));
 //        mail.setAttachments(jsonobject.get(""));
         return mail;
     }

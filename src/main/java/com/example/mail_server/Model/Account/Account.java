@@ -3,6 +3,8 @@ package com.example.mail_server.Model.Account;
 import com.example.mail_server.Model.Contact;
 import com.example.mail_server.Model.DataManagement.FileManager;
 import com.example.mail_server.Model.Mail;
+import com.example.mail_server.Model.Sort.ISortMail;
+import com.example.mail_server.Model.Sort.SortFactory;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -15,6 +17,7 @@ public class Account {
     private String email;
     private String password;
     private LinkedList<Mail> currentFolderMails ;
+    String currentFolderName;
     private LinkedList<Contact> contacts;
     private HashMap<String,LinkedList<Mail>> userFolders;
     private FileManager fileManager;
@@ -29,51 +32,68 @@ public class Account {
         fileManager = new FileManager();
     }
 
+    public boolean CheckContactName(String name) throws IOException {
+        String path = "./Accounts/" + email+ "/" + "contacts.json";
+        JSONArray contacts = fileManager.listJsonObjects(path);
+
+        for ( int i = 0 ;i < contacts.size();i++){
+            JSONObject obj = (JSONObject) contacts.get(i);
+            if(((String) obj.get("name")).equalsIgnoreCase(name)){
+                return false;
+            }
+        }
+
+        return true;
+    }
     public LinkedList<Contact> loadContacts() throws IOException {
         String path = "./Accounts/" + email+ "/" + "contacts.json";
         JSONArray contacts = fileManager.listJsonObjects(path);
-        System.out.println(contacts);
         LinkedList<Contact> contactList = new LinkedList<Contact>();
-        System.out.println(contacts.size());
-        for ( int i = 0 ;i < contacts.size();i++){
-            JSONObject obj = (JSONObject) contacts.get(i);
-           Contact contact=new Contact();
-           contact.setName((String) obj.get("name"));
-            JSONArray Emails=new JSONArray();
-            Emails= (JSONArray) obj.get("email");
-           System.out.println( Emails.size());
-            String[] Contact_Email=new String[Emails.size()];
-            for ( int j = 0 ;j< Emails.size();j++){
+        for (Object o : contacts) {
+            JSONObject obj = (JSONObject) o;
+            Contact contact = new Contact();
+            contact.setName((String) obj.get("name"));
+            JSONArray Emails = new JSONArray();
+            Emails = (JSONArray) obj.get("email");
+            System.out.println(Emails.size());
+            String[] Contact_Email = new String[Emails.size()];
+            for (int j = 0; j < Emails.size(); j++) {
 
-                Contact_Email[j]=(String) Emails.get(j);
+                Contact_Email[j] = (String) Emails.get(j);
 
             }
             contact.setEmail(Contact_Email);
             contactList.add(contact);
         }
 
-
+       this.contacts=contactList;
         return contactList;
     }
+
+
     public LinkedList<Mail> loadFolder(String folderName) throws IOException {
+        this.currentFolderName=folderName;
         String path = "./Accounts/" + email + "/" + folderName + "/index.json";
         JSONArray mails = fileManager.listJsonObjects(path);
-        LinkedList<Mail> mailList = new LinkedList<Mail>();
-        for ( int i = 0 ;i < mails.size();i++){
-            JSONObject obj = (JSONObject) mails.get(i);
-            Mail mail = new Mail();
-            mail.setId((String) obj.get("id"));
-            mail.setDate((String) obj.get("date"));
-            mail.setSender((String) obj.get("sender"));
-            mail.setSubject((String) obj.get("subject"));
-            mail.setBody((String) obj.get("body"));
+        LinkedList<Mail> mailList = new LinkedList<>();
+        for (Object o : mails) {
+            JSONObject obj = (JSONObject) o;
             String[] receivers = new String[1];
             receivers[0] = obj.get("receiver").toString();
-            mail.setReceivers(receivers);
+            Mail mail = new Mail((String) obj.get("subject"),(String) obj.get("body"),
+                    (String) obj.get("sender"),receivers,(String) obj.get("date"), (int)obj.get("priority"));
+            mail.setId((String) obj.get("id"));
             mailList.add(mail);
         }
-        currentFolderMails=mailList;
+        this.currentFolderMails=mailList;
         return mailList;
+    }
+
+    public LinkedList<Mail> sortFolder(String sort){
+        SortFactory sortFactory = new SortFactory();
+        ISortMail sortMail = sortFactory.sortMails(sort);
+        currentFolderMails = (LinkedList<Mail>) sortMail.Sort(currentFolderMails);
+        return currentFolderMails;
     }
 
     public void addUserFolder(String folderName){}
@@ -113,5 +133,8 @@ public class Account {
     public LinkedList<Contact> getContacts() {
         return contacts;
     }
-    
+
+    public String getCurrentFolderName() {
+        return currentFolderName;
+    }
 }

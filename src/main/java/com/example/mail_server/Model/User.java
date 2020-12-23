@@ -3,12 +3,15 @@ package com.example.mail_server.Model;
 import com.example.mail_server.Model.Account.Account;
 import com.example.mail_server.Model.Account.AccountBuilder;
 import com.example.mail_server.Model.Account.AccountProxy;
+import com.example.mail_server.Model.DataManagement.Directory;
 import com.example.mail_server.Model.DataManagement.FileManager;
 import com.example.mail_server.Model.Filter.FilterField;
 import com.example.mail_server.Model.Filter.Filteration;
 import com.example.mail_server.Model.Filter.SenderField;
 import com.example.mail_server.Model.Filter.SubjectField;
 
+import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.LinkedList;
 
@@ -18,6 +21,7 @@ public class User {
     private static AccountProxy proxy;
     private static AccountBuilder builder;
     private static User firstInstance;
+
     private User() {}
     public static User getInstance()
     {
@@ -37,41 +41,32 @@ public class User {
 
     public boolean signIn(String email, String password) throws IOException {
         currentUser = proxy.checkPassword(email, password);
-        if(currentUser == null)
-            return false;
-        return true;
+        return currentUser != null;
     }
-    public boolean Compose(Mail mail) throws IOException {
-        for (String receiver: mail.getReceivers()) {
-            if(!proxy.checkEmail(receiver)){
-                return false;
-            }
+
+    public boolean createNewFolder(String folderName) throws IOException {
+        Directory dir = new Directory();
+        if(dir.createUserFolder(folderName, this.currentUser))
+        {
+            FileManager file = new FileManager();
+            String path = "./Accounts/" + this.currentUser.getEmail() + "/" + folderName + "/index.json";
+            file.listJsonObjects(path);
+            return true;
         }
-        mail.setSender(currentUser.getEmail());
-        FileManager json = new FileManager();
-        String myPath = "./Accounts/"+currentUser.getEmail()+"/sent/index.json";
-        json.setNewID(mail, myPath);
-        String path="./Accounts/"+currentUser.getEmail()+"/sent/"+mail.getId()+".json";
-        json.saveJsonFile(mail, path);
-        json.addMailToIndex(mail, myPath);
-        for (String receiver: mail.getReceivers()) {
-            myPath = "./Accounts/"+receiver+"/inbox/index.json";
-            json.setNewID(mail, myPath);
-            path="./Accounts/"+receiver+"/inbox/"+mail.getId()+".json";
-            json.saveJsonFile(mail,path);
-            json.addMailToIndex(mail, myPath);
-        }
-        return true;
+        return false;
     }
 
     public boolean addContact(Contact contact) throws IOException {
+        if(!currentUser.CheckContactName(contact.getName())){
+            return false;
+        }
         for (String email: contact.getEmail()) {
             if(!proxy.checkEmail(email)){
                 return false; }
         }
         System.out.println("aaaaaaaaaaaaaaa");
         FileManager json = new FileManager();
-        String path="./Accounts/"+"tosahassan97@gmail.com"+"/contacts.json";
+        String path="./Accounts/"+currentUser.getEmail()+"/contacts.json";
         json.addContact(contact,path);
 
         return true;
@@ -89,8 +84,63 @@ public class User {
         return mails;
 
     }
+    public boolean Compose(Mail mail) throws IOException {
+        Directory directory=new Directory();
+        for (String receiver: mail.getReceivers()) {
+            if(!proxy.checkEmail(receiver)){
+                return false;
+            }
+        }
+        mail.setSender(currentUser.getEmail());
+        FileManager json = new FileManager();
+        String myPath = "./Accounts/"+currentUser.getEmail()+"/sent/index.json";
+        json.setNewID(mail, myPath);
+        directory.createFolder("./Accounts/"+currentUser.getEmail()+"/sent/"+mail.getId());
+        String path="./Accounts/"+currentUser.getEmail()+"/sent/"+mail.getId()+"/"+mail.getId()+".json";
+        json.saveJsonFile(mail, path);
+        json.addMailToIndex(mail, myPath);
+        for (String receiver: mail.getReceivers()) {
+            myPath = "./Accounts/"+receiver+"/inbox/index.json";
+            json.setNewID(mail, myPath);
+            directory.createFolder("./Accounts/"+receiver+"/inbox/"+mail.getId());
+            path="./Accounts/"+receiver+"/inbox/"+mail.getId()+"/"+mail.getId()+".json";
+            json.saveJsonFile(mail,path);
+            json.addMailToIndex(mail, myPath);
+        }
+        return true;
+    }
+    public LinkedList<Mail> moveMail(String[] id,String folderName) throws IOException {
+        FileManager json=new FileManager();
+        LinkedList<Mail> mails=currentUser.getCurrentFolderMails();
+        for(int i=0;i<id.length;i++){
+            for(Mail mail: mails){
+                if(mail.getId().equalsIgnoreCase(id[i])){
+                    mails.remove(mail);
+                    json.moveMail(id[i],currentUser,mail,folderName);
 
+                    break;
+                }
+            }
 
+        }
+
+        return mails;
+    }
+
+    public String[] getUserFoldersList()
+    {
+        String path = "./Accounts/" + currentUser.getEmail();
+        File dir = new File(path);
+        String[] directories = dir.list(new FilenameFilter() {
+            @Override
+            public boolean accept(File current, String name) {
+                boolean bool1 = new File(current, name).isDirectory();
+                boolean bool2 = (name.equals("inbox") || name.equals("sent") || name.equals("draft") || name.equals("trash"));
+                return bool1 && !bool2;
+            }
+        });
+        return directories;
+    }
     public Account getCurrentUser() {
         return currentUser;
     }

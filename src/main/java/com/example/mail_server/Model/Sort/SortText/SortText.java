@@ -1,6 +1,7 @@
-package com.example.mail_server.Model.Sort;
+package com.example.mail_server.Model.Sort.SortText;
 
 import com.example.mail_server.Model.Mail;
+import com.example.mail_server.Model.Sort.ISortMail;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -10,7 +11,7 @@ abstract class SortText implements ISortMail {
 
         @Override
         public List<Mail> Sort(LinkedList<Mail> mails) {
-            return divide((Mail[]) mails.toArray(), 0, mails.size());
+            return divide((Mail[]) mails.toArray(), 0, mails.size()-1);
         }
 
         void merge(Mail[] arr, int l, int m, int r) {
@@ -25,6 +26,8 @@ abstract class SortText implements ISortMail {
             /*Copy data to temp arrays*/
             System.arraycopy(arr, l, L, 0, n1);
             System.arraycopy(arr, m + 1, R, 0, n2);
+            System.out.println(Arrays.toString(L));
+            System.out.println(Arrays.toString(R));
             /* Merge the temp arrays */
 
             // Initial indexes of first and second subarrays

@@ -1,5 +1,7 @@
 package com.example.mail_server.Model;
 
+import com.example.mail_server.Model.Sort.SortText.IndicesSorting;
+
 public class Mail {
 
     private String subject;
@@ -7,13 +9,14 @@ public class Mail {
     private String sender;
     private String[] receivers;
     private String date;
-    private String priority;
+    private int priority;
     private String[] attachments;
     private String id = "0" ;
-
+    private Object[] sortedBody;
+    private Object[] sortedSubject;
     public Mail(){}
 
-    public Mail(String subject, String body, String sender, String[] receivers, String date, String priority) {
+    public Mail(String subject, String body, String sender, String[] receivers, String date, int priority) {
         this.subject = subject;
         this.body = body;
         this.sender = sender;
@@ -21,6 +24,9 @@ public class Mail {
         this.date = date;
         this.priority = priority;
         //this.attachments = attachments;
+        IndicesSorting indicesSorting = new IndicesSorting();
+        this.sortedBody = indicesSorting.sortMailContent(body);
+        this.sortedSubject = indicesSorting.sortMailContent(subject);
     }
 
     public String getSubject() {
@@ -63,11 +69,11 @@ public class Mail {
         this.date = date;
     }
 
-    public String getPriority() {
+    public int getPriority() {
         return priority;
     }
 
-    public void setPriority(String priority) {
+    public void setPriority(int priority) {
         this.priority = priority;
     }
 
@@ -85,5 +91,13 @@ public class Mail {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public Object[] getSortedBody() {
+        return sortedBody;
+    }
+
+    public Object[] getSortedSubject() {
+        return sortedSubject;
     }
 }
