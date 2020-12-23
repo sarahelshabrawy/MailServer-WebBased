@@ -8,8 +8,9 @@
           </div>
             <label for="name"></label>
             <input type="text" placeholder="Folder Name" name="name" id="folder">
+            <div id="message-folder"></div>
             <button class="modal-default-button" id="okBtn" @click="addText">
-                OK
+                Ok
             </button>
           </div>
       </div>
@@ -36,7 +37,7 @@ export default {
       var text = document.getElementById("folder");
       this.folderName = text.value;
       console.log(this.folderName);
-      this.$emit('closeFolder', this.folderName);
+      this.$emit('sendFolder', this.folderName);
     }
   }
 }

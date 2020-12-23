@@ -51,8 +51,7 @@ export default {
 }
 .MailBox:hover{
     /* background-color: rgb(214, 214, 168); */
-    box-shadow: 0 0 5px #f5ae92; 
-
+    box-shadow: 0 0 15px #422d25; 
 }
 #hi{
     padding: 0;
