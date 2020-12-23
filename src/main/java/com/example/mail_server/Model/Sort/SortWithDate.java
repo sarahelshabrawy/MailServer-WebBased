@@ -8,7 +8,7 @@ import java.text.SimpleDateFormat;
 
 import java.util.*;
 
-public class SortDate implements ISortMail {
+public class SortWithDate implements ISortMail {
     @Override
     public List<Mail> Sort(LinkedList<Mail> mails) {
         try {

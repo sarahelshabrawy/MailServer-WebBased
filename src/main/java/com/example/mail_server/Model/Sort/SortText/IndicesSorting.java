@@ -1,15 +1,12 @@
 package com.example.mail_server.Model.Sort.SortText;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class IndecesSorting  {
+public class IndicesSorting {
 
-private static class indexedWord{
+public static class indexedWord{
     String word;
     int start ;
     int end;
@@ -23,13 +20,10 @@ private static class indexedWord{
 
 
 
-    public void sortedFileWriter(String mailBody,String subject) {
+    public Object[] sortMailContent(String text) {
 
         LinkedList<indexedWord> temp = new LinkedList<>();
-        try {
-
             String regex = "\\w+";
-            String text = subject +"\n" + mailBody;
             System.out.println(text);
             Pattern pattern = Pattern.compile(regex);
             Matcher matcher = pattern.matcher(text);
@@ -37,17 +31,11 @@ private static class indexedWord{
                 temp.add(new indexedWord(matcher.group(),matcher.start(),matcher.end()-1));
             Object[] arr =  temp.toArray();
             divide(arr,0,arr.length-1);
-            BufferedWriter bw  = new BufferedWriter(new FileWriter("WWW.txt"));
-            bw.write(arr.length+" ");//write length of file in the 1st line
-            for (Object word : arr) {
-                indexedWord castedObject = (indexedWord) word;
-                bw.write("\n" +  castedObject.word + " " + castedObject.start+ " "+ castedObject.end);
-            }
-            bw.close();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
+            return arr;
+//            for (Object word : arr) {
+//                indexedWord castedObject = (indexedWord) word;
+//                bw.write("\n" +  castedObject.word + " " + castedObject.start+ " "+ castedObject.end);
+//            }
     }
 
     void merge(Object[] arr, int l, int m, int r) {
@@ -112,7 +100,7 @@ private static class indexedWord{
     }
 
     public static void main(String[] args) {
-        IndecesSorting h = new IndecesSorting();
-        h.sortedFileWriter("It is a long established fact","AAAA");
+        IndicesSorting h = new IndicesSorting();
+        h.sortMailContent("It is a long established fact");
     }
 }
