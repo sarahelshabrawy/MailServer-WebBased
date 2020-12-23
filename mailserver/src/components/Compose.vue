@@ -112,7 +112,7 @@ export default {
 <style scoped>
 #textArea{
   border: none;
-  height: 417px;
+  height: 350px;
   width: 700x;
 }
 

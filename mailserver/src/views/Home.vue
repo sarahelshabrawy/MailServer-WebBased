@@ -36,36 +36,17 @@
         </div>
       </div>
       <div id="filtering">
-        <div id="filter" @click="clickFilter">Filter results&nbsp;<i class="fas fa-caret-down check-icon" id="check-icon"></i></div>
+        <div id="filter" @click="clickFilter">Filter Mails&nbsp;<i class="fas fa-caret-down check-icon" id="check-icon"></i></div>
         <div id="check-menu">
           <div>
-          <input type="checkbox" value="sender">
-          <label >Sender</label>
+          <label >Sender :  </label>
+          <input type="text" id="sender-filter">
           </div>
           <div>
-          <input type="checkbox" value="receiver">
-          <label>Receiver</label>
+          <label>Subject :  </label>
+          <input type="text" id="subject-filter">
           </div>
-          <div>
-          <input type="checkbox" value="date">
-          <label>Date</label>
-          </div>
-           <div>
-          <input type="checkbox" value="subject">
-          <label>Subject</label>
-          </div>
-           <div>
-          <input type="checkbox" value="importance">
-          <label>Importance</label>
-          </div>
-           <div>
-          <input type="checkbox" value="body">
-          <label>Body</label>
-          </div>
-           <div>
-          <input type="checkbox" value="attachment">
-          <label>Attachment</label>
-          </div>
+          <div id="filter-btn">Filter</div>
         </div>
       </div>
       <div id="search">
@@ -73,26 +54,39 @@
         <i class="fas fa-search searching"></i>
       </div>
     </div>
-    <a href="#" class="float" id = "compose" @click="component = 'compose'" >
-    <i class="fas fa-bars my-float"></i>
+    <a href="#" class="float" id = "compose" @click="component = 'compose'" v-on:click="hideComposeBtn" >
+    <i class="fas fa-plus my-float"></i> Compose
     </a>
     <div id="body">
       <div id="menu">
-        <li id="menuList">
-          <ul id="inbox-menu" @click="setFolder('inbox')">INBOX</ul>
-          <ul id="inbox-menu" @click="setFolder('draft')">DRAFT</ul>
-          <ul id="inbox-menu" @click="setFolder('sent')">SENT</ul>
-          <ul id="inbox-menu" @click="setFolder('trash')">TRASH</ul>
+        <div id="userFoldersList" v-if="openUserFolders">
+        <div id="backToMenu" @click="openUserFolders = false"><i class="fas fa-arrow-alt-circle-left"></i>  Back</div>
+        <li id="users-list" class="menu-styling" v-for="folder in userFoldersList" v-bind:key="folder">
+          <ul @click="setFolder(folder)"><span><i class="far fa-folder-open"></i>  {{folder}}</span></ul>
         </li>
+        </div>
+        <li id="menuList" class="menu-styling" v-if="openUserFolders == false">
+          <ul @click="setFolder('inbox')"><span><i class="fas fa-inbox"></i> Inbox</span></ul>
+          <ul @click="setFolder('draft')"><span><i class="fas fa-archive"></i> Draft</span></ul>
+          <ul @click="setFolder('sent')"><span><i class="fas fa-share-square"></i> Sent</span></ul>
+          <ul @click="setFolder('trash')"><span><i class="fas fa-trash-alt"></i> Trash</span></ul>
+          <ul @click="addFolder = true"><span><i class="fas fa-plus"></i> Add New Folder</span></ul>
+          <ul @click="getUserFolders"><span><i class="fas fa-star"></i> My Folders<i class="fas fa-angle-right icon-arrow"></i></span></ul>
+        </li>
+        <div id="contacts-menu" v-if="openUserFolders == false">
+          <div id="add-contact"><i class="fas fa-user-plus icon"></i>  ADD CONTACT</div>
+          <div id="my-contacts"><i class="fas fa-user-friends icon"></i>  MY CONTACTS</div>
+        </div>
       </div>
+      <AddFolder v-if="addFolder" @sendFolder="sendFolder"></AddFolder>
       <div id="content" >
-        <component :is="component" v-bind:maillist="Mails"></component>
+        <component :is="component" v-bind:maillist="Mails" :currentFolder="currentFolder"></component>
       </div>
     </div>
     <div id="side-bar">
-        <div id="mycheck"><input type="checkbox" value="all" id="selectAll">Select all</div>
-        <div id="trash"><i class="fas fa-trash-alt"></i>Delete</div>
-        <div id="move"><i class="fas fa-folder-open"></i>Move E-mails</div>
+        <div id="mycheck"><input type="checkbox" value="all" id="selectAll">&nbsp;Select all</div>
+        <div id="trash"><i class="fas fa-trash-alt"></i>&nbsp;Delete</div>
+        <div id="move"><i class="fas fa-folder-open"></i>&nbsp;Move E-mails</div>
     </div>
   </div>
 </template>
@@ -100,13 +94,15 @@
 <script>
 import MailView from '../components/MailView.vue'
 import Compose from '../components/Compose.vue'
+import AddFolder from '../components/Add Folder.vue'
 import axios from 'axios'
 let apiUrl = 'http://localhost:8085'
 export default {
   name: 'Home',
   components: {
     'mail-view':MailView,
-    'compose':Compose
+    'compose':Compose,
+    AddFolder
   },
   data()
   {
@@ -115,7 +111,11 @@ export default {
       Mails:[],
       prop:this.Mails,
       currentFolder:"inbox",
-      beforeMount : true
+      beforeMount : true,
+      addFolder: false,
+      folderName:String,
+      userFoldersList:[],
+      openUserFolders: false
     }
   },
   beforeMount(){
@@ -123,16 +123,62 @@ export default {
       this.getMails()
   },
   methods : {
+    getUserFolders()
+    {
+      axios.get(apiUrl + "/getUserFolders"
+      ).then(Response => {
+        let indices = Object.keys( Response.data )
+        console.log("index" + indices);
+        for(let i = 0 ;i < indices.length ; i++){
+          this.userFoldersList[i] = Response.data[indices[i]];
+        }
+      })
+      console.log(this.userFoldersList.toString())
+      this.openUserFolders = true;
+    }
+    ,
+    hideComposeBtn(e)
+    {
+      e.target.style.display = "none";
+    },
+    sendFolder(name)
+    {
+      var message = document.getElementById("message-folder");
+      message.innerHTML = ""
+      if(name === '')
+      {
+        this.addFolder = false;
+        return;
+      }
+      axios.get(apiUrl + "/addFolder", {
+        params:{
+          folderName : name
+        }
+      }).then(Response => {
+        if(Response.data == false)
+        {
+          message.innerHTML = "This folder already exists"
+          return;
+        }
+        else{
+          this.folderName = name;
+          this.addFolder = false;
+        }
+      })
+    },
     setFolder(folder)
     {
       this.currentFolder = folder;
       this.component = 'mail-view';
+      var btn = document.getElementById("compose");
+      btn.style.display = "block";
       this.getMails();
     },
     getMails(){
       axios.get(apiUrl + "/getMails", {
         params:{
           folderName : this.currentFolder
+
         }
       }).then(Response => {
         this.Mails = [];
@@ -183,7 +229,7 @@ export default {
       var icon = document.getElementById("check-icon")
       if(box.style.display === "none")
       {
-        box.style.display = "grid";
+        box.style.display = "block";
         icon.className = "fas fa-caret-up check-icon";
       }
       else
@@ -278,23 +324,31 @@ export default {
   margin-right: -15px;
 }
 .float{
+  display: block;
 	position:fixed;
-	width:60px;
-	height:60px;
-  top: 150px;
-  left: 90px;
-  color: #4a478a;
-	background-color:white;
+	width:130px;
+	height:40px;
+  top: 85%;
+  left: 87%;
+  background-color: #fabaa0;
+  color: white;
 	border-radius:50px;
-	text-align:center;
-	box-shadow: 2px 2px 3px #999;
+	box-shadow: 2px 2px 3px rgb(31, 28, 28);
+  text-decoration: none;
+  font-size: 20px;
+  padding-left: 15px;
+  padding-top: 10px;
+  font-weight: 600;
+  font-family: 'Open sans', serif;
+  text-shadow: 1px 2px #3f3e3e;
 }
 .my-float {
-  margin-top: 20px;
+  margin-right: 6px;
+  margin-top: 5px;
 }
 .float:hover {
-  background-color:  #da8a8b;
-  color: white;
+  color: #fabaa0;
+	background-color:white;
 }
 #upper-bar {
   display: flex;
@@ -328,11 +382,7 @@ export default {
   margin-left: -1%;
   width: 102%;
 }
-#menu {
-  background-color: #4a478a;
-  height: 650px;
-  width: 300px;
-}
+
 #content {
   background-color: white;
   height: 650px;
@@ -344,7 +394,7 @@ export default {
   display: flex;
 	width:1500px;
 	height:25px;
-  left: 16.3%;
+  left: 15.8%;
   top: 20.6%;
   color: white;
 	background-color: #6f6d72;
@@ -435,22 +485,20 @@ export default {
 }
 #filter {
   background-color: #fabaa0;
-  width: 150px;
+  width: 145px;
   height: 25px;
   font-size: 18px;
   font-family: 'Open sans', serif;
   letter-spacing: 1px;
   color: white;
   padding-top: 3px;
-  padding-left: 7px;
+  padding-left: 10px;
   border: 1px, solid, transparent;
   border-radius: 50px;
   cursor: pointer;
 }
 #check-menu {
   position: absolute;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
   background-color: white;
   width: 300px;
   height: 150px;
@@ -460,6 +508,22 @@ export default {
   font-family: 'Open sans', serif;
   letter-spacing: 1px;
   display: none;
+  padding-left: 10px;
+  padding-top: 10px;
+}
+#filter-btn {
+  width: 60px;
+  height: 25px;
+  color: white;
+  background-color: #fabaa0;
+  padding-top: 5px;
+  padding-left: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-left: 180px;
+}
+#sender-filter, #subject-filter {
+  width: 200px;
 }
 #account-info {
   font-size: 15px;
@@ -486,8 +550,64 @@ export default {
   color: #081448;
   font-weight: 600;
 }
-#menuList > ul {
-  font-size: 15px;
-  background-color: pink;
+
+#menu {
+  background: linear-gradient(180deg,  #030b36 0%,rgb(173, 105, 126) 100%);
+  height: 650px;
+  width: 290px;
+  font-family: 'Open sans', serif;
+  color: white;
+  font-weight: 100;
+  letter-spacing: 1px;
+  overflow-y: auto;
+  overflow-x: initial;
+}
+.menu-styling {
+  overflow: hidden;
+}
+.menu-styling  > ul{
+  width: 270px;
+  height: 30px;
+  font-size: 18px;
+  border-bottom: 1px solid rgb(104, 99, 99);
+  padding-bottom: 10px;
+  cursor: pointer;
+}
+#users-list > ul{
+  height: 20px;
+  padding-bottom: 10px;
+  margin-bottom: 0px;
+  font-size: 20px;
+}
+.menu-styling ul > span:hover {
+  color:  #fabaa0;
+  text-shadow: 1px 2px #3f3e3e;
+}
+#add-contact, #my-contacts {
+  margin-left: 45px;
+  border: 1px solid white;
+  width: 160px;
+  height: 35px;
+  border-radius: 50px;
+  font-family: 'Open sans', serif;
+  padding-left: 12px;
+  padding-top: 8px;
+  letter-spacing: 1px;
+  font-weight: 600;
+  margin-top: 30px;
+  cursor: pointer;
+}
+#add-contact:hover, #my-contacts:hover {
+  background-color:  #fabaa0;
+  color: #030b36;
+}
+.icon-arrow {
+  margin-left: 70px;
+}
+#backToMenu {
+  margin-left: 180px;
+  margin-top: 15px;
+  font-size: 18px;
+  cursor: pointer;
 }
 </style>
