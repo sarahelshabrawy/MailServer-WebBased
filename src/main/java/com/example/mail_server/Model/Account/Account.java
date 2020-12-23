@@ -17,6 +17,7 @@ public class Account {
     private String email;
     private String password;
     private LinkedList<Mail> currentFolderMails ;
+    String currentFolderName;
     private LinkedList<Contact> contacts;
     private HashMap<String,LinkedList<Mail>> userFolders;
     private FileManager fileManager;
@@ -31,6 +32,19 @@ public class Account {
         fileManager = new FileManager();
     }
 
+    public boolean CheckContactName(String name) throws IOException {
+        String path = "./Accounts/" + email+ "/" + "contacts.json";
+        JSONArray contacts = fileManager.listJsonObjects(path);
+
+        for ( int i = 0 ;i < contacts.size();i++){
+            JSONObject obj = (JSONObject) contacts.get(i);
+            if(((String) obj.get("name")).equalsIgnoreCase(name)){
+                return false;
+            }
+        }
+
+        return true;
+    }
     public LinkedList<Contact> loadContacts() throws IOException {
         String path = "./Accounts/" + email+ "/" + "contacts.json";
         JSONArray contacts = fileManager.listJsonObjects(path);
@@ -58,6 +72,7 @@ public class Account {
 
 
     public LinkedList<Mail> loadFolder(String folderName) throws IOException {
+        this.currentFolderName=folderName;
         String path = "./Accounts/" + email + "/" + folderName + "/index.json";
         JSONArray mails = fileManager.listJsonObjects(path);
         LinkedList<Mail> mailList = new LinkedList<>();
@@ -119,4 +134,7 @@ public class Account {
         return contacts;
     }
 
+    public String getCurrentFolderName() {
+        return currentFolderName;
+    }
 }
