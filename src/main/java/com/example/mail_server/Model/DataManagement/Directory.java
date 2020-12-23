@@ -35,4 +35,15 @@ public class Directory{
         }
         return false;
     }
+
+    public boolean createUserFolder(String folderName, Account account)
+    {
+        String path = "./Accounts/" + account.getEmail() + "/" + folderName;
+        File folder = new File(path);
+        if(folder.exists())
+            return false;
+        folder.mkdir();
+        return true;
+    }
+
 }

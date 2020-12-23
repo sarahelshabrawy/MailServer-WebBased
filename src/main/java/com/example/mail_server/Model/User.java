@@ -10,6 +10,8 @@ import com.example.mail_server.Model.Filter.Filteration;
 import com.example.mail_server.Model.Filter.SenderField;
 import com.example.mail_server.Model.Filter.SubjectField;
 
+import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.LinkedList;
 
@@ -42,6 +44,17 @@ public class User {
         return currentUser != null;
     }
 
+    public boolean createNewFolder(String folderName) throws IOException {
+        Directory dir = new Directory();
+        if(dir.createUserFolder(folderName, this.currentUser))
+        {
+            FileManager file = new FileManager();
+            String path = "./Accounts/" + this.currentUser.getEmail() + "/" + folderName + "/index.json";
+            file.listJsonObjects(path);
+            return true;
+        }
+        return false;
+    }
 
     public boolean addContact(Contact contact) throws IOException {
         if(!currentUser.CheckContactName(contact.getName())){
@@ -114,6 +127,20 @@ public class User {
         return mails;
     }
 
+    public String[] getUserFoldersList()
+    {
+        String path = "./Accounts/" + currentUser.getEmail();
+        File dir = new File(path);
+        String[] directories = dir.list(new FilenameFilter() {
+            @Override
+            public boolean accept(File current, String name) {
+                boolean bool1 = new File(current, name).isDirectory();
+                boolean bool2 = (name.equals("inbox") || name.equals("sent") || name.equals("draft") || name.equals("trash"));
+                return bool1 && !bool2;
+            }
+        });
+        return directories;
+    }
     public Account getCurrentUser() {
         return currentUser;
     }

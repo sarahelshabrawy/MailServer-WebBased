@@ -86,8 +86,7 @@ public class controller {
     @ResponseBody
     public LinkedList<Mail> getFilteredMails(@RequestParam(value = "sender") String senderField,@RequestParam(value = "subject") String subjectField) {
       LinkedList<Mail> mails= user.filter(senderField,subjectField);
-
-        return mails;
+      return mails;
     }
 
     @CrossOrigin
@@ -120,4 +119,17 @@ public class controller {
            return user.deleteMail(id);
     }
 
+    @CrossOrigin
+    @RequestMapping("/addFolder")
+    @ResponseBody
+    public boolean addFolder(@RequestParam(value = "folderName") String folderName) throws IOException {
+      return User.getInstance().createNewFolder(folderName);
+    }
+
+    @CrossOrigin
+    @RequestMapping("/getUserFolders")
+    @ResponseBody
+    public String[] getUserFolders(){
+        return User.getInstance().getUserFoldersList();
+    }
 }
