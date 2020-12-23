@@ -1,5 +1,5 @@
 <template>
-  <div class="MailsContent">
+  <div class="MailsContent" >
     <div class = "Menu">
       <button id="delete"><i class="material-icons">delete</i></button>
       <button id="Move"><i class="material-icons">move_to_inbox</i></button>      
@@ -12,7 +12,7 @@
       <label class="important">Important:</label> 
       <h1>{{mail.subject}}</h1>
     </div>   
-    <a v-for="attach in mail.Attachments" :key="attach.id" :href="attach" >
+    <a v-for="attach in mail.attachments" :key="attach.id" :href="attach" >
       <img :src= "attach" :alt= "attach" download >
     </a>
     
@@ -32,11 +32,13 @@ export default {
   },
   data(){
     return{
-      beforeMount:true
+      beforeMount:true,
+      mail:{}
     }
   },
   beforeMount(){
-    this.getMailContent()
+    if(this.beforeMount)
+      this.getMailContent()
   },
   methods:{
     getMailContent(){
@@ -46,14 +48,20 @@ export default {
           currentFolder:this.currentFolder
         }
       }).then(Response =>{
-        console.log(Response.data)
+        this.mail = {
+          subject : Response.data.subject,
+          body : Response.data.body,
+          Attachments : Response.data.attachments,
+          sender : Response.data.sender
+        }
+        console.log(this.mail)
       })
-      this.beforeMount = true
+      this.beforeMount = false
     }
 
   },
   mounted() {
-    console.log(this.mail.Attachments)
+    console.log(this.mail)
   },
 }
 </script>
@@ -88,8 +96,7 @@ export default {
 .sender{
   background-color: rgb(255, 247, 254);
   color: #4a478a;
-  width: 150px;
-  height: 20px;
+  display: inline-block;
   margin: 10px;
   border: 1px solid transparent;
   border-radius: 10px;
