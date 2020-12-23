@@ -37,12 +37,12 @@ public class controller {
 
     public controller(){
         user = User.getInstance();
-            Account acc= new Account();
+         /*   Account acc= new Account();
             acc.setName("radwa");
             acc.setEmail("tosahassan97@gmail.com");
             acc.setPassword("123456");
             user.setCurrentUser(acc);
-
+*/
     }
     @CrossOrigin
     @PostMapping("/compose")
@@ -108,6 +108,13 @@ public class controller {
         Account acc = user.getCurrentUser();
         LinkedList<Contact> contacts = acc.loadContacts();
         return contacts;
+    }
+    @CrossOrigin
+    @PostMapping ("/delete")
+    @ResponseBody
+    public LinkedList<Mail> deleteMails(@RequestBody String[] id) throws IOException {
+
+           return user.deleteMail(id);
     }
 
 }

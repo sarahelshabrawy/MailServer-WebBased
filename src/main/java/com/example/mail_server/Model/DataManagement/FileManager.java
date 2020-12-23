@@ -60,10 +60,34 @@ public class FileManager {
         return false;
     }
 
-    public boolean delete() {
-        return false;
+    public boolean deleteMail(String id,Account account,Mail mail) throws IOException {
+        Directory directory=new Directory();
+        String sourcePath="./Accounts/"+account.getEmail()+"/"+account.getCurrentFolderName()+"/"+id;
+        String path="./Accounts/"+account.getEmail()+"/trash/index.json";
+        this.setNewID(mail,path);
+        this.addMailToIndex(mail,path);
+        this.deleteFromIndex("./Accounts/"+account.getEmail()+"/"+account.getCurrentFolderName()+"/index.json",id);
+        path="./Accounts/"+account.getEmail()+"/trash/"+mail.getId();
+        directory.createFolder(path);
+        directory.move(new File(sourcePath),new File(path));
+
+
+        return true;
     }
 
+    public void deleteFromIndex(String path ,String id) throws IOException {
+        JSONObject mail=new JSONObject();
+        JSONArray list = listJsonObjects(path);
+        for(int i=0;i<list.size();i++){
+             mail = (JSONObject) list.get(i);
+            if(((String)mail.get("id")).equalsIgnoreCase(id)){
+                break;
+            }
+        }
+        list.remove(mail);
+        addObjectToJson(path,list);
+
+    }
     public void addObjectToJson(String path, JSONArray array) throws IOException{
         File index = new File(path);
         FileWriter writer = new FileWriter(index);
@@ -108,6 +132,7 @@ public class FileManager {
         JSONArray list = listJsonObjects(path);
         if(list.size() == 0)
         {
+            mail.setId("0");
             return;
         }
         JSONObject lastMail = (JSONObject) list.get(list.size() - 1);
