@@ -99,11 +99,11 @@ public class User {
     public LinkedList<Mail> deleteMail(String[] id) throws IOException {
         FileManager json=new FileManager();
         LinkedList<Mail> mails=currentUser.getCurrentFolderMails();
-        for(int i=0;i<id.length;i++){
-            for(Mail mail: mails){
-                if(mail.getId().equalsIgnoreCase(id[i])){
+        for (String s : id) {
+            for (Mail mail : mails) {
+                if (mail.getId().equalsIgnoreCase(s)) {
                     mails.remove(mail);
-                    json.deleteMail(id[i],currentUser,mail);
+                    json.deleteMail(s, currentUser, mail);
 
                     break;
                 }

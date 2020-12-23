@@ -1,7 +1,7 @@
 package com.example.mail_server.Model.Sort;
 
 import com.example.mail_server.Model.Mail;
-import com.example.mail_server.Model.PriorityQueue;
+import com.example.mail_server.Model.DataStructures.PriorityQueue;
 
 import java.util.LinkedList;
 import java.util.List;
