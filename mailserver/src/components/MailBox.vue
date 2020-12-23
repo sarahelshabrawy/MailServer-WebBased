@@ -1,6 +1,6 @@
 <template>
   <div id ="hi">
-    <div id = "new" class="MailBox"  @click="callMailContent()">
+    <div id = "new" class="MailBox">
         <div>
             <input type="checkbox" >
         </div>
@@ -62,30 +62,31 @@ div {
     overflow: hidden;
     float: left;
     text-align: left;
-    display: block;
     font-size: 17px;
 }
 
 .content{
-    width: 50%;
+    width: 40%;
     color:gray;
     margin: 0;
     height: 20px;
 }
 .date{
-    margin-left: 50px;
-    width: 10%;
+    margin-left: 0px;
+    width: 15%;
     text-align: right;
     height: 20px;
 }
 .sender{
+    display: inline-block;
     font-weight:600;
-    width: 15%;
+    width: 25%;
     height: 20px;
     left: 10%;
     margin-left:20px ;
-    letter-spacing: 2px;
-    font-size: 19px;
+
+    /* letter-spacing: 2px; */
+    font-size: 17px;
 }
 .subject{
     width: 8.5%;
