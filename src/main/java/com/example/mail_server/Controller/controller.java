@@ -137,5 +137,12 @@ public class controller {
         Mail mail = fileManager.getMailContent(path);
         return mail;
     }
+    @CrossOrigin
+    @RequestMapping("/renameFolder")
+    @ResponseBody
+    public boolean renameFolder(@RequestParam(value = "folderName") String folderName, @RequestParam(value = "newFolderName") String newFolderName){
+        System.out.println(folderName + "   " + newFolderName);
+        return User.getInstance().renameFolders(folderName, newFolderName);
+    }
 
 }

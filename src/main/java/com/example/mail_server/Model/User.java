@@ -141,6 +141,10 @@ public class User {
         });
         return directories;
     }
+    public boolean renameFolders(String folderName, String newFolderName)
+    {
+        return false;
+    }
     public Account getCurrentUser() {
         return currentUser;
     }
