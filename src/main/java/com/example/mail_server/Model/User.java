@@ -89,31 +89,43 @@ public class User {
         return mails;
 
     }
+
+    public boolean draft(Mail mail) throws IOException {
+        mail.setSender(currentUser.getEmail());
+        this.saveMail(mail,currentUser.getEmail(),"draft");
+        return true;
+    }
+
     public boolean Compose(Mail mail) throws IOException {
-        Directory directory=new Directory();
+
+        if(!checkReceivers(mail)){return false;}
+        mail.setSender(currentUser.getEmail());
+        this.saveMail(mail,currentUser.getEmail(),"sent");
+        for (String receiver: mail.getReceivers()) {
+          this.saveMail(mail,receiver,"inbox");
+        }
+        return true;
+    }
+
+    public boolean checkReceivers(Mail mail){
         for (String receiver: mail.getReceivers()) {
             if(!proxy.checkEmail(receiver)){
                 return false;
             }
         }
-        mail.setSender(currentUser.getEmail());
-        FileManager json = new FileManager();
-        String myPath = "./Accounts/"+currentUser.getEmail()+"/sent/index.json";
-        json.setNewID(mail, myPath);
-        directory.createFolder("./Accounts/"+currentUser.getEmail()+"/sent/"+mail.getId());
-        String path="./Accounts/"+currentUser.getEmail()+"/sent/"+mail.getId()+"/"+mail.getId()+".json";
-        json.saveJsonFile(mail, path);
-        json.addMailToIndex(mail, myPath);
-        for (String receiver: mail.getReceivers()) {
-            myPath = "./Accounts/"+receiver+"/inbox/index.json";
-            json.setNewID(mail, myPath);
-            directory.createFolder("./Accounts/"+receiver+"/inbox/"+mail.getId());
-            path="./Accounts/"+receiver+"/inbox/"+mail.getId()+"/"+mail.getId()+".json";
-            json.saveJsonFile(mail,path);
-            json.addMailToIndex(mail, myPath);
-        }
         return true;
     }
+    public void saveMail(Mail mail,String E_mail,String folder) throws IOException {
+        Directory directory=new Directory();
+        FileManager json = new FileManager();
+        String myPath = "./Accounts/"+E_mail+"/"+folder+"/index.json";
+        json.setNewID(mail, myPath);
+        directory.createFolder("./Accounts/"+E_mail+"/"+folder+"/"+mail.getId());
+        String path="./Accounts/"+E_mail+"/"+folder+"/"+mail.getId()+"/"+mail.getId()+".json";
+        json.saveJsonFile(mail, path);
+        json.addMailToIndex(mail, myPath);
+    }
+
     public LinkedList<Mail> moveMail(String[] id,String folderName) throws IOException {
         FileManager json=new FileManager();
         LinkedList<Mail> mails=currentUser.getCurrentFolderMails();

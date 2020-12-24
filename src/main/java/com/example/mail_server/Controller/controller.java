@@ -51,6 +51,12 @@ public class controller {
         System.out.println(mail.getBody());
         return user.Compose(mail);
     }
+    @CrossOrigin
+    @PostMapping("/draft")
+    public boolean draft(@RequestBody Mail mail) throws IOException {
+        System.out.println(mail.getBody());
+        return user.draft(mail);
+    }
 
     @CrossOrigin
     @RequestMapping("/createAccount")
@@ -111,7 +117,6 @@ public class controller {
     @PostMapping ("/move")
     @ResponseBody
     public LinkedList<Mail> moveMails(@RequestBody String[] id,String folderName) throws IOException {
-
            return user.moveMail(id,folderName);
     }
 
