@@ -62,7 +62,12 @@
         <div id="userFoldersList" v-if="openUserFolders">
         <div id="backToMenu" @click="openUserFolders = false"><i class="fas fa-arrow-alt-circle-left"></i>  Back</div>
         <li id="users-list" class="menu-styling" v-for="folder in userFoldersList" v-bind:key="folder">
-          <ul @click="setFolder(folder)"><span><i class="far fa-folder-open"></i>  {{folder}}</span></ul>
+          <ul @click="setFolder(folder)"><span><i class="far fa-folder-open"></i>  {{folder}}</span>
+          <div id="options-folder">
+          <div @click="setRenameFolder(folder)" id="rename-folder">Rename</div>
+          <div @click="deleteFolder(folder)" id="delete-folder">Delete</div>
+          </div>
+          </ul>
         </li>
         </div>
         <li id="menuList" class="menu-styling" v-if="openUserFolders == false">
@@ -79,6 +84,7 @@
         </div>
       </div>
       <AddFolder v-if="addFolder" @sendFolder="sendFolder"></AddFolder>
+      <RenameFolder v-if="renameFolderPanel" @renameFolder="renameFolder"></RenameFolder>
       <div id="content" >
         <component :is="component" v-bind:maillist="Mails" :currentFolder="currentFolder"></component>
       </div>
@@ -95,6 +101,7 @@
 import MailView from '../components/MailView.vue'
 import Compose from '../components/Compose.vue'
 import AddFolder from '../components/Add Folder.vue'
+import RenameFolder from '../components/Rename Folder.vue'
 import axios from 'axios'
 let apiUrl = 'http://localhost:8085'
 export default {
@@ -102,7 +109,8 @@ export default {
   components: {
     'mail-view':MailView,
     'compose':Compose,
-    AddFolder
+    AddFolder,
+    RenameFolder
   },
   data()
   {
@@ -115,7 +123,9 @@ export default {
       addFolder: false,
       folderName:String,
       userFoldersList:[],
-      openUserFolders: false
+      openUserFolders: false,
+      renameFolderPanel:false,
+      userFolderName : String
     }
   },
   beforeMount(){
@@ -123,6 +133,53 @@ export default {
       this.getMails()
   },
   methods : {
+    setRenameFolder(name)
+    {
+      this.renameFolderPanel = true;
+      this.userFolderName = name;
+    },
+    renameFolder(newfoldername)
+    {
+      var message = document.getElementById("message-folder-rename");
+      message.innerHTML = ""
+      if(newfoldername === '')
+      {
+        this.renameFolderPanel = false;
+        console.log(this.userFolderName);
+        return;
+      }
+      axios.get(apiUrl + "/renameFolder", {
+        params:{
+          folderName : this.userfoldername,
+          newFolderName : newfoldername
+        }
+      }).then(Response => {
+        if(Response.data == false)
+        {
+          message.innerHTML = "This folder already exists"
+          return;
+        }
+        else{
+          this.renameFolderPanel= false;
+          this.getUserFolders();
+        }
+      })
+    },
+    deleteFolder(foldername)
+    {
+       axios.get(apiUrl + "/deleteFolder", {params:{
+         folderName : foldername
+       }}
+      ).then(Response => {
+        if(!Response.data)
+        {
+          alert("faild to delete folder!");
+        }
+        else{
+          this.getUserFolders();
+        }
+      })
+    },
     getUserFolders()
     {
       axios.get(apiUrl + "/getUserFolders"
@@ -574,9 +631,9 @@ export default {
   cursor: pointer;
 }
 #users-list > ul{
-  height: 20px;
-  padding-bottom: 10px;
+  height: 55px;
   margin-bottom: 0px;
+  padding-bottom: 0;
   font-size: 20px;
 }
 .menu-styling ul > span:hover {
@@ -609,5 +666,19 @@ export default {
   margin-top: 15px;
   font-size: 18px;
   cursor: pointer;
+}
+
+#rename-folder, #delete-folder {
+  color: white;
+  font-size: 17px;
+  cursor: pointer;
+  margin-right: 15px;
+}
+#rename-folder:hover, #delete-folder:hover {
+  color: #fabaa0;
+}
+#options-folder {
+  display: flex;
+  padding-top: 5px;
 }
 </style>
