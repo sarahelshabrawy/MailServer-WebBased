@@ -5,6 +5,7 @@ import com.example.mail_server.Model.Contact;
 import com.example.mail_server.Model.DataManagement.FileManager;
 import com.example.mail_server.Model.Mail;
 import com.example.mail_server.Model.User;
+import com.example.mail_server.Model.indexMail;
 import org.json.simple.parser.ParseException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -68,7 +69,7 @@ public class controller {
     @CrossOrigin
     @RequestMapping("/getMails")
     @ResponseBody
-    public LinkedList<Mail> getListMails(@RequestParam(value = "folderName") String folderName) throws IOException {
+    public LinkedList<indexMail> getListMails(@RequestParam(value = "folderName") String folderName) throws IOException {
         Account acc = user.getCurrentUser();
         return acc.loadFolder(folderName);
     }
@@ -76,7 +77,7 @@ public class controller {
     @CrossOrigin
     @RequestMapping("/sortMails")
     @ResponseBody
-    public LinkedList<Mail> sortMails(@RequestParam(value = "sort") String sort) {
+    public LinkedList<indexMail> sortMails(@RequestParam(value = "sort") String sort) {
         //new ??
         Account acc = user.getCurrentUser();
         return acc.sortFolder(sort);
@@ -86,8 +87,8 @@ public class controller {
     @CrossOrigin
     @RequestMapping("/filter")
     @ResponseBody
-    public LinkedList<Mail> getFilteredMails(@RequestParam(value = "sender") String senderField,@RequestParam(value = "subject") String subjectField) {
-      LinkedList<Mail> mails= user.filter(senderField,subjectField);
+    public LinkedList<indexMail> getFilteredMails(@RequestParam(value = "sender") String senderField,@RequestParam(value = "subject") String subjectField) {
+      LinkedList<indexMail> mails= user.filter(senderField,subjectField);
       return mails;
     }
 
@@ -110,7 +111,7 @@ public class controller {
     @CrossOrigin
     @PostMapping ("/move")
     @ResponseBody
-    public LinkedList<Mail> moveMails(@RequestBody String[] id,String folderName) throws IOException {
+    public LinkedList<indexMail> moveMails(@RequestBody String[] id,String folderName) throws IOException {
 
            return user.moveMail(id,folderName);
     }

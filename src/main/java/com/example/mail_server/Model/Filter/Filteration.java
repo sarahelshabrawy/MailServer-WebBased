@@ -1,6 +1,7 @@
 package com.example.mail_server.Model.Filter;
 
 import com.example.mail_server.Model.Mail;
+import com.example.mail_server.Model.indexMail;
 
 import java.util.LinkedList;
 
@@ -17,8 +18,8 @@ public class Filteration implements FilterField{
           this.subjectFilter=subjectFilter;
    }
     @Override
-    public LinkedList<Mail> filter(LinkedList<Mail> mails) {
-        LinkedList<Mail> SubjectMails=subjectFilter.filter(mails);
+    public LinkedList<indexMail> filter(LinkedList<indexMail> mails) {
+        LinkedList<indexMail> SubjectMails=subjectFilter.filter(mails);
         return senderFilter.filter(SubjectMails);
 
 

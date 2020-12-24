@@ -1,7 +1,7 @@
 package com.example.mail_server.Model.Sort.SortText;
 
-import com.example.mail_server.Model.Mail;
 import com.example.mail_server.Model.Sort.ISortMail;
+import com.example.mail_server.Model.indexMail;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -10,18 +10,18 @@ import java.util.List;
 abstract class SortText implements ISortMail {
 
         @Override
-        public List<Mail> Sort(LinkedList<Mail> mails) {
-            return divide((Mail[]) mails.toArray(), 0, mails.size()-1);
+        public List<indexMail> Sort(LinkedList<indexMail> mails) {
+            return divide((indexMail[]) mails.toArray(), 0, mails.size()-1);
         }
 
-        void merge(Mail[] arr, int l, int m, int r) {
+        void merge(indexMail[] arr, int l, int m, int r) {
             // Find sizes of two subarrays to be merged
             int n1 = m - l + 1;
             int n2 = r - m;
 
             /* Create temp arrays */
-            Mail[] L = new Mail[n1];
-            Mail[] R = new Mail[n2];
+            indexMail[] L = new indexMail[n1];
+            indexMail[] R = new indexMail[n2];
 
             /*Copy data to temp arrays*/
             System.arraycopy(arr, l, L, 0, n1);
@@ -63,7 +63,7 @@ abstract class SortText implements ISortMail {
 
         // Main function that sorts arr[l..r] using
         // merge()
-        List<Mail> divide(Mail[] arr, int l, int r) {
+        List<indexMail> divide(indexMail[] arr, int l, int r) {
             if (l < r) {
                 // Find the middle point
                 int m = (l + r) / 2;
@@ -77,5 +77,5 @@ abstract class SortText implements ISortMail {
             }
             return Arrays.asList(arr);
         }
-        abstract String getStringAttribute(Mail mail);
+        abstract String getStringAttribute(indexMail mail);
     }

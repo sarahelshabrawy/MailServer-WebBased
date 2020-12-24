@@ -1,6 +1,6 @@
 package com.example.mail_server.Model;
 
-import com.example.mail_server.Model.Sort.SortText.IndicesSorting;
+import com.example.mail_server.Model.Sort.SortText.indexedWord;
 
 import java.awt.*;
 import java.util.LinkedList;
@@ -35,7 +35,7 @@ public class Search {
 
             // If the element is present at the
             // middle itself
-            IndicesSorting.indexedWord castedElement = (IndicesSorting.indexedWord) arr[mid];
+            indexedWord castedElement = (indexedWord) arr[mid];
             if (castedElement.getWord().equalsIgnoreCase(x))
                 return findAllOccurrences(arr,mid,x);//return its original index in the UNSORTED array
 
@@ -57,13 +57,13 @@ public class Search {
     public Object[] findAllOccurrences  (Object[] arr,int mid,String x){
         LinkedList<Point> occurrencesIndices = new LinkedList<>();
         for (int i = mid; i < arr.length ; i++) {
-            IndicesSorting.indexedWord castedElement = (IndicesSorting.indexedWord) arr[i];
+            indexedWord castedElement = (indexedWord) arr[i];
             if (castedElement.getWord().equalsIgnoreCase(x))
                 occurrencesIndices.add(new Point(castedElement.getStart(),castedElement.getEnd()));
             else break;
         }
         for (int i = mid-1; i > 0 ; i--) {
-            IndicesSorting.indexedWord castedElement = (IndicesSorting.indexedWord) arr[i];
+            indexedWord castedElement = (indexedWord) arr[i];
             if (castedElement.getWord().equalsIgnoreCase(x))
                 occurrencesIndices.add(new Point(castedElement.getStart(),castedElement.getEnd()));
             else break;

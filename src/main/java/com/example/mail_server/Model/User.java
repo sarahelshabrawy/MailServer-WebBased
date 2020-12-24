@@ -72,8 +72,8 @@ public class User {
         return true;
     }
 
-    public LinkedList<Mail> filter(String senderField,String subjectField){
-        LinkedList<Mail> mails = currentUser.getCurrentFolderMails();
+    public LinkedList<indexMail> filter(String senderField,String subjectField){
+        LinkedList<indexMail> mails = currentUser.getCurrentFolderMails();
         FilterField sender= new SenderField();
         sender.setFilter(senderField);
         FilterField subject= new SubjectField();
@@ -94,29 +94,31 @@ public class User {
         mail.setSender(currentUser.getEmail());
         FileManager json = new FileManager();
         String myPath = "./Accounts/"+currentUser.getEmail()+"/sent/index.json";
-        json.setNewID(mail, myPath);
+        mail.setId(json.setNewID(myPath));
         directory.createFolder("./Accounts/"+currentUser.getEmail()+"/sent/"+mail.getId());
         String path="./Accounts/"+currentUser.getEmail()+"/sent/"+mail.getId()+"/"+mail.getId()+".json";
         json.saveJsonFile(mail, path);
-        json.addMailToIndex(mail, myPath);
+        indexMail indexMail = new indexMail(mail.getSubject(),mail.getBody(),mail.getSender(),mail.getReceivers()[0],mail.getDate(),mail.getPriority());
+        json.addMailToIndex(indexMail, myPath);
         for (String receiver: mail.getReceivers()) {
             myPath = "./Accounts/"+receiver+"/inbox/index.json";
-            json.setNewID(mail, myPath);
+//            json.setNewID(mail, myPath);
+            mail.setId(json.setNewID(myPath));
             directory.createFolder("./Accounts/"+receiver+"/inbox/"+mail.getId());
             path="./Accounts/"+receiver+"/inbox/"+mail.getId()+"/"+mail.getId()+".json";
             json.saveJsonFile(mail,path);
-            json.addMailToIndex(mail, myPath);
+            json.addMailToIndex(indexMail, myPath);
         }
         return true;
     }
-    public LinkedList<Mail> moveMail(String[] id,String folderName) throws IOException {
+    public LinkedList<indexMail> moveMail(String[] id,String folderName) throws IOException {
         FileManager json=new FileManager();
-        LinkedList<Mail> mails=currentUser.getCurrentFolderMails();
-        for(int i=0;i<id.length;i++){
-            for(Mail mail: mails){
-                if(mail.getId().equalsIgnoreCase(id[i])){
+        LinkedList<indexMail> mails=currentUser.getCurrentFolderMails();
+        for (String s : id) {
+            for (indexMail mail : mails) {
+                if (mail.getId().equalsIgnoreCase(s)) {
                     mails.remove(mail);
-                    json.moveMail(id[i],currentUser,mail,folderName);
+                    json.moveMail(s, currentUser, mail, folderName);
 
                     break;
                 }

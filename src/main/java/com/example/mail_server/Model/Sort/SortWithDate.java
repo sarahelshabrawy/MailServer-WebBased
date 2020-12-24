@@ -1,6 +1,6 @@
 package com.example.mail_server.Model.Sort;
 
-import com.example.mail_server.Model.Mail;
+import com.example.mail_server.Model.indexMail;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -10,23 +10,23 @@ import java.util.*;
 
 public class SortWithDate implements ISortMail {
     @Override
-    public List<Mail> Sort(LinkedList<Mail> mails) {
+    public List<indexMail> Sort(LinkedList<indexMail> mails) {
         try {
-            return divide((Mail[]) mails.toArray(), 0, mails.size());
+            return divide((indexMail[]) mails.toArray(), 0, mails.size());
         }
         catch (ParseException ignored){
             return null;
         }
     }
 
-    void merge(Mail[] arr, int l, int m, int r) throws ParseException {
+    void merge(indexMail[] arr, int l, int m, int r) throws ParseException {
         // Find sizes of two subarrays to be merged
         int n1 = m - l + 1;
         int n2 = r - m;
 
         /* Create temp arrays */
-        Mail[] L = new Mail[n1];
-        Mail[] R = new Mail[n2];
+        indexMail[] L = new indexMail[n1];
+        indexMail[] R = new indexMail[n2];
 
         /*Copy data to temp arrays*/
         System.arraycopy(arr, l, L, 0, n1);
@@ -70,7 +70,7 @@ public class SortWithDate implements ISortMail {
 
     // Main function that sorts arr[l..r] using
     // merge()
-    List<Mail> divide(Mail[] arr, int l, int r )throws ParseException {
+    List<indexMail> divide(indexMail[] arr, int l, int r )throws ParseException {
         if (l < r) {
             // Find the middle point
             int m = (l + r) / 2;

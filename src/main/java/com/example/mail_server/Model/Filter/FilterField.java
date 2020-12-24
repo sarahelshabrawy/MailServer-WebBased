@@ -1,9 +1,9 @@
 package com.example.mail_server.Model.Filter;
 
 import java.util.LinkedList;
-import com.example.mail_server.Model.Mail;
+import com.example.mail_server.Model.indexMail;
 
 public interface FilterField {
-    public LinkedList<Mail> filter(LinkedList<Mail> mails);
+    public LinkedList<indexMail> filter(LinkedList<indexMail> mails);
     public void setFilter(String subject);
 }

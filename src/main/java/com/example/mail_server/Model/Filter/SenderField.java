@@ -1,17 +1,18 @@
 package com.example.mail_server.Model.Filter;
 
 import com.example.mail_server.Model.Mail;
+import com.example.mail_server.Model.indexMail;
 
 import java.util.LinkedList;
 
 public class SenderField implements FilterField {
     private String sender;
     @Override
-    public LinkedList<Mail> filter(LinkedList<Mail> mails) {
-        LinkedList<Mail> SenderMails =new LinkedList<Mail>();
+    public LinkedList<indexMail> filter(LinkedList<indexMail> mails) {
+        LinkedList<indexMail> SenderMails = new LinkedList<>();
 
 
-        for(Mail mail : mails){
+        for(indexMail mail : mails){
             if(mail.getSubject().equalsIgnoreCase(sender)){
                 SenderMails.add(mail);
             }

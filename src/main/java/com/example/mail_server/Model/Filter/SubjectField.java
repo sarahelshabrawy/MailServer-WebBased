@@ -1,6 +1,7 @@
 package com.example.mail_server.Model.Filter;
 
 import com.example.mail_server.Model.Mail;
+import com.example.mail_server.Model.indexMail;
 
 import java.util.LinkedList;
 
@@ -9,11 +10,11 @@ public class SubjectField implements FilterField {
     private  String subject;
 
     @Override
-    public LinkedList<Mail> filter(LinkedList<Mail> mails ){
-        LinkedList<Mail> SubjectMails =new LinkedList<Mail>();
+    public LinkedList<indexMail> filter(LinkedList<indexMail> mails) {
+        LinkedList<indexMail> SubjectMails =new LinkedList<>();
 
 
-        for(Mail mail : mails){
+        for(indexMail mail : mails){
             if(mail.getSubject().equalsIgnoreCase(subject)){
                 SubjectMails.add(mail);
             }
