@@ -18,23 +18,16 @@
       <div id="message"></div>
 
     </div>
-    <button id="show-modal" @click="showModal = true">Show Modal</button>
-    <add-contact v-if="showModal" @close="showModal = false">
-    </add-contact>  </div>
+  </div>
 </template>
 
 <script>
-import AddContact from '../components/Add Contact'
 import axios from 'axios'
 const apiLink = 'http://localhost:8085'
 
 export default {
   name: "Register",
-  data(){
-    return{
-      showModal: false
-    }
-  },mounted() {
+  mounted() {
     this.highlight()
   },
   methods:{
@@ -78,9 +71,6 @@ export default {
 
     }
 
-  },
-  components:{
-    AddContact
   }
 }
 </script>

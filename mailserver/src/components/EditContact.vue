@@ -4,13 +4,13 @@
       <div class="modal-wrapper">
         <div class="modal-container">
           <div class="header">
-            Add Contact
+            Edit Contact
           </div>
             <label for="name"></label>
-            <input type="text" placeholder="Name" name="name" id="name" required>
-          <div id="mails">
+            <input type="text"  name="name" id="new_name" :value="name"  required>
+          <div id="new_mails">
             <label for="email"></label>
-            <input type="text" placeholder="Primary Email" name="email" id="primaryEmail" required>
+            <input type="text" name="email" v-for="email in emails" :key="email.id" :value="email" class="new_email" required>
           </div>
           <button class="add-secondary-mail" v-on:click="addMail">
             + Add secondary mail
@@ -29,14 +29,18 @@ let contact= {};
 import axios from 'axios'
 export default {
   name : "AddContact",
+  props:{
+      emails:Array,
+      name:String
+  },
   data() {
     return {
-      secondaryMailsCount : 0
+      secondaryMailsCount : 0,
     }
   },
   methods:{
     addMail(){
-      const mailsContainer = document.getElementById("mails")
+      const mailsContainer = document.getElementById("new_mails")
       const input = document.createElement("input");
       input.type = "text";
       input.name = "email" ;
@@ -49,17 +53,23 @@ export default {
 
     
     sendContact(){
-       var email =[];
-       var name = document.getElementById("name").value;
-       email[0]=document.getElementById("primaryEmail").value;
-       for(var i = 0;i<this.secondaryMailsCount;i++){
-          email[i+1]=document.getElementById("Secondary Mail "+ (parseInt(i) + 1 )).value;
-       }
-       contact={
-         name:name,
-         email:email
+        var email =[];
+        var name = document.getElementById("new_name").value,
+            emails = document.getElementsByClassName("new_email");
+        var j ; 
+        for(j = 0 ; j < emails.length;j++){
+            email[j] = emails[j].value
+        } 
+        for(var i = 0;i<this.secondaryMailsCount;i++){
+            email[i+j]=document.getElementById("Secondary Mail "+ (parseInt(i) + 1 )).value;
 
-       }
+        }
+        contact={
+            name:name,
+            email:email
+
+        }
+        console.log(contact)
         axios.post('http://localhost:8085//addContact',contact)
       .then(response => {
         console.log(response.data)

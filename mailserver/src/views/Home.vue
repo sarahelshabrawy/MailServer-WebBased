@@ -1,5 +1,6 @@
 <template>
   <div id="home">
+  <add-contact v-if="addContact" @close="addContact = false"  ></add-contact>
     <div id="brand">
         <h1>COMET</h1>
         <img src="..\assets\1.jpg" id="image">
@@ -74,8 +75,8 @@
           <ul @click="getUserFolders"><span><i class="fas fa-star"></i> My Folders<i class="fas fa-angle-right icon-arrow"></i></span></ul>
         </li>
         <div id="contacts-menu" v-if="openUserFolders == false">
-          <div id="add-contact"><i class="fas fa-user-plus icon"></i>  ADD CONTACT</div>
-          <div id="my-contacts"><i class="fas fa-user-friends icon"></i>  MY CONTACTS</div>
+          <div id="add-contact" @click="addContact = true"><i class="fas fa-user-plus icon"></i>  ADD CONTACT</div>
+          <div id="my-contacts" @click="component = 'contact-view'"><i class="fas fa-user-friends icon"></i>  MY CONTACTS</div>
         </div>
       </div>
       <AddFolder v-if="addFolder" @sendFolder="sendFolder"></AddFolder>
@@ -93,16 +94,20 @@
 
 <script>
 import MailView from '../components/MailView.vue'
+import ContactView from '../components/ContactView.vue'
 import Compose from '../components/Compose.vue'
 import AddFolder from '../components/Add Folder.vue'
 import axios from 'axios'
+import AddContact from '../components/Add Contact.vue'
 let apiUrl = 'http://localhost:8085'
 export default {
   name: 'Home',
   components: {
     'mail-view':MailView,
     'compose':Compose,
-    AddFolder
+    'contact-view':ContactView,
+    AddFolder,
+    AddContact
   },
   data()
   {
@@ -115,7 +120,8 @@ export default {
       addFolder: false,
       folderName:String,
       userFoldersList:[],
-      openUserFolders: false
+      openUserFolders: false,
+      addContact:false
     }
   },
   beforeMount(){
@@ -440,7 +446,7 @@ export default {
 	width:1500px;
 	height:25px;
   left: 15.8%;
-  top: 20.6%;
+  top: 21.1%;
   color: white;
 	background-color: #6f6d72;
   font-family: 'Open sans', serif;
