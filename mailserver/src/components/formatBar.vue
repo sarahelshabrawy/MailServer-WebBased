@@ -24,8 +24,6 @@
         <input type ="number" id = "num_input"  max = "30" min = "0" value="30" @change="changeRange();$emit('setwidth',lineValue)">
             
     </span>
-    
-
 
     <!-- <button class="attach"> </button>-->
       <span class="image-upload">
@@ -51,8 +49,9 @@
        <span class="space"></span>
         <span class="space"></span>
 
-<span id="delete" @click="$emit('send_mail','draft')">
-         Save to Draft<i class="fas fa-archive"></i>
+<span  id="delete" @click="$emit('send_mail','draft')">
+  <span id="draft"><i style="margin-left:8px;" class="fas fa-archive"></i>  Save to Draft</span>
+     
 </span>
      
   </div>
@@ -109,28 +108,23 @@ export default {
      
         var num = document.getElementById("num_input");
         num.id = this.num_id;
-       
-        
   },
 
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style  scoped>
 #formatBar{
-   position: absolute;
+   
    height: 45px;
    width: 1300px;
    background-color: #faeeea;
-   padding-top: 5px;
   
 }
  button, input[type=number], #Inputs{
   display: block;
   float: left;
 }
-
 
 input[type=number]{
   width: 50px;
@@ -150,11 +144,18 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 #delete{
-  margin-left:400px ;
-  font-family: 'Open sans', serif;
- 
+  margin-left:370px ;
 }
-
+#draft{
+  font-family: 'Open sans', serif;
+  font-size: 20px;
+   border: 2px solid #fabba2;
+  border-radius: 12px;
+  
+}
+#draft:hover{
+  background-color: #fabba2;
+}
 #Inputs{
   padding: 2px;
   margin: 0%;
@@ -173,15 +174,12 @@ input[type=number]::-webkit-outer-spin-button {
     position: absolute;
      margin: 9px;
       margin-top: 9px;
-   
-
 }
 .textFormat>input{
     position: relative;
 }
 .button {
   border: none;
-
   padding: 16px 32px;
   text-align: center;
   text-decoration: none;
@@ -193,7 +191,6 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .Send{
- 
   background-color: #fabba2; 
   color: black; 
   border: 2px solid purple;
@@ -202,8 +199,6 @@ input[type=number]::-webkit-outer-spin-button {
   border-radius: 12px;
   margin-left: 9px;
   margin-right: 200px;
-  
-  
 
 }
 .switch input { 
