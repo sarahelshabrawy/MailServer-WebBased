@@ -21,6 +21,18 @@ import java.util.Collections;
 
 public class FileManager {
 
+    public void removeContact(String path, String name) throws IOException {
+        JSONArray contacts = listJsonObjects(path);
+        System.out.println(contacts);
+        for (int i = 0 ; i < contacts.size() ;i++) {
+            JSONObject jsonobject = (JSONObject) contacts.get(i);
+            if(jsonobject.get("name").equals(name)){
+                contacts.remove(i);
+            }
+        }
+        System.out.println(contacts);
+        addObjectToJson(path,contacts);
+    }
 
     public void addContact(Contact contact,String path) throws IOException {
         JSONArray contacts = listJsonObjects(path);

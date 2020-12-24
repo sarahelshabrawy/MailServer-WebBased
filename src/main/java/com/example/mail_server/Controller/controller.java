@@ -38,12 +38,6 @@ public class controller {
 
     public controller(){
         user = User.getInstance();
-         /*   Account acc= new Account();
-            acc.setName("radwa");
-            acc.setEmail("tosahassan97@gmail.com");
-            acc.setPassword("123456");
-            user.setCurrentUser(acc);
-*/
     }
     @CrossOrigin
     @PostMapping("/compose")
@@ -104,6 +98,15 @@ public class controller {
         return user.addContact(contact);
     }
 
+    @CrossOrigin
+    @GetMapping("/removeContact")
+    public boolean  removeContact(@RequestParam (value = "id") String id ) throws IOException {
+        String path = "./Accounts/" + user.getCurrentUser().getEmail() + "/contacts.json";
+        System.out.println("HHHHHHHHHHHHH");
+        FileManager fileManager = new FileManager();
+        fileManager.removeContact(path,id);
+        return true;
+    }
 
     @CrossOrigin
     @RequestMapping("/getContacts")
