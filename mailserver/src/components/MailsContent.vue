@@ -3,13 +3,13 @@
     <div class = "Menu">
       <button id="delete"><i class="material-icons">delete</i></button>
       <button id="Move"><i class="material-icons">move_to_inbox</i></button>      
-      <div class="input_slider">
+      <!-- <div class="input_slider">
         <label class="switch">
         <input type="checkbox" checked>
         <span class="slider round"></span>
         </label>
       </div>
-      <label class="important">Important:</label> 
+      <label class="important">Important:</label>  -->
       <h1>{{mail.subject}}</h1>
     </div>   
     <a v-for="attach in mail.attachments" :key="attach.id" :href="attach" >
@@ -124,7 +124,7 @@ h1,h4,h3{
   font-family: 'Open sans', serif;
   letter-spacing:1px
 }
-/* Important */
+/* Important
 .input_slider{
   padding:0 ;
   margin: 9px;
@@ -185,13 +185,13 @@ input:checked + .slider:before {
   transform: translateX(26px);
 }
 
-/* Rounded sliders */
+/* Rounded sliders 
 .slider.round {
   border-radius: 34px;
 }
 
 .slider.round:before {
   border-radius: 50%;
-}
+} */
 
 </style>
