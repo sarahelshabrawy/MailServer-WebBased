@@ -12,9 +12,6 @@ public class Mail {
     private int priority;
     private String[] attachments;
     private String id = "0" ;
-    private Object[] sortedBody;
-    private Object[] sortedSubject;
-    private IndicesSorting indicesSorting = new IndicesSorting();
 
     public Mail(){}
 
@@ -34,7 +31,6 @@ public class Mail {
     }
 
     public void setSubject(String subject) {
-        this.sortedSubject = indicesSorting.sortMailContent(subject);
         this.subject = subject;
     }
 
@@ -43,7 +39,6 @@ public class Mail {
     }
 
     public void setBody(String body) {
-        this.sortedBody = indicesSorting.sortMailContent(body);
         this.body = body;
     }
 
@@ -93,22 +88,6 @@ public class Mail {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public Object[] getSortedBody() {
-        return sortedBody;
-    }
-
-    public Object[] getSortedSubject() {
-        return sortedSubject;
-    }
-
-    public void setSortedBody(Object[] sortedBody) {
-        this.sortedBody = sortedBody;
-    }
-
-    public void setSortedSubject(Object[] sortedSubject) {
-        this.sortedSubject = sortedSubject;
     }
 
 }

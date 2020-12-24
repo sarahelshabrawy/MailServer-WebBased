@@ -17,9 +17,9 @@ public class Search {
         }
     }
 
-    public LinkedList<searchResults> search(LinkedList<Mail> mails, String x){
+    public LinkedList<searchResults> search(LinkedList<indexMail> mails, String x){
         LinkedList<searchResults> searchResults = new LinkedList<>();
-        for(Mail mail : mails){
+        for(indexMail mail : mails){
             Point[] occurrences = (Point[]) binarySearch(mail.getSortedSubject(),0,mail.getSortedSubject().length-1,x);
             if(occurrences!=null)
                 searchResults.add(new searchResults(mail, occurrences));
