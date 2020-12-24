@@ -14,7 +14,7 @@
   </textarea>
   </div>
 
-   <formatBar @attach_file="setAttachment()" @importance="setImportance()" @send_mail="setmail()"></formatBar>
+   <formatBar @attach_file="setAttachment()" @importance="setImportance()" @send_mail="setmail" ></formatBar>
 
   </div>
 </template>
@@ -23,6 +23,7 @@
 let mail= {};
 import formatBar from './formatBar.vue'
 import axios from 'axios'
+let apiUrl = 'http://localhost:8085//';
 export default {
   name: 'Compose',
  
@@ -95,7 +96,8 @@ export default {
       console.log(this.importance)
 
     },
-    setmail(){
+    setmail(folder){
+      console.log(folder)
       this.setDate();
       this.setImportance();
       mail={
@@ -108,7 +110,8 @@ export default {
 
       },
       console.log(mail)
-      axios.post('http://localhost:8085//compose',mail)
+
+      axios.post(apiUrl+folder,mail)
       .then(response => {
         console.log(response.data)
         

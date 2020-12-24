@@ -15,7 +15,7 @@
   
 
  <span id="sending">
-   <button class="Send" @click="$emit('send_mail')">Send</button>
+   <button class="Send" @click="$emit('send_mail','compose')">Send</button>
 </span>
 
  <span class="space"></span>
@@ -51,8 +51,8 @@
        <span class="space"></span>
         <span class="space"></span>
 
-<span id="delete">
-         <i class="material-icons" style="color:#fabba2  " >delete</i>
+<span id="delete" @click="$emit('send_mail','draft')">
+         Save to Draft<i class="fas fa-archive"></i>
 </span>
      
   </div>
@@ -150,7 +150,8 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 #delete{
-  margin-left:500px ;
+  margin-left:400px ;
+  font-family: 'Open sans', serif;
  
 }
 
