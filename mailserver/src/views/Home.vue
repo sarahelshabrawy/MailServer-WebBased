@@ -46,7 +46,7 @@
           <label>Subject :  </label>
           <input type="text" id="subject-filter">
           </div>
-          <div id="filter-btn">Filter</div>
+          <div id="filter-btn" @click="getFilteredMail()">Filter</div>
         </div>
       </div>
       <div id="search">
@@ -247,9 +247,54 @@ export default {
     {
       var acc = document.getElementById("account-info");
       acc.style.display = "none";
+    },
+
+
+    getFilteredMail(){
+      var sender =document.getElementById("sender-filter").value;
+      var subject=document.getElementById("subject-filter").value;
+       axios.get(apiUrl + '/filter', {
+        params:
+        {
+          sender: sender,
+          subject: subject 
+        }
+      })
+      .then(response => {
+          console.log("hello"+response.data.length)
+          console.log(response.data)
+           this.Mails = [];
+        
+        for(let i = 0 ;i < response.data.length ; i++){
+          this.Mails[i] = {
+            id : response.data[i].id,
+            subject : response.data[i].subject,
+            sender : response.data[i].sender,
+            body : response.data[i].body,
+            date : response.data[i].date,
+            receiver : response.data[i].receiver
+          }
+        }
+          console.log("mama"+this.Mails)
+           
+      })
+     
+       // this.component = 'mail-view';
     }
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
 </script>
 
 <style scoped>
