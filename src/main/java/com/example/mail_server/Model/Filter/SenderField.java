@@ -10,12 +10,14 @@ public class SenderField implements FilterField {
     public LinkedList<Mail> filter(LinkedList<Mail> mails) {
         LinkedList<Mail> SenderMails =new LinkedList<Mail>();
 
-
+ System.out.println(sender);
         for(Mail mail : mails){
-            if(mail.getSubject().equalsIgnoreCase(sender)){
+            if(mail.getSender().contains(sender)){
+
                 SenderMails.add(mail);
             }
         }
+
         return SenderMails;
     }
 

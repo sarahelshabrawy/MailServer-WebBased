@@ -12,9 +12,9 @@ public class SubjectField implements FilterField {
     public LinkedList<Mail> filter(LinkedList<Mail> mails ){
         LinkedList<Mail> SubjectMails =new LinkedList<Mail>();
 
-
+        System.out.println(subject);
         for(Mail mail : mails){
-            if(mail.getSubject().equalsIgnoreCase(subject)){
+            if(mail.getSubject().contains(subject)){
                 SubjectMails.add(mail);
             }
         }

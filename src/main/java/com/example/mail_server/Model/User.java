@@ -79,7 +79,12 @@ public class User {
         FilterField subject= new SubjectField();
         subject.setFilter(subjectField);
         FilterField totalFilter= new Filteration(sender,subject);
-        mails=totalFilter.filter(mails);
+        if(senderField==null){
+            mails=subject.filter(mails); }
+        else if(subjectField==null){
+            mails=sender.filter(mails); }
+        else{
+            mails=totalFilter.filter(mails); }
 
         return mails;
 
