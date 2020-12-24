@@ -1,4 +1,4 @@
-package com.example.mail_server.Model;
+package com.example.mail_server.Model.DataStructures;
 
 import java.util.LinkedList;
 

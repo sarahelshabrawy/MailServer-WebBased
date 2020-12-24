@@ -3,8 +3,10 @@ package com.example.mail_server.Model.DataManagement;
 import com.example.mail_server.Model.Account.Account;
 import com.example.mail_server.Model.Contact;
 import com.example.mail_server.Model.Mail;
+import com.example.mail_server.Model.Sort.SortText.IndicesSorting;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.json.simple.JSONArray;
@@ -14,6 +16,7 @@ import org.junit.Assert;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Collections;
 
 public class FileManager {
@@ -42,6 +45,9 @@ public class FileManager {
         addObjectToJson(path,accounts);
     }
 
+
+
+
     public void addMailToIndex(Mail mail, String path) throws IOException {
         JSONArray mails = listJsonObjects(path);
         JSONObject newMail = new JSONObject();
@@ -52,6 +58,31 @@ public class FileManager {
         newMail.put("date", mail.getDate());
         newMail.put("body", mail.getBody());
         newMail.put("priority",mail.getPriority());
+
+        JSONArray sortedBody = new JSONArray();
+        for(Object word : mail.getSortedBody()){
+            JSONObject wordJson = new JSONObject();
+            IndicesSorting.indexedWord castedObject = (IndicesSorting.indexedWord)word ;
+            wordJson.put("word",castedObject.getWord());
+            wordJson.put("start",castedObject.getStart());
+            wordJson.put("end",castedObject.getEnd());
+            sortedBody.add(wordJson);
+
+        }
+
+        JSONArray sortedSubject = new JSONArray();
+        for(Object word : mail.getSortedSubject()){
+            JSONObject wordJson = new JSONObject();
+            IndicesSorting.indexedWord castedObject = (IndicesSorting.indexedWord)word ;
+            wordJson.put("word",castedObject.getWord());
+            wordJson.put("start",castedObject.getStart());
+            wordJson.put("end",castedObject.getEnd());
+            sortedBody.add(wordJson);
+
+        }
+
+        newMail.put("sortedBody",sortedBody);
+        newMail.put("sortedSubject",sortedSubject);
         mails.add(newMail);
         addObjectToJson(path,mails);
     }
@@ -77,9 +108,9 @@ public class FileManager {
     public void deleteFromIndex(String path ,String id) throws IOException {
         JSONObject mail=new JSONObject();
         JSONArray list = listJsonObjects(path);
-        for(int i=0;i<list.size();i++){
-             mail = (JSONObject) list.get(i);
-            if(((String)mail.get("id")).equalsIgnoreCase(id)){
+        for (Object o : list) {
+            mail = (JSONObject) o;
+            if (((String) mail.get("id")).equalsIgnoreCase(id)) {
                 break;
             }
         }
@@ -87,6 +118,8 @@ public class FileManager {
         addObjectToJson(path,list);
 
     }
+
+
     public void addObjectToJson(String path, JSONArray array) throws IOException{
         File index = new File(path);
         FileWriter writer = new FileWriter(index);
@@ -107,6 +140,7 @@ public class FileManager {
             return array;
         }
         JSONParser jsonParser = new JSONParser();
+        System.out.println("YASARAAAH"+path);
         try {
             JSONArray jsonArray= (JSONArray) jsonParser.parse( new FileReader(path) );
             System.out.println(jsonArray);
@@ -128,9 +162,10 @@ public class FileManager {
         }
     }
     public void setNewID(Mail mail, String path) throws IOException {
+        //leih keda
         JSONArray list = listJsonObjects(path);
-        if(list.size() == 0)
-        {
+            if(list == null || list.size() == 0)
+            {
             mail.setId("0");
             return;
         }
@@ -149,7 +184,7 @@ public class FileManager {
         mail.setSender(jsonobject.get("sender").toString());
         mail.setDate(jsonobject.get("date").toString());
         mail.setId(jsonobject.get("id").toString());
-        mail.setPriority((int)jsonobject.get("priority"));
+        mail.setPriority(((Long) jsonobject.get("priority")).intValue());
 //        mail.setAttachments(jsonobject.get(""));
         return mail;
     }

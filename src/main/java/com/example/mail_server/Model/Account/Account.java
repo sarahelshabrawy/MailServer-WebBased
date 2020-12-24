@@ -5,10 +5,14 @@ import com.example.mail_server.Model.DataManagement.FileManager;
 import com.example.mail_server.Model.Mail;
 import com.example.mail_server.Model.Sort.ISortMail;
 import com.example.mail_server.Model.Sort.SortFactory;
+import com.example.mail_server.Model.Sort.SortText.IndicesSorting;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import com.google.gson.Gson;
+
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -36,9 +40,9 @@ public class Account {
         String path = "./Accounts/" + email+ "/" + "contacts.json";
         JSONArray contacts = fileManager.listJsonObjects(path);
 
-        for ( int i = 0 ;i < contacts.size();i++){
-            JSONObject obj = (JSONObject) contacts.get(i);
-            if(((String) obj.get("name")).equalsIgnoreCase(name)){
+        for (Object contact : contacts) {
+            JSONObject obj = (JSONObject) contact;
+            if (((String) obj.get("name")).equalsIgnoreCase(name)) {
                 return false;
             }
         }
@@ -74,18 +78,24 @@ public class Account {
     public LinkedList<Mail> loadFolder(String folderName) throws IOException {
         this.currentFolderName=folderName;
         String path = "./Accounts/" + email + "/" + folderName + "/index.json";
+        System.out.println(path);
         JSONArray mails = fileManager.listJsonObjects(path);
+        System.out.println(mails.toJSONString());
+        System.out.println(mails.size()+"WWW");
         LinkedList<Mail> mailList = new LinkedList<>();
         for (Object o : mails) {
             JSONObject obj = (JSONObject) o;
             String[] receivers = new String[1];
             receivers[0] = obj.get("receiver").toString();
             Mail mail = new Mail((String) obj.get("subject"),(String) obj.get("body"),
-                    (String) obj.get("sender"),receivers,(String) obj.get("date"), (int)obj.get("priority"));
+                    (String) obj.get("sender"),receivers,(String) obj.get("date"), ((Long) obj.get("priority")).intValue());
             mail.setId((String) obj.get("id"));
+//            mail.setSortedBody(new Gson().fromJson(obj.get("sortedBody"), IndicesSorting.indexedWord);
+//            mail.setSortedSubject(obj.get("sortedSubject"));
             mailList.add(mail);
         }
         this.currentFolderMails=mailList;
+        System.out.println("MAMA"+Arrays.toString(mailList.toArray()));
         return mailList;
     }
 
