@@ -41,10 +41,10 @@
 
       <span>
          <select name="priority" id="priority" @change="$emit('importance')">
-            <option value="high priority">high priority</option>
-            <option value="priority">high priority </option>
-            <option value="normal">Normal</option>
-            <option value="low priority">low priority</option>
+            <option value="Very Important">Very Important</option>
+            <option value="Important">Important </option>
+            <option value="Normal">Normal</option>
+            <option value="Not Important">Not Important</option>
        </select>
 
       </span>
