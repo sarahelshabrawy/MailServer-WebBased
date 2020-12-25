@@ -185,25 +185,24 @@ export default {
           pageNumber :pageNumber
 
         }
-      }).then(Response => {
-        hello.
-        this.Mails = [];
-        let indices = Object.keys( Response.data )
-        for(let i = 0 ;i < indices.length ; i++){
-          this.Mails[i] = {
-            id : Response.data[indices[i]].id,
-            subject : Response.data[indices[i]].subject,
-            sender : Response.data[indices[i]].sender,
-            body : Response.data[indices[i]].body,
-            date : Response.data[indices[i]].date,
-            receiver : Response.data[indices[i]].receiver
-          }
-          console.log(this.Mails[i])
-        }
-      })
+      }).then(Response => this.updateMails(Response))
       this.beforeMount = false
     },
-
+updateMails(Response){
+  this.Mails = [];
+  let indices = Object.keys( Response.data )
+  for(let i = 0 ;i < indices.length ; i++){
+    this.Mails[i] = {
+      id : Response.data[indices[i]].id,
+      subject : Response.data[indices[i]].subject,
+      sender : Response.data[indices[i]].sender,
+      body : Response.data[indices[i]].body,
+      date : Response.data[indices[i]].date,
+      receiver : Response.data[indices[i]].receiver
+    }
+    console.log(this.Mails[i])
+  }
+},
  setpage(){
      var header = document.getElementById("pagination");
     var btns = header.getElementsByClassName("btn");
@@ -545,7 +544,7 @@ export default {
   font-size: 17px;
   padding-left: 22px;
   padding-top: 5px;
-  border: 2px, solid, transparent;
+  border: 2px solid transparent;
   border-radius: 5px;
   cursor: pointer;
   width: 180px;
@@ -571,7 +570,7 @@ export default {
   color: white;
   padding-top: 3px;
   padding-left: 10px;
-  border: 1px, solid, transparent;
+  border: 1px solid transparent;
   border-radius: 50px;
   cursor: pointer;
 }
@@ -687,7 +686,7 @@ export default {
   font-size: 18px;
   cursor: pointer;
 }
-.fas fa-search searching {
+.fas fa-search searching{
   cursor: pointer;
 }
 </style>

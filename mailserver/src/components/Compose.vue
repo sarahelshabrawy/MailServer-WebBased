@@ -7,11 +7,11 @@
   <formatBar  @attach_file="setAttachment" @importance="setImportance()" @send_mail="setmail" ></formatBar>
   </div>
 
-  <div id="Subject">
+  <div id="Subject_">
    <label  for="subject">Subject: </label>
   <input type="text" id="subject" name="subject"  @change="setSubject()"><br><br>
   </div>
-  <div id="To">
+  <div id="To_">
     <span id="Recievers">
   <label for="to">To:</label>
   <input type="text" id="to" name="to" >
@@ -171,7 +171,7 @@ export default {
 #Recievers{
    display: inline-block;
 }
-#Subject{
+#Subject_{
 height: 40px;
 }
 #to{
