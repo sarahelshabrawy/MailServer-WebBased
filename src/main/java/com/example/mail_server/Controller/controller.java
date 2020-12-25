@@ -1,11 +1,8 @@
 package com.example.mail_server.Controller;
 
+import com.example.mail_server.Model.*;
 import com.example.mail_server.Model.Account.Account;
-import com.example.mail_server.Model.Contact;
 import com.example.mail_server.Model.DataManagement.FileManager;
-import com.example.mail_server.Model.Mail;
-import com.example.mail_server.Model.User;
-import com.example.mail_server.Model.indexMail;
 import org.json.simple.parser.ParseException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -47,10 +44,9 @@ public class controller {
         file = new LinkedList<String>();
     }
     @CrossOrigin
-    @ResponseBody
-    @GetMapping("/compose")
-    public boolean compose(@RequestParam (value = "receivers") String[] receivers ,@RequestParam (value = "subject") String subject,@RequestParam (value = "body") String body,@RequestParam (value = "date") String date ,@RequestParam (value = "priority") int priority) throws IOException {
-        Mail mail = new Mail(subject,body,user.getCurrentUser().getEmail(),receivers,date,priority,this.file);
+    @PostMapping("/compose")
+    public boolean compose(@RequestBody Mail mail) throws IOException {
+        System.out.println(mail.getBody());
         return user.Compose(mail);
     }
 
@@ -100,6 +96,14 @@ public class controller {
         //new ??
         Account acc = user.getCurrentUser();
         return acc.sortFolder(sort);
+    }
+
+    @CrossOrigin
+    @RequestMapping("/searchMails")
+    @ResponseBody
+    public LinkedList<Search.searchResults> searchMails(@RequestParam(value = "target") String target) {
+        Account acc = user.getCurrentUser();
+        return acc.searchFolder(target);
     }
 
 
