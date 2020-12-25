@@ -66,7 +66,7 @@
           <ul @click="setFolder(folder)"><span><i class="far fa-folder-open"></i>  {{folder}}</span></ul>
         </li>
         </div>
-        <li id="menuList" class="menu-styling" v-if="openUserFolders == false">
+        <li id="menuList" class="menu-styling" v-if="openUserFolders === false">
           <ul @click="setFolder('inbox')"><span><i class="fas fa-inbox"></i> Inbox</span></ul>
           <ul @click="setFolder('draft')"><span><i class="fas fa-archive"></i> Draft</span></ul>
           <ul @click="setFolder('sent')"><span><i class="fas fa-share-square"></i> Sent</span></ul>
@@ -74,7 +74,7 @@
           <ul @click="addFolder = true"><span><i class="fas fa-plus"></i> Add New Folder</span></ul>
           <ul @click="getUserFolders"><span><i class="fas fa-star"></i> My Folders<i class="fas fa-angle-right icon-arrow"></i></span></ul>
         </li>
-        <div id="contacts-menu" v-if="openUserFolders == false">
+        <div id="contacts-menu" v-if="openUserFolders === false">
           <div id="add-contact" @click="addContact = true"><i class="fas fa-user-plus icon"></i>  ADD CONTACT</div>
           <div id="my-contacts" @click="component = 'contact-view'"><i class="fas fa-user-friends icon"></i>  MY CONTACTS</div>
         </div>
@@ -161,7 +161,7 @@ export default {
           folderName : name
         }
       }).then(Response => {
-        if(Response.data == false)
+        if(Response.data === false)
         {
           message.innerHTML = "This folder already exists"
           return;
@@ -184,41 +184,43 @@ export default {
       axios.get(apiUrl + "/getMails", {
         params:{
           folderName : this.currentFolder
-
         }
-      }).then(Response => {
-        this.Mails = [];
-        let indices = Object.keys( Response.data )
-        for(let i = 0 ;i < indices.length ; i++){
-          this.Mails[i] = {
-            id : Response.data[indices[i]].id,
-            subject : Response.data[indices[i]].subject,
-            sender : Response.data[indices[i]].sender,
-            body : Response.data[indices[i]].body,
-            date : Response.data[indices[i]].date,
-            receiver : Response.data[indices[i]].receiver
-          }
-          console.log(this.Mails[i])
-        }
-      })
+      }).then(Response =>this.updateMails(Response))
       this.beforeMount = false
     },
-
+    updateMails(Response){
+      this.Mails = [];
+      let indices = Object.keys( Response.data )
+      for(let i = 0 ;i < indices.length ; i++){
+        this.Mails[i] = {
+          id : Response.data[indices[i]].id,
+          subject : Response.data[indices[i]].subject,
+          sender : Response.data[indices[i]].sender,
+          body : Response.data[indices[i]].body,
+          date : Response.data[indices[i]].date,
+          receiver : Response.data[indices[i]].receiver
+        }
+        console.log(this.Mails[i])
+      }
+    },
     searchBar() {
-      var myvalue =  document.getElementById("text").value ;
-      if(myvalue == "Search In Your Emails"){
+      const myvalue = document.getElementById("text").value;
+      if(myvalue === "Search In Your Emails"){
         document.getElementById("text").value = "";
       }
     },
     clickItem(e){
-      var listItem = e.target.innerHTML;
-      var firstItem = document.getElementById("first-item");
+      const listItem = e.target.innerHTML;
+      const firstItem = document.getElementById("first-item");
       e.target.innerHTML = firstItem.innerHTML;
       firstItem.innerHTML = listItem;
+      axios.get(apiUrl + "/sortMails", {
+        params:{ sort : listItem }
+      }).then(Response =>this.updateMails(Response))
     },
     clickSort(){
-      var list = document.getElementById("sortList")
-      var icon = document.getElementById("list-icon")
+      const list = document.getElementById("sortList");
+      const icon = document.getElementById("list-icon");
       if(list.style.display === "none")
       {
         list.style.display = "block";
@@ -482,7 +484,7 @@ export default {
 }
 #sortList {
   margin-top: 0px;
-  border: 2px, solid, transparent;
+  border: 2px solid transparent;
   background-color: white;
   color: #081448;
   text-transform: uppercase;
@@ -518,7 +520,7 @@ export default {
   font-size: 17px;
   padding-left: 22px;
   padding-top: 5px;
-  border: 2px, solid, transparent;
+  border: 2px solid transparent;
   border-radius: 5px;
   cursor: pointer;
   width: 180px;
@@ -544,7 +546,7 @@ export default {
   color: white;
   padding-top: 3px;
   padding-left: 10px;
-  border: 1px, solid, transparent;
+  border: 1px solid transparent;
   border-radius: 50px;
   cursor: pointer;
 }

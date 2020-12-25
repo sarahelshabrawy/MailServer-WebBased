@@ -70,7 +70,7 @@ export default {
 <style scoped>
 .MailsContent{
   background: linear-gradient(90deg,  #ffdde9 0%,white 100%);
-  padding:0px ;
+  padding:0;
   height: 600px;
 }
 .Menu{
@@ -78,9 +78,9 @@ export default {
   background-color: #ffdde9;
   height: 45px;
   width: 100%;
-  margin: 0px;
+  margin: 0;
   top: -10%;
-  padding: 0px;
+  padding: 0;
   text-align: left;
 }
 .Menu button,.Menu label,.input_slider{

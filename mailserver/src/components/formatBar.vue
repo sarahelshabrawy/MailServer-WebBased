@@ -30,7 +30,12 @@
   <label for="file-input">
     <i class="material-icons" style="color:#fabba2 " >attach_file</i>
   </label>
-  <input id="file-input" type="file" multiple @change="$emit('attach_file')" />
+        <!--         @change="test"-->
+
+  <input id="file-input" type="file" ref="file"
+         multiple @change="$emit('attach_file',$refs.file.files[0])"
+
+        />
 </span>
 
  <span class="space"></span>
@@ -69,9 +74,14 @@ export default {
             range_id:"rangeLineOpacity",
             div_id:"divLineOpacity",
             lineValue:'',
+            file:'',
+
         }
     },
-     methods:{ 
+     methods:{
+    test(){
+this.file = this.$refs.file.files[0];
+    },
         rangeDisplay(){
         var range = document.getElementById(this.range_id),
             range_div = document.getElementById(this.div_id);

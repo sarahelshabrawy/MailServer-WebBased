@@ -4,7 +4,7 @@
 <div id="compose">
 
  <div>
-  <formatBar  @attach_file="setAttachment()" @importance="setImportance()" @send_mail="setmail" ></formatBar>
+  <formatBar  @attach_file="setAttachment" @importance="setImportance()" @send_mail="setmail" ></formatBar>
   </div>
 
   <div id="Subject">
@@ -47,8 +47,10 @@ export default {
             subject:"",
             body:"",
             date:"",
-            importance:"",
-            secondaryRecieversCount:0
+            importance:0,
+            secondaryRecieversCount:0,
+            file:{},
+
         }
     },
   methods:{
@@ -82,10 +84,13 @@ export default {
       console.log(this.body)
 
     },
-    setAttachment(){
+    setAttachment(file){
       console.log("helo")
-     this.files=document.getElementById("file-input").files; 
-     console.log(this.files)
+       const formData = new FormData();
+     // this.files=document.getElementById("file-input").files;
+       formData.append('file',file)
+      this.file = formData
+     console.log(file)
        
     },
     setDate(){
@@ -94,15 +99,15 @@ export default {
       
     },
     setImportance(){
-      var priority=document.getElementById("priority").value;
-    
-      if(priority=="Very Important"){
+      const priority = document.getElementById("priority").value;
+
+      if(priority==="Very Important"){
         this.importance=1;
       }
-      else if(priority=="Important"){
+      else if(priority==="Important"){
         this.importance=2;
       }
-      else if(priority=="Normal"){
+      else if(priority==="Normal"){
         this.importance=3;
       }
        else {
@@ -116,27 +121,45 @@ export default {
       this.setDate();
       this.setImportance();
       this.setReciever();
-     
+
       mail={
         receivers:this.Receivers,
         subject:this.subject,
         body:this.body,
-       // attachments:this.files,
+        attachments:this.file,
         date:this.date,
         priority:this.importance
 
-      },
+      }
       console.log(mail)
 
-      axios.post(apiUrl+folder,mail)
+      axios.get(apiUrl+folder,{params: {
+          receivers: this.Receivers,
+          subject: this.subject,
+          body: this.body,
+          attachments: this.file,
+          date: this.date,
+          priority: this.importance
+        }
+      })
       .then(response => {
         console.log(response.data)
-        
+
       })
       .catch(function (error) {
           console.log(error);
       });
-     
+
+
+
+      // axios.post(apiUrl+"/attachment",this.file)
+      // .then(response => {
+      //   console.log(response.data)
+      //
+      // })
+      // .catch(function (error) {
+      //     console.log(error);
+      // });
     }
 }
 }
