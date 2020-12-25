@@ -1,5 +1,6 @@
 <template>
   <div id="home">
+  <add-contact v-if="addContact" @close="addContact = false"  ></add-contact>
     <div id="brand">
         <h1>COMET</h1>
         <img src="..\assets\1.jpg" id="image">
@@ -65,7 +66,7 @@
           <ul @click="setFolder(folder)"><span><i class="far fa-folder-open"></i>  {{folder}}</span></ul>
         </li>
         </div>
-        <li id="menuList" class="menu-styling" v-if="openUserFolders == false">
+        <li id="menuList" class="menu-styling" v-if="openUserFolders === false">
           <ul @click="setFolder('inbox')"><span><i class="fas fa-inbox"></i> Inbox</span></ul>
           <ul @click="setFolder('draft')"><span><i class="fas fa-archive"></i> Draft</span></ul>
           <ul @click="setFolder('sent')"><span><i class="fas fa-share-square"></i> Sent</span></ul>
@@ -73,9 +74,9 @@
           <ul @click="addFolder = true"><span><i class="fas fa-plus"></i> Add New Folder</span></ul>
           <ul @click="getUserFolders"><span><i class="fas fa-star"></i> My Folders<i class="fas fa-angle-right icon-arrow"></i></span></ul>
         </li>
-        <div id="contacts-menu" v-if="openUserFolders == false">
-          <div id="add-contact"><i class="fas fa-user-plus icon"></i>  ADD CONTACT</div>
-          <div id="my-contacts"><i class="fas fa-user-friends icon"></i>  MY CONTACTS</div>
+        <div id="contacts-menu" v-if="openUserFolders === false">
+          <div id="add-contact" @click="addContact = true"><i class="fas fa-user-plus icon"></i>  ADD CONTACT</div>
+          <div id="my-contacts" @click="component = 'contact-view'"><i class="fas fa-user-friends icon"></i>  MY CONTACTS</div>
         </div>
       </div>
       <AddFolder v-if="addFolder" @sendFolder="sendFolder"></AddFolder>
@@ -214,13 +215,9 @@ export default {
             current[0].className = current[0].className.replace(" active", "");
             this.className += " active";
             pageNumber=current[0].id;
-            
-            
             });
-
             } 
-           
-            console.log(pageNumber);
+
             this.getMails();   
   },
 
