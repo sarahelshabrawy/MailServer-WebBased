@@ -1,6 +1,5 @@
 <template>
   <div id="home">
-  <add-contact v-if="addContact" @close="addContact = false"  ></add-contact>
     <div id="brand">
         <h1>COMET</h1>
         <img src="..\assets\1.jpg" id="image">
@@ -75,13 +74,13 @@
           <ul @click="getUserFolders"><span><i class="fas fa-star"></i> My Folders<i class="fas fa-angle-right icon-arrow"></i></span></ul>
         </li>
         <div id="contacts-menu" v-if="openUserFolders == false">
-          <div id="add-contact" @click="addContact = true"><i class="fas fa-user-plus icon"></i>  ADD CONTACT</div>
-          <div id="my-contacts" @click="component = 'contact-view'"><i class="fas fa-user-friends icon"></i>  MY CONTACTS</div>
+          <div id="add-contact"><i class="fas fa-user-plus icon"></i>  ADD CONTACT</div>
+          <div id="my-contacts"><i class="fas fa-user-friends icon"></i>  MY CONTACTS</div>
         </div>
       </div>
       <AddFolder v-if="addFolder" @sendFolder="sendFolder"></AddFolder>
       <div id="content" >
-        <component :is="component" v-bind:maillist="Mails" :currentFolder="currentFolder"></component>
+        <component :is="component" v-bind:maillist="Mails" :currentFolder="currentFolder" @paging='setpage'></component>
       </div>
     </div>
     <div id="side-bar">
@@ -94,20 +93,17 @@
 
 <script>
 import MailView from '../components/MailView.vue'
-import ContactView from '../components/ContactView.vue'
 import Compose from '../components/Compose.vue'
 import AddFolder from '../components/Add Folder.vue'
 import axios from 'axios'
-import AddContact from '../components/Add Contact.vue'
 let apiUrl = 'http://localhost:8085'
+let pageNumber=1;
 export default {
   name: 'Home',
   components: {
     'mail-view':MailView,
     'compose':Compose,
-    'contact-view':ContactView,
-    AddFolder,
-    AddContact
+    AddFolder
   },
   data()
   {
@@ -121,7 +117,7 @@ export default {
       folderName:String,
       userFoldersList:[],
       openUserFolders: false,
-      addContact:false
+    
     }
   },
   beforeMount(){
@@ -129,6 +125,8 @@ export default {
       this.getMails()
   },
   methods : {
+
+ 
     getUserFolders()
     {
       axios.get(apiUrl + "/getUserFolders"
@@ -181,9 +179,11 @@ export default {
       this.getMails();
     },
     getMails(){
+      console.log(this.pageNumber)
       axios.get(apiUrl + "/getMails", {
         params:{
-          folderName : this.currentFolder
+          folderName : this.currentFolder,
+          pageNumber :pageNumber
 
         }
       }).then(Response => {
@@ -203,6 +203,26 @@ export default {
       })
       this.beforeMount = false
     },
+
+ setpage(){
+     var header = document.getElementById("pagination");
+    var btns = header.getElementsByClassName("btn");
+    
+     for (var i = 0; i < btns.length; i++) {
+         btns[i].addEventListener("click", function() {
+            var current = document.getElementsByClassName("active");
+            current[0].className = current[0].className.replace(" active", "");
+            this.className += " active";
+            pageNumber=current[0].id;
+            
+            
+            });
+
+            } 
+           
+            console.log(pageNumber);
+            this.getMails();   
+  },
 
     searchBar() {
       var myvalue =  document.getElementById("text").value ;
@@ -281,23 +301,13 @@ export default {
             receiver : response.data[i].receiver
           }
         }
-          console.log("mama"+this.Mails)
            
       })
      
-       // this.component = 'mail-view';
+       
     }
   }
 }
-
-
-
-
-
-
-
-
-
 
 
 
@@ -446,7 +456,7 @@ export default {
 	width:1500px;
 	height:25px;
   left: 15.8%;
-  top: 21.1%;
+  top: 20.6%;
   color: white;
 	background-color: #6f6d72;
   font-family: 'Open sans', serif;
