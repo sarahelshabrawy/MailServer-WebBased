@@ -50,6 +50,7 @@ export default {
             importance:0,
             secondaryRecieversCount:0,
             file:new FormData(),
+
         }
     },
   methods:{
@@ -84,6 +85,10 @@ export default {
       console.log("helo")
       // const formData = ;
      // this.files=document.getElementById("file-input").files;
+
+      // const formData = ;
+     // this.files=document.getElementById("file-input").files;
+
       this.file.append('file',file)
       // this.file = formData
       // this.file.push(formData)
@@ -133,6 +138,7 @@ export default {
       .catch(function (error) {
           console.log(error);
       });
+
       axios.get(apiUrl+folder,{
         params: {
           receivers: encodeURI(this.Receivers),
@@ -148,6 +154,7 @@ export default {
       .catch(function (error) {
           console.log(error);
       });
+
     }
 }
 }
