@@ -74,7 +74,9 @@ public class Account {
     }
 
 
-    public LinkedList<indexMail> loadFolder(String folderName) throws IOException {
+    public LinkedList<indexMail> loadFolder(String folderName,int page) throws IOException {
+        int start=page*11-10;int end =page*11;
+        int counter=1;
         this.currentFolderName=folderName;
         String path = "./Accounts/" + email + "/" + folderName + "/index.json";
         System.out.println(path);
@@ -112,7 +114,13 @@ public class Account {
             }
             mail.setSortedBody(sortedBodywow);
             mail.setSortedBody(sortedSubjectwow);
-            mailList.add(mail);
+            if(counter>=start&&counter<=end) {
+                mailList.add(mail);
+                if (counter == end)
+                    break;
+            }
+            counter++;
+
         }
         this.currentFolderindexMails=mailList;
         System.out.println("MAMA"+Arrays.toString(mailList.toArray()));

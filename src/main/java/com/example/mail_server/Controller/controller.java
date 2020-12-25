@@ -84,9 +84,9 @@ public class controller {
     @CrossOrigin
     @RequestMapping("/getMails")
     @ResponseBody
-    public LinkedList<indexMail> getListMails(@RequestParam(value = "folderName") String folderName) throws IOException {
+    public LinkedList<indexMail> getListMails(@RequestParam(value = "folderName") String folderName,@RequestParam(value = "pageNumber") int pageNumber) throws IOException {
         Account acc = user.getCurrentUser();
-        return acc.loadFolder(folderName);
+        return acc.loadFolder(folderName,pageNumber);
     }
 
     @CrossOrigin
