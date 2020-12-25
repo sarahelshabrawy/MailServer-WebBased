@@ -2,54 +2,55 @@ package com.example.mail_server.Model.Sort;
 
 import java.lang.Integer;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.*;
 
 public class SortNumbers  {
-//leih ??
-public List<Integer> Sort(LinkedList<Integer> mails) {
-    return divide(mails, 0, mails.size()-1);
-}
+    //leih ??
+    public List<Integer> Sort(LinkedList<Integer> mails) {
+        return divide(mails, 0, mails.size()-1);
+    }
 
     LinkedList<Integer> merge(LinkedList<Integer> list, int l, int m, int r) {
         /* Create temp lists */
-        List<Integer> L = list.subList(l,m+1);
-        List<Integer> R = list.subList(m+1,r+1);
+        List<Integer> L = new ArrayList<>(list.subList(l,m+1));
+        List<Integer> R = new ArrayList<>(list.subList(m+1,r+1));
         /*Copy data to temp lists*/
-        ListIterator<Integer> leftIterator = L.listIterator(0);
-        ListIterator<Integer> rightIterator = R.listIterator(0);
+        ListIterator<Integer> leftIterator = L.listIterator();
+        ListIterator<Integer> rightIterator = R.listIterator();
 //        ListIterator<Integer> listIterator = list.listIterator(l);
-        LinkedList<Integer> sortedList = new LinkedList<>();
 
         /* Merge the temp lists */
-
+        int k = l;
         while (leftIterator.hasNext() && rightIterator.hasNext()) {
             Integer left = leftIterator.next();
             Integer right = rightIterator.next();
-//            listIterator.next();
-//            listIterator.previous();
             if(left<right){
-                sortedList.add(left);
+                list.set(k,left);
+//                sortedList.add(left);
                 rightIterator.previous();
             } else {
-                sortedList.add(right);
+                list.set(k,right);
                 leftIterator.previous();
             }
+            k++;
         }
 
         /* Copy remaining elements of L[] if any */
         while (leftIterator.hasNext()) {
-            sortedList.add(leftIterator.next());
+            list.set(k,leftIterator.next());
+            k++;
+//            listIterator.set(leftIterator.next());
+//            sortedList.add(leftIterator.next());
         }
 
         /* Copy remaining elements of R[] if any */
         while (rightIterator.hasNext()) {
-            sortedList.add(rightIterator.next());
+            list.set(k,rightIterator.next());
+            k++;
+//            listIterator.set(rightIterator.next());
         }
-        System.out.println(Arrays.toString(sortedList.toArray()));
-        return sortedList;
+        System.out.println(Arrays.toString(list.toArray()));
+        return list;
     }
 
     // Main function that sorts list[l..r] using
@@ -73,7 +74,7 @@ public List<Integer> Sort(LinkedList<Integer> mails) {
     public static void main(String[] args) {
         SortNumbers lala = new SortNumbers();
         List<Integer> haha = new LinkedList<>();
-        for (int i = 10; i >= 0; i--) {
+        for (int i = 3; i >= 0; i--) {
             haha.add(i);
         }
 

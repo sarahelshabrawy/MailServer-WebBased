@@ -54,6 +54,7 @@ public class controller {
         return user.Compose(mail);
     }
 
+
 //    @CrossOrigin
 //    @PostMapping("/attachment")
 //    public boolean compose(@RequestParam("file") MultipartFile file) throws IOException {
