@@ -49,7 +49,7 @@ export default {
             date:"",
             importance:0,
             secondaryRecieversCount:0,
-            file:{},
+            file:new FormData(),
 
         }
     },
@@ -86,11 +86,14 @@ export default {
     },
     setAttachment(file){
       console.log("helo")
-       const formData = new FormData();
+
+      // const formData = ;
      // this.files=document.getElementById("file-input").files;
-       formData.append('file',file)
-      this.file = formData
-     console.log(file)
+
+      this.file.append('file',file)
+      // this.file = formData
+      // this.file.push(formData)
+      console.log(this.file)
        
     },
     setDate(){
@@ -116,7 +119,7 @@ export default {
       console.log(this.importance)
 
     },
-    setmail(folder){
+    async setmail(folder){
       console.log(folder)
       this.setDate();
       this.setImportance();
@@ -132,34 +135,31 @@ export default {
 
       }
       console.log(mail)
-
-      axios.get(apiUrl+folder,{params: {
-          receivers: this.Receivers,
-          subject: this.subject,
-          body: this.body,
-          attachments: this.file,
-          date: this.date,
-          priority: this.importance
-        }
-      })
+      
+      await axios.post(apiUrl+"/attachment",this.file)
       .then(response => {
         console.log(response.data)
-
       })
       .catch(function (error) {
           console.log(error);
       });
 
+      axios.get(apiUrl+folder,{
+        params: {
+          receivers: encodeURI(this.Receivers),
+          subject: encodeURI(this.subject),
+          body: encodeURI(this.body),
+          date: encodeURI(this.date),
+          priority: encodeURI(this.importance)
+        }
+      })
+      .then(response => {
+        console.log(response.data)
+      })
+      .catch(function (error) {
+          console.log(error);
+      });
 
-
-      // axios.post(apiUrl+"/attachment",this.file)
-      // .then(response => {
-      //   console.log(response.data)
-      //
-      // })
-      // .catch(function (error) {
-      //     console.log(error);
-      // });
     }
 }
 }
