@@ -81,7 +81,7 @@
       </div>
       <AddFolder v-if="addFolder" @sendFolder="sendFolder"></AddFolder>
       <div id="content" >
-        <component :is="component" v-bind:maillist="Mails" :currentFolder="currentFolder"></component>
+        <component :is="component" v-bind:maillist="Mails" :currentFolder="currentFolder" @paging='setpage'></component>
       </div>
     </div>
     <div id="side-bar">
@@ -94,20 +94,17 @@
 
 <script>
 import MailView from '../components/MailView.vue'
-import ContactView from '../components/ContactView.vue'
 import Compose from '../components/Compose.vue'
 import AddFolder from '../components/Add Folder.vue'
 import axios from 'axios'
-import AddContact from '../components/Add Contact.vue'
 let apiUrl = 'http://localhost:8085'
+let pageNumber=1;
 export default {
   name: 'Home',
   components: {
     'mail-view':MailView,
     'compose':Compose,
-    'contact-view':ContactView,
-    AddFolder,
-    AddContact
+    AddFolder
   },
   data()
   {
@@ -121,8 +118,8 @@ export default {
       folderName:String,
       userFoldersList:[],
       openUserFolders: false,
-      addContact:false,
-      target:""
+      // addContact:false,
+      // target:""
     }
   },
   beforeMount(){
@@ -130,6 +127,8 @@ export default {
       this.getMails()
   },
   methods : {
+
+
     getUserFolders()
     {
       axios.get(apiUrl + "/getUserFolders"
@@ -179,28 +178,48 @@ export default {
       this.getMails();
     },
     getMails(){
+      console.log(this.pageNumber)
       axios.get(apiUrl + "/getMails", {
         params:{
-          folderName : this.currentFolder
+          folderName : this.currentFolder,
+          pageNumber :pageNumber
+
         }
-      }).then(Response =>this.updateMails(Response))
+      }).then(Response => {
+        hello.
+        this.Mails = [];
+        let indices = Object.keys( Response.data )
+        for(let i = 0 ;i < indices.length ; i++){
+          this.Mails[i] = {
+            id : Response.data[indices[i]].id,
+            subject : Response.data[indices[i]].subject,
+            sender : Response.data[indices[i]].sender,
+            body : Response.data[indices[i]].body,
+            date : Response.data[indices[i]].date,
+            receiver : Response.data[indices[i]].receiver
+          }
+          console.log(this.Mails[i])
+        }
+      })
       this.beforeMount = false
     },
-    updateMails(Response){
-      this.Mails = [];
-      let indices = Object.keys( Response.data )
-      for(let i = 0 ;i < indices.length ; i++){
-        this.Mails[i] = {
-          id : Response.data[indices[i]].id,
-          subject : Response.data[indices[i]].subject,
-          sender : Response.data[indices[i]].sender,
-          body : Response.data[indices[i]].body,
-          date : Response.data[indices[i]].date,
-          receiver : Response.data[indices[i]].receiver
-        }
-        console.log(this.Mails[i])
-      }
-    },
+
+ setpage(){
+     var header = document.getElementById("pagination");
+    var btns = header.getElementsByClassName("btn");
+
+     for (var i = 0; i < btns.length; i++) {
+         btns[i].addEventListener("click", function() {
+           const current = document.getElementsByClassName("active");
+           current[0].className = current[0].className.replace(" active", "");
+            this.className += " active";
+            pageNumber=current[0].id;
+            });
+            }
+
+            this.getMails();
+  },
+
     searchBar() {
       const myvalue = document.getElementById("targetText").value;
       if(myvalue === "Search In Your Emails"){
@@ -299,23 +318,13 @@ export default {
             receiver : response.data[i].receiver
           }
         }
-          console.log("mama"+this.Mails)
            
       })
      
-       // this.component = 'mail-view';
+
     }
   }
 }
-
-
-
-
-
-
-
-
-
 
 
 
@@ -464,7 +473,7 @@ export default {
 	width:1500px;
 	height:25px;
   left: 15.8%;
-  top: 21.1%;
+  top: 20.6%;
   color: white;
 	background-color: #6f6d72;
   font-family: 'Open sans', serif;
@@ -536,7 +545,7 @@ export default {
   font-size: 17px;
   padding-left: 22px;
   padding-top: 5px;
-  border: 2px solid transparent;
+  border: 2px, solid, transparent;
   border-radius: 5px;
   cursor: pointer;
   width: 180px;
@@ -562,7 +571,7 @@ export default {
   color: white;
   padding-top: 3px;
   padding-left: 10px;
-  border: 1px solid transparent;
+  border: 1px, solid, transparent;
   border-radius: 50px;
   cursor: pointer;
 }

@@ -31,7 +31,6 @@
     <i class="material-icons" style="color:#fabba2 " >attach_file</i>
   </label>
         <!--         @change="test"-->
-
   <input id="file-input" type="file" ref="file"
          multiple @change="$emit('attach_file',$refs.file.files[0])"
 
