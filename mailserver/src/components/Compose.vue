@@ -126,22 +126,13 @@ export default {
         receivers:this.Receivers,
         subject:this.subject,
         body:this.body,
-        attachments:this.file,
         date:this.date,
         priority:this.importance
 
       }
       console.log(mail)
 
-      axios.get(apiUrl+folder,{params: {
-          receivers: this.Receivers,
-          subject: this.subject,
-          body: this.body,
-          attachments: this.file,
-          date: this.date,
-          priority: this.importance
-        }
-      })
+      axios.post(apiUrl+folder,mail)
       .then(response => {
         console.log(response.data)
 

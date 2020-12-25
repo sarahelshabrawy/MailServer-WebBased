@@ -28,7 +28,7 @@
           <div id="first-item" @click="clickSort">Date</div>
           <ul id="sortList">
             <li @click="clickItem">Senders</li>
-            <li @click="clickItem">Receivers</li>
+<!--            <li @click="clickItem">Receivers</li>-->
             <li @click="clickItem">Importance</li>
             <li @click="clickItem">Subject</li>
             <li @click="clickItem">Body</li>
@@ -51,8 +51,8 @@
         </div>
       </div>
       <div id="search">
-        <input key="text" id="text" value="Search In Your Emails" @click="searchBar">
-        <i class="fas fa-search searching"></i>
+        <input key="text" id="targetText" value="Search In Your Emails" @click="searchBar">
+        <i class="fas fa-search searching" v-on:click="search"></i>
       </div>
     </div>
     <a href="#" class="float" id = "compose" @click="component = 'compose'" v-on:click="hideComposeBtn" >
@@ -121,7 +121,8 @@ export default {
       folderName:String,
       userFoldersList:[],
       openUserFolders: false,
-      addContact:false
+      addContact:false,
+      target:""
     }
   },
   beforeMount(){
@@ -149,7 +150,7 @@ export default {
     },
     sendFolder(name)
     {
-      var message = document.getElementById("message-folder");
+      const message = document.getElementById("message-folder");
       message.innerHTML = ""
       if(name === '')
       {
@@ -162,10 +163,7 @@ export default {
         }
       }).then(Response => {
         if(Response.data === false)
-        {
           message.innerHTML = "This folder already exists"
-          return;
-        }
         else{
           this.folderName = name;
           this.addFolder = false;
@@ -176,7 +174,7 @@ export default {
     {
       this.currentFolder = folder;
       this.component = 'mail-view';
-      var btn = document.getElementById("compose");
+      const btn = document.getElementById("compose");
       btn.style.display = "block";
       this.getMails();
     },
@@ -204,19 +202,37 @@ export default {
       }
     },
     searchBar() {
-      const myvalue = document.getElementById("text").value;
+      const myvalue = document.getElementById("targetText").value;
       if(myvalue === "Search In Your Emails"){
-        document.getElementById("text").value = "";
+        document.getElementById("targetText").value = "";
       }
+    },search(){
+      console.log("HELLO SARSOURAAA")
+      const target = document.getElementById("targetText").value;
+      axios.get(apiUrl + "/searchMails", {
+        params:{ target : target }
+      }).then(Response => {
+        // this.Mails = [];
+        // let indices = Object.keys( Response.data )
+        // for(let i = 0 ;i < indices.length ; i++){
+        //   this.Mails[i] = Response.data[indices[i]].source
+        //   this.bodyHighlights = Response.data[indices[i]].
+        //   console.log(this.Mails[i])
+        // }
+        console.log(Response)
+      })
     },
     clickItem(e){
       const listItem = e.target.innerHTML;
       const firstItem = document.getElementById("first-item");
       e.target.innerHTML = firstItem.innerHTML;
       firstItem.innerHTML = listItem;
-      axios.get(apiUrl + "/sortMails", {
-        params:{ sort : listItem }
-      }).then(Response =>this.updateMails(Response))
+      if(listItem!=="Date"){
+        axios.get(apiUrl + "/sortMails", {
+          params:{ sort : listItem }
+        }).then(Response =>this.updateMails(Response))
+      }
+
     },
     clickSort(){
       const list = document.getElementById("sortList");
@@ -233,8 +249,8 @@ export default {
       }
     },
     clickFilter(){
-      var box = document.getElementById("check-menu");
-      var icon = document.getElementById("check-icon")
+      const box = document.getElementById("check-menu");
+      const icon = document.getElementById("check-icon");
       if(box.style.display === "none")
       {
         box.style.display = "block";
@@ -248,20 +264,20 @@ export default {
     },
     display()
     {
-      var acc = document.getElementById("account-info");
+      const acc = document.getElementById("account-info");
       acc.style.display = "block";
     },
     hide()
     {
-      var acc = document.getElementById("account-info");
+      const acc = document.getElementById("account-info");
       acc.style.display = "none";
     },
 
 
     getFilteredMail(){
-      var sender =document.getElementById("sender-filter").value;
-      var subject=document.getElementById("subject-filter").value;
-       axios.get(apiUrl + '/filter', {
+      const sender = document.getElementById("sender-filter").value;
+      const subject = document.getElementById("subject-filter").value;
+      axios.get(apiUrl + '/filter', {
         params:
         {
           sender: sender,
@@ -414,7 +430,7 @@ export default {
 #search {
   transform: translate(200%, 20%);
 }
-#text {
+#targetText {
   width: 330px;
   height: 23px;
   border: 5px solid transparent;
@@ -483,7 +499,7 @@ export default {
   margin-top: 5px;
 }
 #sortList {
-  margin-top: 0px;
+  margin-top: 0;
   border: 2px solid transparent;
   background-color: white;
   color: #081448;
@@ -590,8 +606,7 @@ export default {
   letter-spacing: 1px;
   left: 70px;
   border: 1px solid white;
-  border-radius: 20px;
-  border-top-left-radius: 0;
+  border-radius: 0 20px 20px 20px;
   word-wrap: break-word;
   display: none;
   box-shadow: 2px 2px 3px #999;
@@ -629,7 +644,7 @@ export default {
 #users-list > ul{
   height: 20px;
   padding-bottom: 10px;
-  margin-bottom: 0px;
+  margin-bottom: 0;
   font-size: 20px;
 }
 .menu-styling ul > span:hover {
@@ -661,6 +676,9 @@ export default {
   margin-left: 180px;
   margin-top: 15px;
   font-size: 18px;
+  cursor: pointer;
+}
+.fas fa-search searching {
   cursor: pointer;
 }
 </style>
