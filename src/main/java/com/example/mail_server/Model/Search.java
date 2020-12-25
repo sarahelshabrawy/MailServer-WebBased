@@ -7,11 +7,11 @@ import java.util.LinkedList;
 
 public class Search {
 
-    private static class searchResults{
+    public static class searchResults{
         Object source;
-        Point[] occurrences;
+        Interval[] occurrences;
 
-        public searchResults(Object source, Point[] occurrences) {
+        public searchResults(Object source, Interval[] occurrences) {
             this.source = source;
             this.occurrences = occurrences;
         }
@@ -20,7 +20,7 @@ public class Search {
     public LinkedList<searchResults> search(LinkedList<indexMail> mails, String x){
         LinkedList<searchResults> searchResults = new LinkedList<>();
         for(indexMail mail : mails){
-            Point[] occurrences = (Point[]) binarySearch(mail.getSortedSubject(),0,mail.getSortedSubject().length-1,x);
+            Interval[] occurrences = (Interval []) binarySearch(mail.getSortedSubject(),0,mail.getSortedSubject().length-1,x);
             if(occurrences!=null)
                 searchResults.add(new searchResults(mail, occurrences));
         }
@@ -28,7 +28,7 @@ public class Search {
     }
 
 
-    Object[] binarySearch(Object[] arr, int l, int r, String x)
+    public Object[] binarySearch(Object[] arr, int l, int r, String x)
     {
         if (r >= l) {
             int mid = l + (r - l) / 2;
@@ -55,22 +55,30 @@ public class Search {
     }
 
     public Object[] findAllOccurrences  (Object[] arr,int mid,String x){
-        LinkedList<Point> occurrencesIndices = new LinkedList<>();
+        LinkedList<Interval> occurrencesIndices = new LinkedList<>();
         for (int i = mid; i < arr.length ; i++) {
             indexedWord castedElement = (indexedWord) arr[i];
             if (castedElement.getWord().equalsIgnoreCase(x))
-                occurrencesIndices.add(new Point(castedElement.getStart(),castedElement.getEnd()));
+                occurrencesIndices.add(new Interval(castedElement.getStart(),castedElement.getEnd()));
             else break;
         }
         for (int i = mid-1; i > 0 ; i--) {
             indexedWord castedElement = (indexedWord) arr[i];
             if (castedElement.getWord().equalsIgnoreCase(x))
-                occurrencesIndices.add(new Point(castedElement.getStart(),castedElement.getEnd()));
+                occurrencesIndices.add(new Interval(castedElement.getStart(),castedElement.getEnd()));
             else break;
         }
         return occurrencesIndices.toArray();
     }
 
 
+    private static class Interval {
+        int start;
+        int end;
 
+        public Interval(int start, int end) {
+            this.start = start;
+            this.end = end;
+        }
+    }
 }

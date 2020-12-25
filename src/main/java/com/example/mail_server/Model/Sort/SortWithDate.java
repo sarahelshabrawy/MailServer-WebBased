@@ -22,37 +22,39 @@ public class SortWithDate implements ISortMail {
 
     LinkedList<indexMail> merge(LinkedList<indexMail> list, int l, int m, int r) throws ParseException {
         /* Create temp lists */
-        List<indexMail> L = list.subList(l,m+1);
-        List<indexMail> R = list.subList(m+1,r+1);
-        LinkedList<indexMail> sortedList = new LinkedList<>();
+        List<indexMail> L = new ArrayList<>(list.subList(l,m+1));
+        List<indexMail> R = new ArrayList<>(list.subList(m+1,r+1));
         /*Copy data to temp lists*/
-        ListIterator<indexMail> leftIterator = L.listIterator(0);
-        ListIterator<indexMail> rightIterator = R.listIterator(0);
+        ListIterator<indexMail> leftIterator = L.listIterator();
+        ListIterator<indexMail> rightIterator = R.listIterator();
+        ListIterator<indexMail> listIterator = list.listIterator(l);
 
         /* Merge the temp lists */
-
         while (leftIterator.hasNext() && rightIterator.hasNext()) {
             indexMail left = leftIterator.next();
             indexMail right = rightIterator.next();
+            listIterator.next();
             if(formatDate(left.getDate()).before(formatDate(right.getDate()))){
-                sortedList.add(left);
+                listIterator.set(left);
                 rightIterator.previous();
             } else {
-                sortedList.add(right);
+                listIterator.set(right);
                 leftIterator.previous();
             }
         }
 
         /* Copy remaining elements of L[] if any */
         while (leftIterator.hasNext()) {
-            sortedList.add(leftIterator.next());
+            listIterator.next();
+            listIterator.set(leftIterator.next());
         }
 
         /* Copy remaining elements of R[] if any */
         while (rightIterator.hasNext()) {
-            sortedList.add(rightIterator.next());
+            listIterator.next();
+            listIterator.set(rightIterator.next());
         }
-        return sortedList;
+        return list;
     }
 
     // Main function that sorts list[l..r] using

@@ -1,35 +1,30 @@
-package com.example.mail_server.Model.Sort.SortText;
+package com.example.mail_server.Model.Sort;
 
-import com.example.mail_server.Model.Sort.ISortMail;
-import com.example.mail_server.Model.indexMail;
+import java.lang.Integer;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.*;
 
-abstract class SortText implements ISortMail {
-
-    @Override
-    public List<indexMail> Sort(LinkedList<indexMail> mails) {
+public class SortOmmElnumbers  {
+    //leih ??
+    public List<Integer> Sort(LinkedList<Integer> mails) {
         return divide(mails, 0, mails.size()-1);
     }
 
-    LinkedList<indexMail> merge(LinkedList<indexMail> list, int l, int m, int r) {
+    LinkedList<Integer> merge(LinkedList<Integer> list, int l, int m, int r) {
         /* Create temp lists */
-        List<indexMail> L = new ArrayList<>(list.subList(l,m+1));
-        List<indexMail> R = new ArrayList<>(list.subList(m+1,r+1));
+        List<Integer> L = new ArrayList<>(list.subList(l,m+1));
+        List<Integer> R = new ArrayList<>(list.subList(m+1,r+1));
         /*Copy data to temp lists*/
-        ListIterator<indexMail> leftIterator = L.listIterator();
-        ListIterator<indexMail> rightIterator = R.listIterator();
-        ListIterator<indexMail> listIterator = list.listIterator(l);
+        ListIterator<Integer> leftIterator = L.listIterator();
+        ListIterator<Integer> rightIterator = R.listIterator();
+        ListIterator<Integer> listIterator = list.listIterator(l);
 
         /* Merge the temp lists */
         while (leftIterator.hasNext() && rightIterator.hasNext()) {
-            indexMail left = leftIterator.next();
-            indexMail right = rightIterator.next();
+            Integer left = leftIterator.next();
+            Integer right = rightIterator.next();
             listIterator.next();
-            if(getStringAttribute(left).compareToIgnoreCase(getStringAttribute(right))<0){
+            if(left<right){
                 listIterator.set(left);
                 rightIterator.previous();
             } else {
@@ -50,12 +45,11 @@ abstract class SortText implements ISortMail {
             listIterator.set(rightIterator.next());
         }
         return list;
-
     }
 
     // Main function that sorts list[l..r] using
     // merge()
-    List<indexMail> divide(LinkedList<indexMail> list, int l, int r) {
+    List<Integer> divide(LinkedList<Integer> list, int l, int r) {
         if (l < r) {
             // Find the middle point
             int m = (l + r) / 2;
@@ -68,7 +62,18 @@ abstract class SortText implements ISortMail {
             return merge(list, l, m, r);
         }
         //walla null ?
-        return new LinkedList<>();
+        return null;
     }
-    abstract String getStringAttribute(indexMail mail);
+
+//    public static void main(String[] args) {
+//        SortOmmElnumbers lala = new SortOmmElnumbers();
+//        List<Integer> haha = new LinkedList<>();
+//        for (int i = 10; i >= 0; i--) {
+//            haha.add(i);
+//        }
+//
+//        haha = lala.Sort((LinkedList<Integer>) haha);
+//        System.out.println(Arrays.toString(haha.toArray()));
+//
+//    }
 }
