@@ -3,79 +3,68 @@ package com.example.mail_server.Model.Sort.SortText;
 import com.example.mail_server.Model.Sort.ISortMail;
 import com.example.mail_server.Model.indexMail;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 
 abstract class SortText implements ISortMail {
 
         @Override
         public List<indexMail> Sort(LinkedList<indexMail> mails) {
-            return divide((indexMail[]) mails.toArray(), 0, mails.size()-1);
+            return divide(mails, 0, mails.size()-1);
         }
 
-        void merge(indexMail[] arr, int l, int m, int r) {
-            // Find sizes of two subarrays to be merged
-            int n1 = m - l + 1;
-            int n2 = r - m;
+        LinkedList<indexMail> merge(LinkedList<indexMail> list, int l, int m, int r) {
+            /* Create temp lists */
+            List<indexMail> L = list.subList(l,m+1);
+            List<indexMail> R = list.subList(m+1,r+1);
+            LinkedList<indexMail> sortedList = new LinkedList<>();
+            /*Copy data to temp lists*/
+            ListIterator<indexMail> leftIterator = L.listIterator(0);
+            ListIterator<indexMail> rightIterator = R.listIterator(0);
 
-            /* Create temp arrays */
-            indexMail[] L = new indexMail[n1];
-            indexMail[] R = new indexMail[n2];
+            /* Merge the temp lists */
 
-            /*Copy data to temp arrays*/
-            System.arraycopy(arr, l, L, 0, n1);
-            System.arraycopy(arr, m + 1, R, 0, n2);
-            System.out.println(Arrays.toString(L));
-            System.out.println(Arrays.toString(R));
-            /* Merge the temp arrays */
-
-            // Initial indexes of first and second subarrays
-            int i = 0, j = 0;
-
-            // Initial index of merged subarry array
-            int k = l;
-            while (i < n1 && j < n2) {
-                if(getStringAttribute(L[i]).compareToIgnoreCase(getStringAttribute(R[j]))<0){
-                    arr[k] = L[i];
-                    i++;
+            while (leftIterator.hasNext() && rightIterator.hasNext()) {
+                indexMail left = leftIterator.next();
+                indexMail right = rightIterator.next();
+                if(getStringAttribute(left).compareToIgnoreCase(getStringAttribute(right))<0){
+                    sortedList.add(left);
+                    rightIterator.previous();
                 } else {
-                    arr[k] = R[j];
-                    j++;
+                    sortedList.add(right);
+                    leftIterator.previous();
                 }
-                k++;
             }
 
             /* Copy remaining elements of L[] if any */
-            while (i < n1) {
-                arr[k] = L[i];
-                i++;
-                k++;
+            while (leftIterator.hasNext()) {
+                sortedList.add(leftIterator.next());
             }
 
             /* Copy remaining elements of R[] if any */
-            while (j < n2) {
-                arr[k] = R[j];
-                j++;
-                k++;
+            while (rightIterator.hasNext()) {
+                sortedList.add(rightIterator.next());
             }
+            return sortedList;
         }
 
-        // Main function that sorts arr[l..r] using
+        // Main function that sorts list[l..r] using
         // merge()
-        List<indexMail> divide(indexMail[] arr, int l, int r) {
+        List<indexMail> divide(LinkedList<indexMail> list, int l, int r) {
             if (l < r) {
                 // Find the middle point
                 int m = (l + r) / 2;
 
                 // Sort first and second halves
-                divide(arr, l, m);
-                divide(arr, m + 1, r);
+                divide(list, l, m);
+                divide(list, m + 1, r);
 
                 // Merge the sorted halves
-                merge(arr, l, m, r);
+               return merge(list, l, m, r);
             }
-            return Arrays.asList(arr);
+            //walla null ?
+            return new LinkedList<>();
         }
         abstract String getStringAttribute(indexMail mail);
     }

@@ -13,7 +13,9 @@ import com.example.mail_server.Model.Filter.SubjectField;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.LinkedList;
+import java.util.Objects;
 
 public class User {
 
@@ -123,6 +125,9 @@ public class User {
         directory.createFolder("./Accounts/"+E_mail+"/"+folder+"/"+mail.getId());
         String path="./Accounts/"+E_mail+"/"+folder+"/"+mail.getId()+"/"+mail.getId()+".json";
         json.saveJsonFile(mail, path);
+//        String attachmentPath = path + mail.getAttachments().getOriginalFilename();
+//        mail.getAttachments().transferTo(Paths.get(Objects.requireNonNull(attachmentPath)));
+
         indexMail indexMail = new indexMail(mail.getSubject(),mail.getBody(),mail.getSender(),mail.getReceivers()[0],mail.getDate(),mail.getPriority());
         json.addMailToIndex(indexMail, myPath);
 //        for (String receiver: mail.getReceivers()) {

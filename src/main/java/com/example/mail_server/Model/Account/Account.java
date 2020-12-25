@@ -122,7 +122,8 @@ public class Account {
     public LinkedList<indexMail> sortFolder(String sort){
         SortFactory sortFactory = new SortFactory();
         ISortMail sortMail = sortFactory.sortMails(sort);
-        currentFolderindexMails = (LinkedList<indexMail>) sortMail.Sort(currentFolderindexMails);
+        if(currentFolderindexMails!=null && !currentFolderindexMails.isEmpty())
+              currentFolderindexMails = (LinkedList<indexMail>) sortMail.Sort(currentFolderindexMails);
         return currentFolderindexMails;
     }
 

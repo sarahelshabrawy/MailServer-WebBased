@@ -1,6 +1,8 @@
 package com.example.mail_server.Model;
 
-import com.example.mail_server.Model.Sort.SortText.IndicesSorting;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 public class Mail {
 
@@ -10,7 +12,7 @@ public class Mail {
     private String[] receivers;
     private String date;
     private int priority;
-    private String[] attachments;
+//    private byte[] attachments;
     private String id = "0" ;
 
     public Mail(){}
@@ -22,7 +24,7 @@ public class Mail {
         this.receivers = receivers;
         this.date = date;
         this.priority = priority;
-        //this.attachments = attachments;
+//        this.attachments = attachments;
 
     }
 
@@ -74,13 +76,13 @@ public class Mail {
         this.priority = priority;
     }
 
-    public String[] getAttachments() {
-        return attachments;
-    }
-
-    public void setAttachments(String[] attachments) {
-        this.attachments = attachments;
-    }
+//    public byte[] getAttachments() {
+//        return attachments;
+//    }
+//
+//    public void setAttachments(MultipartFile attachments) throws IOException {
+//        this.attachments = attachments.getBytes();
+//    }
 
     public String getId() {
         return id;

@@ -12,79 +12,67 @@ public class SortWithDate implements ISortMail {
     @Override
     public List<indexMail> Sort(LinkedList<indexMail> mails) {
         try {
-            return divide((indexMail[]) mails.toArray(), 0, mails.size());
+            return divide(mails, 0, mails.size()-1);
         }
         catch (ParseException ignored){
             return null;
         }
     }
 
-    void merge(indexMail[] arr, int l, int m, int r) throws ParseException {
-        // Find sizes of two subarrays to be merged
-        int n1 = m - l + 1;
-        int n2 = r - m;
 
-        /* Create temp arrays */
-        indexMail[] L = new indexMail[n1];
-        indexMail[] R = new indexMail[n2];
+    LinkedList<indexMail> merge(LinkedList<indexMail> list, int l, int m, int r) throws ParseException {
+        /* Create temp lists */
+        List<indexMail> L = list.subList(l,m+1);
+        List<indexMail> R = list.subList(m+1,r+1);
+        LinkedList<indexMail> sortedList = new LinkedList<>();
+        /*Copy data to temp lists*/
+        ListIterator<indexMail> leftIterator = L.listIterator(0);
+        ListIterator<indexMail> rightIterator = R.listIterator(0);
 
-        /*Copy data to temp arrays*/
-        System.arraycopy(arr, l, L, 0, n1);
-        System.arraycopy(arr,m+1,R,0,n2);
-//        for (int j = 0; j < n2; ++j)
-//            R[j] = arr[m + 1 + j];
+        /* Merge the temp lists */
 
-        /* Merge the temp arrays */
-
-        // Initial indexes of first and second subarrays
-        int i = 0, j = 0;
-
-        // Initial index of merged subarry array
-        int k = l;
-        while (i < n1 && j < n2) {
-            if (formatDate(L[i].getDate()).before(formatDate(R[j].getDate()) )) {
-                arr[k] = L[i];
-                i++;
+        while (leftIterator.hasNext() && rightIterator.hasNext()) {
+            indexMail left = leftIterator.next();
+            indexMail right = rightIterator.next();
+            if(formatDate(left.getDate()).before(formatDate(right.getDate()))){
+                sortedList.add(left);
+                rightIterator.previous();
+            } else {
+                sortedList.add(right);
+                leftIterator.previous();
             }
-            else {
-                arr[k] = R[j];
-                j++;
-            }
-            k++;
         }
 
         /* Copy remaining elements of L[] if any */
-        while (i < n1) {
-            arr[k] = L[i];
-            i++;
-            k++;
+        while (leftIterator.hasNext()) {
+            sortedList.add(leftIterator.next());
         }
 
         /* Copy remaining elements of R[] if any */
-        while (j < n2) {
-            arr[k] = R[j];
-            j++;
-            k++;
+        while (rightIterator.hasNext()) {
+            sortedList.add(rightIterator.next());
         }
+        return sortedList;
     }
 
-    // Main function that sorts arr[l..r] using
+    // Main function that sorts list[l..r] using
     // merge()
-    List<indexMail> divide(indexMail[] arr, int l, int r )throws ParseException {
+    List<indexMail> divide(LinkedList<indexMail> list, int l, int r) throws ParseException {
         if (l < r) {
             // Find the middle point
             int m = (l + r) / 2;
 
             // Sort first and second halves
-            divide(arr, l, m);
-            divide(arr, m + 1, r);
+            divide(list, l, m);
+            divide(list, m + 1, r);
 
             // Merge the sorted halves
-            merge(arr, l, m, r);
+            return merge(list, l, m, r);
         }
-        return Arrays.asList(arr);
-
+        //walla null ?
+        return new LinkedList<>();
     }
+
     Date formatDate(String string) throws ParseException {
         DateFormat format = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
         return format.parse(string);

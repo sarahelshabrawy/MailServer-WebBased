@@ -10,12 +10,15 @@ import org.json.simple.parser.ParseException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.LinkedList;
+import java.util.Objects;
 
 @Configuration
 @Deprecated
@@ -41,11 +44,24 @@ public class controller {
         user = User.getInstance();
     }
     @CrossOrigin
-    @PostMapping("/compose")
-    public boolean compose(@RequestBody Mail mail) throws IOException {
+    @ResponseBody
+    @GetMapping("/compose")
+    public boolean compose(@RequestParam (value = "receivers") String[] receivers ,@RequestParam (value = "subject") String subject,@RequestParam (value = "body") String body,@RequestParam(value = "file") MultipartFile file,@RequestParam (value = "date") String date ,@RequestParam (value = "priority") int priority) throws IOException {
+       Mail mail = new Mail(subject,body,user.getCurrentUser().getEmail(),receivers,date,priority);
         System.out.println(mail.getBody());
+        file.transferTo(Paths.get(Objects.requireNonNull(file.getOriginalFilename())));
+
         return user.Compose(mail);
     }
+
+//    @CrossOrigin
+//    @PostMapping("/attachment")
+//    public boolean compose(@RequestParam("file") MultipartFile file) throws IOException {
+//        System.out.println(file);
+//        file.transferTo(Paths.get(Objects.requireNonNull(file.getOriginalFilename())));
+//        return true;
+//    }
+
     @CrossOrigin
     @PostMapping("/draft")
     public boolean draft(@RequestBody Mail mail) throws IOException {
