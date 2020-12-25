@@ -49,8 +49,7 @@ export default {
             date:"",
             importance:0,
             secondaryRecieversCount:0,
-            file:{},
-
+            file:new FormData(),
         }
     },
   methods:{
@@ -73,24 +72,22 @@ export default {
        }
         
       },
-
     setSubject(){
       this.subject=document.getElementById("subject").value;
       console.log(this.subject)
-
     },
     setbody(){
       this.body=document.getElementById("textArea").value;
       console.log(this.body)
-
     },
     setAttachment(file){
       console.log("helo")
-       const formData = new FormData();
+      // const formData = ;
      // this.files=document.getElementById("file-input").files;
-       formData.append('file',file)
-      this.file = formData
-     console.log(file)
+      this.file.append('file',file)
+      // this.file = formData
+      // this.file.push(formData)
+      console.log(this.file)
        
     },
     setDate(){
@@ -100,7 +97,6 @@ export default {
     },
     setImportance(){
       const priority = document.getElementById("priority").value;
-
       if(priority==="Very Important"){
         this.importance=1;
       }
@@ -114,14 +110,12 @@ export default {
         this.importance=4;
       }
       console.log(this.importance)
-
     },
-    setmail(folder){
+    async setmail(folder){
       console.log(folder)
       this.setDate();
       this.setImportance();
       this.setReciever();
-
       mail={
         receivers:this.Receivers,
         subject:this.subject,
@@ -129,37 +123,31 @@ export default {
         attachments:this.file,
         date:this.date,
         priority:this.importance
-
       }
       console.log(mail)
-
-      axios.get(apiUrl+folder,{params: {
-          receivers: this.Receivers,
-          subject: this.subject,
-          body: this.body,
-          attachments: this.file,
-          date: this.date,
-          priority: this.importance
-        }
-      })
+      
+      await axios.post(apiUrl+"/attachment",this.file)
       .then(response => {
         console.log(response.data)
-
       })
       .catch(function (error) {
           console.log(error);
       });
-
-
-
-      // axios.post(apiUrl+"/attachment",this.file)
-      // .then(response => {
-      //   console.log(response.data)
-      //
-      // })
-      // .catch(function (error) {
-      //     console.log(error);
-      // });
+      axios.get(apiUrl+folder,{
+        params: {
+          receivers: encodeURI(this.Receivers),
+          subject: encodeURI(this.subject),
+          body: encodeURI(this.body),
+          date: encodeURI(this.date),
+          priority: encodeURI(this.importance)
+        }
+      })
+      .then(response => {
+        console.log(response.data)
+      })
+      .catch(function (error) {
+          console.log(error);
+      });
     }
 }
 }
@@ -167,25 +155,21 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
 #textArea{
   border: none;
   height: 450px;
   width: 1250px;
 }
-
 #Recievers{
    display: inline-block;
 }
 #Subject{
-
 height: 40px;
 }
 #to{
   background-color:transparent;
   border-radius: 12px;
   width: 250px;
-
 }
 #subject{
  
@@ -196,7 +180,6 @@ input[type=text] {
   border: 2px solid #fabba2;
  
 }
-
 textarea:focus, input:focus{
  
     outline: 0;
@@ -220,11 +203,9 @@ textarea:focus, input:focus{
   border: 2px solid #008CBA;
   height: 50px;
   width: 100px;
-
 }
 .format{
   padding-top: 20px;
-
 }
 formatBar{
  position: absolute;
