@@ -5,7 +5,8 @@
       <!-- <mail-box  :mail= "male" :id= "male.id" ></mail-box>  -->
       <component @click="component = 'mails-content'" :is="component" v-bind:id = "male.id" :mail="male" :currentFolder="currentFolder" ></component>
     </div>
-    <div id="pagination" @click="$emit('paging')" >
+   
+   <div id="pagination" @click="$emit('paging')" >
     <button class="left" @click="changePageNumber(-1)" > &laquo;</button> 
   <button id="1" class="btn active">1</button>
   <button id="2" class="btn ">2</button>
