@@ -10,6 +10,8 @@ public class MailServerApplication {
 
     public static void main(String[] args) {
         File folder = new File("./Accounts");
+        File folder_two = new File("./Accounts/Attachments");
+        folder_two.mkdir();
         System.out.println( folder.mkdir() );
         SpringApplication.run(MailServerApplication.class, args);
     }

@@ -125,19 +125,9 @@ public class User {
         directory.createFolder("./Accounts/"+E_mail+"/"+folder+"/"+mail.getId());
         String path="./Accounts/"+E_mail+"/"+folder+"/"+mail.getId()+"/"+mail.getId()+".json";
         json.saveJsonFile(mail, path);
-//        String attachmentPath = path + mail.getAttachments().getOriginalFilename();
-//        mail.getAttachments().transferTo(Paths.get(Objects.requireNonNull(attachmentPath)));
 
         indexMail indexMail = new indexMail(mail.getSubject(),mail.getBody(),mail.getSender(),mail.getReceivers()[0],mail.getDate(),mail.getPriority());
         json.addMailToIndex(indexMail, myPath);
-//        for (String receiver: mail.getReceivers()) {
-//            myPath = "./Accounts/"+receiver+"/inbox/index.json";
-//            mail.setId(json.setNewID(myPath));
-//            directory.createFolder("./Accounts/"+receiver+"/inbox/"+mail.getId());
-//            path="./Accounts/"+receiver+"/inbox/"+mail.getId()+"/"+mail.getId()+".json";
-//            json.saveJsonFile(mail,path);
-//            json.addMailToIndex(indexMail, myPath);
-//        }
     }
 
     public LinkedList<indexMail> moveMail(String[] id,String folderName) throws IOException {

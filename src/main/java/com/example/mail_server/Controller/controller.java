@@ -38,29 +38,32 @@ class MyConfiguration {
 @CrossOrigin
 public class controller {
     private User user;
+    LinkedList<String> file;
+
 
 
     public controller(){
         user = User.getInstance();
+        file = new LinkedList<String>();
     }
     @CrossOrigin
     @ResponseBody
     @GetMapping("/compose")
-    public boolean compose(@RequestParam (value = "receivers") String[] receivers ,@RequestParam (value = "subject") String subject,@RequestParam (value = "body") String body,@RequestParam(value = "file") MultipartFile file,@RequestParam (value = "date") String date ,@RequestParam (value = "priority") int priority) throws IOException {
-       Mail mail = new Mail(subject,body,user.getCurrentUser().getEmail(),receivers,date,priority);
-        System.out.println(mail.getBody());
-        file.transferTo(Paths.get(Objects.requireNonNull(file.getOriginalFilename())));
-
+    public boolean compose(@RequestParam (value = "receivers") String[] receivers ,@RequestParam (value = "subject") String subject,@RequestParam (value = "body") String body,@RequestParam (value = "date") String date ,@RequestParam (value = "priority") int priority) throws IOException {
+        Mail mail = new Mail(subject,body,user.getCurrentUser().getEmail(),receivers,date,priority,this.file);
         return user.Compose(mail);
     }
 
-//    @CrossOrigin
-//    @PostMapping("/attachment")
-//    public boolean compose(@RequestParam("file") MultipartFile file) throws IOException {
-//        System.out.println(file);
-//        file.transferTo(Paths.get(Objects.requireNonNull(file.getOriginalFilename())));
-//        return true;
-//    }
+    @CrossOrigin
+    @PostMapping("/attachment")
+    public boolean attach(@RequestParam("file") MultipartFile[] file) throws IOException {
+        for(MultipartFile file0 : file) {
+            file0.transferTo(Paths.get(Objects.requireNonNull("./Accounts/Attachments/" + file0.getOriginalFilename())));
+            this.file.add("./Accounts/Attachments/" + file0.getOriginalFilename());
+        }
+        return true;
+    }
+
 
     @CrossOrigin
     @PostMapping("/draft")
