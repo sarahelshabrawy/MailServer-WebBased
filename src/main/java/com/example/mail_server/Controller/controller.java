@@ -126,6 +126,15 @@ public class controller {
     }
 
     @CrossOrigin
+    @RequestMapping("/sortContacts")
+    @ResponseBody
+    public LinkedList<Contact> sortContacts(@RequestParam(value = "sort") String sort) {
+        //new ??
+        Account acc = user.getCurrentUser();
+        return acc.sortContacts(sort);
+    }
+
+    @CrossOrigin
     @GetMapping("/removeContact")
     public boolean  removeContact(@RequestParam (value = "id") String id ) throws IOException {
         String path = "./Accounts/" + user.getCurrentUser().getEmail() + "/contacts.json";

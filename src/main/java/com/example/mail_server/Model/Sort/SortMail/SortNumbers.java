@@ -1,4 +1,4 @@
-package com.example.mail_server.Model.Sort;
+package com.example.mail_server.Model.Sort.SortMail;
 
 import java.lang.Integer;
 
