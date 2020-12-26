@@ -1,10 +1,10 @@
 <template>
   <div id ="hi">
     <div id = "new" class="MailBox">
-        <div id = "sender">{{mail.sender}}</div>
-        <div id = "subject">{{mail.subject + "  - "}}</div>
+        <div id = "senderxx">{{mail.sender}}</div>
+        <div id = "subjectxx">{{mail.subject + "  - "}}</div>
         <div id = "contentxx">{{ mail.body}}</div>
-        <div id = "date" >{{mail.date}}</div>
+        <div id = "datexx" >{{mail.date}}</div>
     </div>
   </div>
 </template>
@@ -31,11 +31,8 @@ export default {
       },
       highlight(element,keys){
       const inputText = document.getElementById(element);
-      let innerHTML = inputText.innerHTML;
+      let innerHTML = inputText.innerText;
       let newHTML = "";
-      console.log(innerHTML)
-      console.log("KEEEYSS")
-      console.log(keys)
       let from = 0;
       for(let i = 0 ;i < keys.length ; i++){
         newHTML = newHTML + innerHTML.substring(from,keys[i].start) + "<span style='background-color: " + "yellow" + ";'>"
@@ -44,11 +41,10 @@ export default {
       }
       newHTML = newHTML + innerHTML.substring(from);
       inputText.innerHTML = newHTML;
-      console.log(inputText.innerHTML)
     },
         showSearchResults() {
           const temp = JSON.parse(JSON.stringify(this.searchResults));
-          const mySearchResults = temp[0];
+          const mySearchResults = temp[this.id];
           if(!mySearchResults)
             return
           console.log(mySearchResults)
@@ -60,17 +56,17 @@ export default {
           // const priorityOccurrences= JSON.parse(JSON.stringify(mySearchResults.subjectOccurrences))
           console.log(subjectOccurrences)
           if(subjectOccurrences)
-          this.highlight("subject",mySearchResults.subjectOccurrences)
+          this.highlight("subjectxx",mySearchResults.subjectOccurrences)
 
           if(bodyOccurrences)
           this.highlight("contentxx",mySearchResults.bodyOccurrences)
 
           if(senderOccurrences)
-          this.highlight("sender",mySearchResults.senderOccurrences)
+          this.highlight("senderxx",mySearchResults.senderOccurrences)
 
           // this.highlight(temp.priorityOccurrences)
           if(dateOccurrences)
-          this.highlight("date",mySearchResults.dateOccurrences)
+          this.highlight("datexx",mySearchResults.dateOccurrences)
         }
     },
     mounted() {
@@ -118,13 +114,13 @@ div {
     margin: 0;
     height: 20px;
 }
-#date{
+#datexx{
     margin-left: 0;
     width: 15%;
     text-align: right;
     height: 20px;
 }
-#sender{
+#senderxx{
     display: inline-block;
     font-weight:600;
     width: 25%;
@@ -135,7 +131,7 @@ div {
     /* letter-spacing: 2px; */
     font-size: 17px;
 }
-#subject{
+#subjectxx{
     width: 8.5%;
     margin: 0;
     height: 20px;

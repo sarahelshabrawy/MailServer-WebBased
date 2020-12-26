@@ -2,7 +2,7 @@
   <div id="con">
     
     <div id = "mails_view" class="Mails"  v-for="male in maillist" :key="male.id" >
-      <mail-box v-if="mailContent == false"  :mail= "male" :id= "male.id" @click="setMail(male.id)" :searchResults ="searchResults"></mail-box> 
+      <mail-box v-if="mailContent === false" :mail= "male" :id= "male.id" @click="setMail(male.id)" :searchResults ="searchResults"></mail-box>
       <!-- <component @click="component = 'mails-content'" :is="component" v-bind:id = "male.id" :mail="male" :currentFolder="currentFolder" v-bind:searchResults ="searchResults"></component> -->
     </div>
     <mails-content v-if="mailContent" :currentFolder="currentFolder" :id="id"></mails-content>

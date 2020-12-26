@@ -1,7 +1,7 @@
 <template>
   <div id="background">
     <div class="container">
-      <h1 id = "highlighttest">
+      <h1 >
        Login
       </h1>
       <hr>
@@ -28,7 +28,6 @@ const apiLink = 'http://localhost:8085'
 export default {
   name: "Register",
   mounted() {
-    this.highlight()
   },
   methods:{
     signIn(){
@@ -60,15 +59,6 @@ export default {
       .catch(function (error) {
           console.log(error);
       });
-    },highlight(){
-      const inputText = document.getElementById("highlighttest");
-      let innerHTML = inputText.innerHTML;
-      console.log(innerHTML)
-      innerHTML = innerHTML.substring(0,2) + "<span style='background-color: " + "yellow" + ";'>"
-          + innerHTML.substring(2,5) + "</span>" + innerHTML.substring(5);
-      inputText.innerHTML = innerHTML;
-      console.log(inputText.innerHTML)
-
     }
 
   }

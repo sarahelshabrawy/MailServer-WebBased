@@ -429,19 +429,20 @@ updateMails(Response){
           this.contactlist = []
           let indices = Object.keys(Response.data)
           for (let i = 0; i < indices.length; i++) {
-            this.contactlist[i] = Response.data[indices[i]].source
+            const temp = JSON.parse(JSON.stringify(Response.data[indices[i]].contact))
+            this.contactlist[i] = JSON.parse(JSON.stringify(temp))
             this.searchResults[i] = {
               nameOccurrences: JSON.parse(JSON.stringify(Response.data[indices[i]].nameOccurrences)),
               emailOccurrences: JSON.parse(JSON.stringify(Response.data[indices[i]].emailOccurrences)),
             }
-
           }
         })
       }
-      console.log(this.searchResults)
+      // console.log(this.searchResults)
       console.log("6a")
-      this.componentKey += 1;
+      console.log(this.Mails)
 
+      this.componentKey += 1;
     },
 
     clickItem(e){
