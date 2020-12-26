@@ -66,7 +66,12 @@
         <div id="userFoldersList" v-if="openUserFolders">
         <div id="backToMenu" @click="openUserFolders = false"><i class="fas fa-arrow-alt-circle-left"></i>  Back</div>
         <li id="users-list" class="menu-styling" v-for="folder in userFoldersList" v-bind:key="folder">
-          <ul @click="setFolder(folder)"><span><i class="far fa-folder-open"></i>  {{folder}}</span></ul>
+          <ul><span @click="setFolder(folder)"><i class="far fa-folder-open"></i>  {{folder}}</span>
+          <div id="options-folder">
+          <div @click="setRenameFolder(folder)" id="rename-folder">Rename</div>
+          <div @click="deleteFolder(folder)" id="delete-folder">Delete</div>
+          </div>
+          </ul>
         </li>
         </div>
         <li id="menuList" class="menu-styling" v-if="openUserFolders === false">
@@ -83,15 +88,13 @@
         </div>
       </div>
       <AddFolder v-if="addFolder" @sendFolder="sendFolder"></AddFolder>
+      <RenameFolder v-if="renameFolderPanel" @renameFolder="renameFolder"></RenameFolder>
+      <MoveToFolder v-if="moveFolderPanel" @setMoveToFolder="setMoveToFolder"></MoveToFolder>
       <div id="content" >
         <component :key="componentKey" :is="component" v-bind:maillist="Mails" :currentFolder="currentFolder" :searchResults="searchResults" @paging='setpage'></component>
       </div>
     </div>
-    <div id="side-bar" v-if="component != 'contact-view'">
-        <div id="mycheck"><input type="checkbox" value="all" id="selectAll">&nbsp;Select all</div>
-        <div id="trash"><i class="fas fa-trash-alt"></i>&nbsp;Delete</div>
-        <div id="move"><i class="fas fa-folder-open"></i>&nbsp;Move E-mails</div>
-    </div>
+    <ControlBar  @getCheckedMails="getCheckedMails" @openMoveTo="openMoveTo" ></ControlBar>
   </div>
 </template>
 
@@ -100,6 +103,9 @@ import MailView from '../components/MailView.vue'
 import ContactView from '../components/ContactView.vue'
 import Compose from '../components/Compose.vue'
 import AddFolder from '../components/Add Folder.vue'
+import RenameFolder from '../components/Rename Folder.vue'
+import ControlBar from '../components/Control Bar.vue'
+import MoveToFolder from '../components/Move To Folder.vue'
 import axios from 'axios'
 let apiUrl = 'http://localhost:8085'
 let pageNumber=1;
@@ -108,8 +114,11 @@ export default {
   components: {
     'mail-view':MailView,
     'compose':Compose,
+    AddFolder,
+    RenameFolder,
+    ControlBar,
+    MoveToFolder,
     'contact-view':ContactView,
-    AddFolder
   },
   data()
   {
@@ -124,6 +133,10 @@ export default {
       folderName:String,
       userFoldersList:[],
       openUserFolders: false,
+      renameFolderPanel:false,
+      userFolderName : String,
+      folderForChecked: String,
+      moveFolderPanel : false,
       contact:false,
       componentKey : 0
       // addContact:false,
@@ -140,10 +153,125 @@ export default {
     console.log(this.contact)
   },
   methods : {
-
-
+    openMoveTo(){
+      this.moveFolderPanel = true;
+    },
+    setMoveToFolder(folder)
+    {
+      var message = document.getElementById("message-folder-move")
+      message.innerHTML = "";
+      if(folder === '')
+      {
+        this.moveFolderPanel = false;
+        return;
+      }
+      this.folderForChecked = folder;
+      this.getCheckedMails(false);
+    },
+     getCheckedMails(bool)
+    {
+        var checkedMails = [];
+        var count = 0;
+        var i = 0;
+        var checkBoxes = document.getElementsByClassName("check-boxes");
+        console.log(this.Mails)
+        for(i=0; i<this.Mails.length; i++){
+          console.log(checkBoxes[i])
+          var box = checkBoxes[i]
+            if(box.checked === true)
+            {
+              console.log("iiiiii:" + i + "  id : " + this.Mails[i]);
+              checkedMails[count] = this.Mails[i].id.toString();
+              console.log("hiiiiiii" +checkedMails[count]);
+              ++count;
+            }
+        }
+        if(bool)
+          this.moveChecked(checkedMails, "trash");
+        else
+          {
+            this.moveChecked(checkedMails, this.folderForChecked);
+          }          
+    },
+    moveChecked(checkedMails, folderName)
+    {
+      if(folderName !== "trash")
+      {
+        var message = document.getElementById("message-folder-move")
+        message.innerHTML = "";
+      }
+      axios.post(apiUrl + "/move", 
+      {
+        id : checkedMails,
+        folderName : folderName
+      }
+      ).then(Response => {
+          if(Response.data)
+          {
+            this.moveFolderPanel = false;
+            this.getMails();
+          }
+          else{
+            var message = document.getElementById("message-folder-move")
+            message.innerHTML = "Invalid Folder Name!"
+          }
+      })
+    },
+    setRenameFolder(name)
+    {
+      this.renameFolderPanel = true;
+      this.userFolderName = name;
+    },
+    renameFolder(newfoldername)
+    {
+      var message = document.getElementById("message-folder-rename");
+      message.innerHTML = "";
+      console.log(newfoldername);
+      console.log(this.userFolderName);
+      if(newfoldername === '')
+      {
+        this.renameFolderPanel = false;
+        console.log(this.userFolderName);
+        this.getUserFolders();
+        return;
+      }
+      axios.get(apiUrl + "/renameFolder", {
+        params:{
+          folderName : this.userFolderName,
+          newFolderName : newfoldername
+        }
+      }).then(Response => {
+        if(Response.data == false)
+        {
+          message.innerHTML = "This folder name is invalid!"
+          return;
+        }
+        else{
+          this.renameFolderPanel= false;
+          this.getUserFolders();
+        }
+      })
+    },
+    deleteFolder(foldername)
+    {
+       axios.get(apiUrl + "/deleteFolder", {params:{
+         folderName : foldername
+       }}
+      ).then(Response => {
+        if(!Response.data)
+        {
+          alert("faild to delete folder!");
+        }
+        else{
+          this.openUserFolders = false;
+          this.currentFolder = "inbox";
+          this.getMails();
+        }
+      })
+    },
     getUserFolders()
     {
+      this.userFoldersList = []
       axios.get(apiUrl + "/getUserFolders"
       ).then(Response => {
         let indices = Object.keys( Response.data )
@@ -173,8 +301,11 @@ export default {
           folderName : name
         }
       }).then(Response => {
-        if(Response.data === false)
-          message.innerHTML = "This folder already exists"
+        if(Response.data == false)
+        {
+          message.innerHTML = "This folder name is invalid!"
+          return;
+        }
         else{
           this.folderName = name;
           this.addFolder = false;
@@ -516,31 +647,7 @@ updateMails(Response){
   width: 1500px;
   padding-top: 25px;
 }
-#side-bar {
-  position: fixed;
-  display: flex;
-	width:1500px;
-	height:25px;
-  left: 15.8%;
-  top: 20.6%;
-  color: white;
-	background-color: #6f6d72;
-  font-family: 'Open sans', serif;
-}
-#side-bar > div {
-  position: absolute;
-}
-#trash {
-  cursor: pointer;
-  left: 300px;
-}
-#mycheck {
-  left: 50px;
-}
-#move {
-  left: 550px;
-  cursor: pointer;
-}
+
 #sort {
   transform: translate(100%, 20%);
   display: flex;
@@ -700,9 +807,9 @@ updateMails(Response){
   cursor: pointer;
 }
 #users-list > ul{
-  height: 20px;
-  padding-bottom: 10px;
-  margin-bottom: 0;
+  height: 50%;
+  margin-bottom: 0px;
+  padding-bottom: 0;
   font-size: 20px;
 }
 .menu-styling ul > span:hover {
@@ -736,7 +843,18 @@ updateMails(Response){
   font-size: 18px;
   cursor: pointer;
 }
-.fas fa-search searching{
+
+#rename-folder, #delete-folder {
+  color: white;
+  font-size: 17px;
   cursor: pointer;
+  margin-right: 15px;
+}
+#rename-folder:hover, #delete-folder:hover {
+  color: #fabaa0;
+}
+#options-folder {
+  display: flex;
+  padding-top: 5px;
 }
 </style>

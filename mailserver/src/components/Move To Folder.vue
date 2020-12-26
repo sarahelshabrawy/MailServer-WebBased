@@ -1,15 +1,15 @@
 <template>
-  <div id="addFolder">
+  <div id="MoveToFolder">
     <div class="modal-mask">
       <div class="modal-wrapper">
         <div class="modal-container">
           <div class="header">
-            Add New Folder
+            Move To
           </div>
             <label for="name"></label>
-            <input type="text" placeholder="Folder Name" name="name" id="folder">
-            <div id="message-folder"></div>
-            <button class="modal-default-button" id="okBtn" @click="addText">
+            <input type="text" placeholder="Folder Name" name="name" id="folder-move">
+            <div id="message-folder-move"></div>
+            <button class="modal-default-button" id="okBtn-move" @click="addFolderName">
                 Ok
             </button>
           </div>
@@ -20,30 +20,31 @@
 
 <script>
 export default {
-  name: 'AddFolder',
+  name: 'MoveToFolder',
   components: {
   },
   data(){
     return{
-      folderName :''
+      MoveToFolderName :''
     }
   },
   mounted() {
     
   },
   methods:{
-    addText()
+    addFolderName()
     {
-      var text = document.getElementById("folder");
-      this.folderName = text.value;
-      console.log(this.folderName);
-      this.$emit('sendFolder', this.folderName);
+      var text = document.getElementById("folder-move");
+      this.MoveToFolderName = text.value;
+      console.log("hiiiiiiiii " + this.MoveToFolderName);
+      this.$emit('setMoveToFolder', this.MoveToFolderName);
     }
   }
 }
 </script>
 
 <style scoped>
+
 .modal-mask {
 position: fixed;
 z-index: 9998;
@@ -133,5 +134,4 @@ input[type=text]:focus {
   font-weight: bold;
   padding-bottom: 20px;
 }
-
 </style>

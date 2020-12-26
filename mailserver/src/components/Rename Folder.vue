@@ -1,15 +1,15 @@
 <template>
-  <div id="addFolder">
+  <div id="renameFolder">
     <div class="modal-mask">
       <div class="modal-wrapper">
         <div class="modal-container">
           <div class="header">
-            Add New Folder
+            Rename Folder
           </div>
             <label for="name"></label>
-            <input type="text" placeholder="Folder Name" name="name" id="folder">
-            <div id="message-folder"></div>
-            <button class="modal-default-button" id="okBtn" @click="addText">
+            <input type="text" placeholder="Folder Name" name="name" id="folder-rename">
+            <div id="message-folder-rename"></div>
+            <button class="modal-default-button" id="okBtn-rename" @click="addFolderName">
                 Ok
             </button>
           </div>
@@ -20,24 +20,24 @@
 
 <script>
 export default {
-  name: 'AddFolder',
+  name: 'RenameFolder',
   components: {
   },
   data(){
     return{
-      folderName :''
+      newFolderName :''
     }
   },
   mounted() {
     
   },
   methods:{
-    addText()
+    addFolderName()
     {
-      var text = document.getElementById("folder");
-      this.folderName = text.value;
-      console.log(this.folderName);
-      this.$emit('sendFolder', this.folderName);
+      var text = document.getElementById("folder-rename");
+      this.newFolderName = text.value;
+      console.log(this.newFolderName);
+      this.$emit('renameFolder', this.newFolderName);
     }
   }
 }
@@ -133,5 +133,4 @@ input[type=text]:focus {
   font-weight: bold;
   padding-bottom: 20px;
 }
-
 </style>
