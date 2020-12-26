@@ -1,5 +1,6 @@
 <template>
   <div id="home">
+  <add-contact v-if="addContact" @close="addContact = false"  ></add-contact>
     <div id="brand">
         <h1>COMET</h1>
         <img src="..\assets\1.jpg" id="image">
@@ -27,7 +28,7 @@
           <div id="first-item" @click="clickSort">Date</div>
           <ul id="sortList">
             <li @click="clickItem">Senders</li>
-            <li @click="clickItem">Receivers</li>
+<!--            <li @click="clickItem">Receivers</li>-->
             <li @click="clickItem">Importance</li>
             <li @click="clickItem">Subject</li>
             <li @click="clickItem">Body</li>
@@ -46,12 +47,12 @@
           <label>Subject :  </label>
           <input type="text" id="subject-filter">
           </div>
-          <div id="filter-btn">Filter</div>
+          <div id="filter-btn" @click="getFilteredMail()">Filter</div>
         </div>
       </div>
       <div id="search">
-        <input key="text" id="text" value="Search In Your Emails" @click="searchBar">
-        <i class="fas fa-search searching"></i>
+        <input key="text" id="targetText" value="Search In Your Emails" @click="searchBar">
+        <i class="fas fa-search searching" v-on:click="search"></i>
       </div>
     </div>
     <a href="#" class="float" id = "compose" @click="component = 'compose'" v-on:click="hideComposeBtn" >
@@ -70,7 +71,7 @@
           </ul>
         </li>
         </div>
-        <li id="menuList" class="menu-styling" v-if="openUserFolders == false">
+        <li id="menuList" class="menu-styling" v-if="openUserFolders === false">
           <ul @click="setFolder('inbox')"><span><i class="fas fa-inbox"></i> Inbox</span></ul>
           <ul @click="setFolder('draft')"><span><i class="fas fa-archive"></i> Draft</span></ul>
           <ul @click="setFolder('sent')"><span><i class="fas fa-share-square"></i> Sent</span></ul>
@@ -78,15 +79,15 @@
           <ul @click="addFolder = true"><span><i class="fas fa-plus"></i> Add New Folder</span></ul>
           <ul @click="getUserFolders"><span><i class="fas fa-star"></i> My Folders<i class="fas fa-angle-right icon-arrow"></i></span></ul>
         </li>
-        <div id="contacts-menu" v-if="openUserFolders == false">
-          <div id="add-contact"><i class="fas fa-user-plus icon"></i>  ADD CONTACT</div>
-          <div id="my-contacts"><i class="fas fa-user-friends icon"></i>  MY CONTACTS</div>
+        <div id="contacts-menu" v-if="openUserFolders === false">
+          <div id="add-contact" @click="addContact = true"><i class="fas fa-user-plus icon"></i>  ADD CONTACT</div>
+          <div id="my-contacts" @click="component = 'contact-view'"><i class="fas fa-user-friends icon"></i>  MY CONTACTS</div>
         </div>
       </div>
       <AddFolder v-if="addFolder" @sendFolder="sendFolder"></AddFolder>
       <RenameFolder v-if="renameFolderPanel" @renameFolder="renameFolder"></RenameFolder>
       <div id="content" >
-        <component :is="component" v-bind:maillist="Mails" :currentFolder="currentFolder"></component>
+        <component :key="componentKey" :is="component" v-bind:maillist="Mails" :currentFolder="currentFolder" :searchResults="searchResults" @paging='setpage'></component>
       </div>
     </div>
     <div id="side-bar">
@@ -104,6 +105,7 @@ import AddFolder from '../components/Add Folder.vue'
 import RenameFolder from '../components/Rename Folder.vue'
 import axios from 'axios'
 let apiUrl = 'http://localhost:8085'
+let pageNumber=1;
 export default {
   name: 'Home',
   components: {
@@ -117,6 +119,7 @@ export default {
     return{
       component:'mail-view',
       Mails:[],
+      searchResults:[],
       prop:this.Mails,
       currentFolder:"inbox",
       beforeMount : true,
@@ -125,7 +128,10 @@ export default {
       userFoldersList:[],
       openUserFolders: false,
       renameFolderPanel:false,
-      userFolderName : String
+      userFolderName : String,
+      componentKey : 0
+      // addContact:false,
+      // target:""
     }
   },
   beforeMount(){
@@ -196,15 +202,14 @@ export default {
       })
       console.log(this.userFoldersList.toString())
       this.openUserFolders = true;
-    }
-    ,
+    },
     hideComposeBtn(e)
     {
       e.target.style.display = "none";
     },
     sendFolder(name)
     {
-      var message = document.getElementById("message-folder");
+      const message = document.getElementById("message-folder");
       message.innerHTML = ""
       if(name === '')
       {
@@ -231,49 +236,126 @@ export default {
     {
       this.currentFolder = folder;
       this.component = 'mail-view';
-      var btn = document.getElementById("compose");
+      const btn = document.getElementById("compose");
       btn.style.display = "block";
       this.getMails();
     },
     getMails(){
+      console.log(this.pageNumber)
       axios.get(apiUrl + "/getMails", {
         params:{
-          folderName : this.currentFolder
+          folderName : this.currentFolder,
+          pageNumber :pageNumber
 
         }
-      }).then(Response => {
-        this.Mails = [];
-        let indices = Object.keys( Response.data )
-        for(let i = 0 ;i < indices.length ; i++){
-          this.Mails[i] = {
-            id : Response.data[indices[i]].id,
-            subject : Response.data[indices[i]].subject,
-            sender : Response.data[indices[i]].sender,
-            body : Response.data[indices[i]].body,
-            date : Response.data[indices[i]].date,
-            receiver : Response.data[indices[i]].receiver
-          }
-          console.log(this.Mails[i])
-        }
-      })
+      }).then(Response => this.updateMails(Response))
       this.beforeMount = false
     },
+updateMails(Response){
+  this.Mails = [];
+  let indices = Object.keys( Response.data )
+  for(let i = 0 ;i < indices.length ; i++){
+    this.Mails[i] = {
+      id : Response.data[indices[i]].id,
+      subject : Response.data[indices[i]].subject,
+      sender : Response.data[indices[i]].sender,
+      body : Response.data[indices[i]].body,
+      date : Response.data[indices[i]].date,
+      receiver : Response.data[indices[i]].receiver
+    }
+    console.log(this.Mails[i])
+  }
+},
+ setpage(){
+     var header = document.getElementById("pagination");
+    var btns = header.getElementsByClassName("btn");
+
+     for (var i = 0; i < btns.length; i++) {
+         btns[i].addEventListener("click", function() {
+           const current = document.getElementsByClassName("active");
+           current[0].className = current[0].className.replace(" active", "");
+            this.className += " active";
+            pageNumber=current[0].id;
+            });
+            }
+
+            this.getMails();
+  },
 
     searchBar() {
-      var myvalue =  document.getElementById("text").value ;
-      if(myvalue == "Search In Your Emails"){
-        document.getElementById("text").value = "";
+      const myvalue = document.getElementById("targetText").value;
+      if(myvalue === "Search In Your Emails"){
+        document.getElementById("targetText").value = "";
       }
+    },async search() {
+      console.log("HELLO SARSOURAAA")
+      const target = document.getElementById("targetText").value;
+      await axios.get(apiUrl + "/searchMails", {
+        params: {target: target}
+      }).then(Response => {
+        this.searchResults = []
+        // const searchResult = {
+        //   subjectOccurrences : [],
+        //   bodyOccurrences : [],
+        //   senderOccurrences : [],
+        //   importanceOccurrences : [] ,
+        //   priorityOccurrences : [],
+        //   dateOccurrences : []
+        // }
+        let indices = Object.keys(Response.data)
+        for (let i = 0; i < indices.length; i++) {
+          this.Mails[i] = Response.data[indices[i]].source
+          this.searchResults[i] = {
+            subjectOccurrences: JSON.parse(JSON.stringify(Response.data[indices[i]].subjectOccurrences)),
+            bodyOccurrences: JSON.parse(JSON.stringify(Response.data[indices[i]].bodyOccurrences)),
+            senderOccurrences: JSON.parse(JSON.stringify(Response.data[indices[i]].senderOccurrences)),
+            priorityOccurrences: JSON.parse(JSON.stringify(Response.data[indices[i]].priorityOccurrences)),
+            dateOccurrences: JSON.parse(JSON.stringify(Response.data[indices[i]].dateOccurrences))
+          }
+          // console.log("subject")
+          // console.log(this.searchResults[i].subjectOccurrences)
+          // const temp = JSON.parse(JSON.stringify(this.searchResults[i].subjectOccurrences));
+          // console.log("TEMP")
+          // console.log(temp)
+          // console.log("FINISH")
+          // for(let i = 0 ;i < temp.length ; i++){
+          //   console.log("WOW")
+          //   console.log(temp[i].start)
+          //   console.log(temp[i].end)
+          //   console.log("WOW")
+          // }
+          // subjectOccurrences : JSON.parse(JSON.stringify(Response.data[indices[i]].subjectOccurrences)),
+          //     bodyOccurrences : JSON.parse(JSON.stringify(Response.data[indices[i]].bodyOccurrences)),
+          //     senderOccurrences : JSON.parse(JSON.stringify(Response.data[indices[i]].senderOccurrences)),
+          //     importanceOccurrences : JSON.parse(JSON.stringify(Response.data[indices[i]].importanceOccurrences)),
+          //     priorityOccurrences : JSON.parse(JSON.stringify(Response.data[indices[i]].priorityOccurrences)),
+          //     dateOccurrences : JSON.parse(JSON.stringify(Response.data[indices[i]].dateOccurrences))
+
+
+        }
+        console.log(this.searchResults)
+        console.log("6a")
+
+      })
+      this.searchResults = JSON.parse(JSON.stringify(this.searchResults));
+      this.componentKey +=1;
     },
+
     clickItem(e){
-      var listItem = e.target.innerHTML;
-      var firstItem = document.getElementById("first-item");
+      const listItem = e.target.innerHTML;
+      const firstItem = document.getElementById("first-item");
       e.target.innerHTML = firstItem.innerHTML;
       firstItem.innerHTML = listItem;
+      if(listItem!=="Date"){
+        axios.get(apiUrl + "/sortMails", {
+          params:{ sort : listItem }
+        }).then(Response =>this.updateMails(Response))
+      }
+
     },
     clickSort(){
-      var list = document.getElementById("sortList")
-      var icon = document.getElementById("list-icon")
+      const list = document.getElementById("sortList");
+      const icon = document.getElementById("list-icon");
       if(list.style.display === "none")
       {
         list.style.display = "block";
@@ -286,8 +368,8 @@ export default {
       }
     },
     clickFilter(){
-      var box = document.getElementById("check-menu");
-      var icon = document.getElementById("check-icon")
+      const box = document.getElementById("check-menu");
+      const icon = document.getElementById("check-icon");
       if(box.style.display === "none")
       {
         box.style.display = "block";
@@ -301,16 +383,51 @@ export default {
     },
     display()
     {
-      var acc = document.getElementById("account-info");
+      const acc = document.getElementById("account-info");
       acc.style.display = "block";
     },
     hide()
     {
-      var acc = document.getElementById("account-info");
+      const acc = document.getElementById("account-info");
       acc.style.display = "none";
+    },
+
+
+    getFilteredMail(){
+      const sender = document.getElementById("sender-filter").value;
+      const subject = document.getElementById("subject-filter").value;
+      axios.get(apiUrl + '/filter', {
+        params:
+        {
+          sender: sender,
+          subject: subject 
+        }
+      })
+      .then(response => {
+          console.log("hello"+response.data.length)
+          console.log(response.data)
+           this.Mails = [];
+        
+        for(let i = 0 ;i < response.data.length ; i++){
+          this.Mails[i] = {
+            id : response.data[i].id,
+            subject : response.data[i].subject,
+            sender : response.data[i].sender,
+            body : response.data[i].body,
+            date : response.data[i].date,
+            receiver : response.data[i].receiver
+          }
+        }
+           
+      })
+     
+
     }
   }
 }
+
+
+
 </script>
 
 <style scoped>
@@ -422,7 +539,7 @@ export default {
 #search {
   transform: translate(200%, 20%);
 }
-#text {
+#targetText {
   width: 330px;
   height: 23px;
   border: 5px solid transparent;
@@ -491,8 +608,8 @@ export default {
   margin-top: 5px;
 }
 #sortList {
-  margin-top: 0px;
-  border: 2px, solid, transparent;
+  margin-top: 0;
+  border: 2px solid transparent;
   background-color: white;
   color: #081448;
   text-transform: uppercase;
@@ -528,7 +645,7 @@ export default {
   font-size: 17px;
   padding-left: 22px;
   padding-top: 5px;
-  border: 2px, solid, transparent;
+  border: 2px solid transparent;
   border-radius: 5px;
   cursor: pointer;
   width: 180px;
@@ -554,7 +671,7 @@ export default {
   color: white;
   padding-top: 3px;
   padding-left: 10px;
-  border: 1px, solid, transparent;
+  border: 1px solid transparent;
   border-radius: 50px;
   cursor: pointer;
 }
@@ -598,8 +715,7 @@ export default {
   letter-spacing: 1px;
   left: 70px;
   border: 1px solid white;
-  border-radius: 20px;
-  border-top-left-radius: 0;
+  border-radius: 0 20px 20px 20px;
   word-wrap: break-word;
   display: none;
   box-shadow: 2px 2px 3px #999;

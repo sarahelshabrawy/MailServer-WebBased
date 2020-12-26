@@ -18,30 +18,23 @@
       <div id="message"></div>
 
     </div>
-    <button id="show-modal" @click="showModal = true">Show Modal</button>
-    <add-contact v-if="showModal" @close="showModal = false">
-    </add-contact>  </div>
+  </div>
 </template>
 
 <script>
-import AddContact from '../components/Add Contact'
 import axios from 'axios'
 const apiLink = 'http://localhost:8085'
 
 export default {
   name: "Register",
-  data(){
-    return{
-      showModal: false
-    }
-  },mounted() {
+  mounted() {
     this.highlight()
   },
   methods:{
     signIn(){
-      var password = document.getElementById("psw").value;
-      var email = document.getElementById("email").value;
-      var text = document.getElementById("message");
+      const password = document.getElementById("psw").value;
+      const email = document.getElementById("email").value;
+      const text = document.getElementById("message");
       if(password ==='' || email ==='')
       {
         text.innerHTML = "You should fill all fields!";
@@ -78,9 +71,6 @@ export default {
 
     }
 
-  },
-  components:{
-    AddContact
   }
 }
 </script>

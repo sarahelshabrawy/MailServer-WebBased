@@ -15,7 +15,7 @@
   
 
  <span id="sending">
-   <button class="Send" @click="$emit('send_mail')">Send</button>
+   <button class="Send" @click="$emit('send_mail','compose')">Send</button>
 </span>
 
  <span class="space"></span>
@@ -24,15 +24,17 @@
         <input type ="number" id = "num_input"  max = "30" min = "0" value="30" @change="changeRange();$emit('setwidth',lineValue)">
             
     </span>
-    
-
 
     <!-- <button class="attach"> </button>-->
       <span class="image-upload">
   <label for="file-input">
     <i class="material-icons" style="color:#fabba2 " >attach_file</i>
   </label>
-  <input id="file-input" type="file" multiple @change="$emit('attach_file')" />
+        <!--         @change="test"-->
+  <input id="file-input" type="file" ref="file"
+         multiple @change="$emit('attach_file',$refs.file.files[0])"
+
+        />
 </span>
 
  <span class="space"></span>
@@ -51,8 +53,9 @@
        <span class="space"></span>
         <span class="space"></span>
 
-<span id="delete">
-         <i class="material-icons" style="color:#fabba2  " >delete</i>
+<span  id="delete" @click="$emit('send_mail','draft')">
+  <span id="draft"><i style="margin-left:8px;" class="fas fa-archive"></i>  Save to Draft</span>
+     
 </span>
      
   </div>
@@ -70,9 +73,14 @@ export default {
             range_id:"rangeLineOpacity",
             div_id:"divLineOpacity",
             lineValue:'',
+            file:'',
+
         }
     },
-     methods:{ 
+     methods:{
+    test(){
+this.file = this.$refs.file.files[0];
+    },
         rangeDisplay(){
         var range = document.getElementById(this.range_id),
             range_div = document.getElementById(this.div_id);
@@ -109,28 +117,23 @@ export default {
      
         var num = document.getElementById("num_input");
         num.id = this.num_id;
-       
-        
   },
 
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style  scoped>
 #formatBar{
-   position: absolute;
+   
    height: 45px;
    width: 1300px;
    background-color: #faeeea;
-   padding-top: 5px;
   
 }
  button, input[type=number], #Inputs{
   display: block;
   float: left;
 }
-
 
 input[type=number]{
   width: 50px;
@@ -150,10 +153,18 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 #delete{
-  margin-left:500px ;
- 
+  margin-left:370px ;
 }
-
+#draft{
+  font-family: 'Open sans', serif;
+  font-size: 20px;
+   border: 2px solid #fabba2;
+  border-radius: 12px;
+  
+}
+#draft:hover{
+  background-color: #fabba2;
+}
 #Inputs{
   padding: 2px;
   margin: 0%;
@@ -172,15 +183,12 @@ input[type=number]::-webkit-outer-spin-button {
     position: absolute;
      margin: 9px;
       margin-top: 9px;
-   
-
 }
 .textFormat>input{
     position: relative;
 }
 .button {
   border: none;
-
   padding: 16px 32px;
   text-align: center;
   text-decoration: none;
@@ -192,7 +200,6 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .Send{
- 
   background-color: #fabba2; 
   color: black; 
   border: 2px solid purple;
@@ -201,8 +208,6 @@ input[type=number]::-webkit-outer-spin-button {
   border-radius: 12px;
   margin-left: 9px;
   margin-right: 200px;
-  
-  
 
 }
 .switch input { 
