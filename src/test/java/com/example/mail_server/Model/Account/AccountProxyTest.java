@@ -32,6 +32,7 @@ public class AccountProxyTest  {
     @Test
     public void testCheckEmail() {
         AccountProxy accountProxy = new AccountProxy();
-        Assertions.assertFalse(accountProxy.checkEmail("1"));
+        Assertions.assertTrue(accountProxy.checkEmail("john@gmail.com"));
+        Assertions.assertFalse(accountProxy.checkEmail("falseMail@gmail.com"));
     }
 }

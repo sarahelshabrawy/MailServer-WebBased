@@ -27,9 +27,10 @@ public class AccountProxy {
     public boolean checkEmail(String email){
         File folder = new File("./Accounts");
         File[] list = folder.listFiles();
+        assert list != null;
         for(File file : list)
         {
-            if(file.getName().equals(email))
+            if(file.getName().equalsIgnoreCase(email))
             {
                 return true;
             }
