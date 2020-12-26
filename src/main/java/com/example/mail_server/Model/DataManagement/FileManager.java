@@ -115,13 +115,7 @@ public class FileManager {
         directory.createFolder(path);
         directory.CopyFolder(new File(sourcePath),new File(path),mail.getId());
         directory.DeleteFolder(new File(sourcePath));
-        if(folderName.equalsIgnoreCase("trash"))
-        {
-            SimpleDateFormat formatter= new SimpleDateFormat("YYYY-MM-dd-HH-mm-ss");
-            Date now = new Date(System.currentTimeMillis());
-            System.out.println("hellooooooooooooo");
-            mail.setDeleteDate(formatter.format(now));
-        }
+
 
         return true;
     }

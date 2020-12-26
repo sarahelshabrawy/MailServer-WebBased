@@ -15,6 +15,8 @@ import com.example.mail_server.Model.Mail.indexMail;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedList;
 
 public class User {
@@ -141,11 +143,21 @@ public class User {
             for (indexMail mail : mails) {
                 if (mail.getId().equalsIgnoreCase(s)) {
                     mails.remove(mail);
+                    if(folderName.equalsIgnoreCase("trash"))
+                    {
+                        SimpleDateFormat formatter= new SimpleDateFormat("YYYY-MM-dd-HH-mm-ss");
+                        Date now = new Date(System.currentTimeMillis());
+                        System.out.println("hellooooooooooooo");
+                        mail.setDeleteDate(formatter.format(now));
+                    }
                     json.moveMail(s, currentUser, mail, folderName);
+
                     break;
                 }
+
             }
         }
+
         return true;
     }
 
