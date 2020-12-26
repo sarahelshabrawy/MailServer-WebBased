@@ -8,7 +8,7 @@
   </div>
 
   <div id="Subject_">
-   <label  for="subject">Subject: </label>
+   <label  for="subject">Subject:  </label>
   <input type="text" id="subject" name="subject"  @change="setSubject()"><br><br>
   </div>
   <div id="To_">
@@ -19,12 +19,12 @@
   <span><i class="fas fa-plus" @click="addReciever"></i> </span>
   
 </div>
-
-
-
-  <div>
-<textarea id="textArea" name="w3review" rows="4" cols="50"  @change="setbody()">
-  </textarea>
+  <div id = "contain" >
+         <div id="attach"  >Attachments :</div>
+  </div>
+<div>
+<textarea id="textArea" name="w3review" rows="4" cols="30"  @change="setbody()">  </textarea>
+ 
   </div>
 </div>
 
@@ -50,9 +50,10 @@ export default {
             importance:0,
             secondaryRecieversCount:0,
             file:new FormData(),
-
+            attachments : 0,
         }
     },
+
   methods:{
      addReciever(){
       const recieversContainer = document.getElementById("Recievers")
@@ -83,17 +84,30 @@ export default {
     },
     setAttachment(file){
       console.log("helo")
-      // const formData = ;
-     // this.files=document.getElementById("file-input").files;
+      const attach = document.getElementById("contain")
+      const div = document.createElement("div");
+      div.style.borderRadius="12px";
+      div.style.border= "2px solid #fabba2" ;
+      div.id= "Attachment"+ (parseInt(this.attachments));
+      div.innerHTML = file.name 
+      attach.appendChild(div);
 
-      // const formData = ;
-     // this.files=document.getElementById("file-input").files;
+      const button = document.createElement("button")
+      button.id = "attach" + this.attachment 
+      button.innerHTML = "<i class='material-icons'>delete</i>"
+      button.setAttribute("onclick", this.deletAttachment("Attachment" + this.attachment ))
+      div.append(button)
 
-      this.file.append('file',file)
-      // this.file = formData
-      // this.file.push(formData)
+      this.file.append('file'+ this.attachment ,file)
       console.log(this.file)
-       
+      this.attachment ++;
+
+    },
+    deletAttachment(id){
+      var attach = document.getElementById( id)
+      attach.remove()
+      this.file.delete('file'+id)
+      console.log("this.file")
     },
     setDate(){
       this.date=new Date();
@@ -140,15 +154,6 @@ export default {
       });
 
       axios.post(apiUrl+folder,mail)
-      // axios.get(apiUrl+folder,{
-      //   params: {
-      //     receivers: encodeURI(this.Receivers),
-      //     subject: encodeURI(this.subject),
-      //     body: encodeURI(this.body),
-      //     date: encodeURI(this.date),
-      //     priority: encodeURI(this.importance)
-      //   }
-      // })
       .then(response => {
         console.log(response.data)
       })
@@ -215,7 +220,7 @@ textarea:focus, input:focus{
 .format{
   padding-top: 20px;
 }
-#formatBar{
+ #formatBar{
  position: absolute;
  top:90%;
 }

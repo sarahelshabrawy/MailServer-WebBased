@@ -3,7 +3,7 @@
     <div id = "new" class="MailBox">
         <div id = "sender">{{mail.sender}}</div>
         <div id = "subject">{{mail.subject + "  - "}}</div>
-        <div id = "content">{{ mail.body}}</div>
+        <div id = "contentxx">{{ mail.body}}</div>
         <div id = "date" >{{mail.date}}</div>
     </div>
   </div>
@@ -54,16 +54,16 @@ export default {
           console.log(mySearchResults)
           console.log("LALALA")
           const subjectOccurrences = JSON.parse(JSON.stringify(mySearchResults.subjectOccurrences))
-          const bodyOccurrences = JSON.parse(JSON.stringify(mySearchResults.subjectOccurrences))
-          const senderOccurrences = JSON.parse(JSON.stringify(mySearchResults.subjectOccurrences))
-          const dateOccurrences = JSON.parse(JSON.stringify(mySearchResults.subjectOccurrences))
+          const bodyOccurrences = JSON.parse(JSON.stringify(mySearchResults.bodyOccurrences))
+          const senderOccurrences = JSON.parse(JSON.stringify(mySearchResults.senderOccurrences))
+          const dateOccurrences = JSON.parse(JSON.stringify(mySearchResults.dateOccurrences))
           // const priorityOccurrences= JSON.parse(JSON.stringify(mySearchResults.subjectOccurrences))
           console.log(subjectOccurrences)
           if(subjectOccurrences)
           this.highlight("subject",mySearchResults.subjectOccurrences)
 
           if(bodyOccurrences)
-          this.highlight("content",mySearchResults.bodyOccurrences)
+          this.highlight("contentxx",mySearchResults.bodyOccurrences)
 
           if(senderOccurrences)
           this.highlight("sender",mySearchResults.senderOccurrences)
@@ -112,7 +112,7 @@ div {
     font-size: 17px;
 }
 
-#content{
+#contentxx{
     width: 40%;
     color:gray;
     margin: 0;

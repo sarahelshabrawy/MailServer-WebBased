@@ -5,41 +5,27 @@
 </template>
 
 <script>
-import axios from 'axios'
-let apiUrl = 'http://localhost:8085'
+// import axios from 'axios'
+// let apiUrl = 'http://localhost:8085'
 import Contact from './Contact.vue'
 export default {
     components: {
         Contact
-    },
+    },props:{
+      contactlist:[]
+  },
     name: 'ContactView',
     data(){
     return{
         beforeMount:true,
-        contactlist:[]
     }
     },
-    beforeMount(){
-        if(this.beforeMount)
-            this.getContacts()
-    },
+    // beforeMount(){
+    //     if(this.beforeMount)
+    //         this.getContacts()
+    // },
     methods:{
-        getContacts(){
-            axios.get(apiUrl + "/getContacts")
-            .then(Response => {
-                this.contactlist = [];
-                let indices = Object.keys( Response.data )
-                for(let i = 0 ;i < indices.length ; i++){
-                this.contactlist[i] = {
-                    emails : Response.data[indices[i]].email,
-                    name:Response.data[indices[i]].name
-                }
-                console.log(this.contactlist[i])
-                console.log(Response.data)
-                }
-            })
-            this.beforeMount = false
-        }
+
     }
 }
 </script>

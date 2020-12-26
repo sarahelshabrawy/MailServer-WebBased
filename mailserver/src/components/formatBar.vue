@@ -25,7 +25,6 @@
             
     </span>
 
-    <!-- <button class="attach"> </button>-->
       <span class="image-upload">
   <label for="file-input">
     <i class="material-icons" style="color:#fabba2 " >attach_file</i>

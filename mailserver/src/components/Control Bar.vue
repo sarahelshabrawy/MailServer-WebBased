@@ -36,12 +36,16 @@ export default {
 </script>
 
 <style scoped>
+* {
+  margin: 0;
+  padding: 0;
+}
 #controlBar {
-  position: fixed;
+  position: relative;
   display: flex;
-  width:1500px;
+  width:100%;
   height:25px;
-  left: 15.8%;
+  left: 0;
   top: 20.6%;
   color: white;
   background-color: #6f6d72;

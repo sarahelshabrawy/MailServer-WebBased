@@ -9,7 +9,7 @@
             <label for="name"></label>
             <input type="text" placeholder="Name" name="name" id="name" required>
           <div id="mails">
-            <label for="email"></label>
+            <label for="primaryEmail"></label>
             <input type="text" placeholder="Primary Email" name="email" id="primaryEmail" required>
           </div>
           <button class="add-secondary-mail" v-on:click="addMail">
@@ -77,7 +77,7 @@ export default {
 <style>
 .modal-mask {
 position: fixed;
-z-index: 9998;
+z-index: 999999999999999999;
 top: 0;
 left: 0;
 width: 100%;

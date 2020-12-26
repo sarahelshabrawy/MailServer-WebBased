@@ -1,12 +1,11 @@
 <template>
   <div class="MailsContent" >
     <div class = "Menu">
-      <button id="delete"><i class="material-icons">delete</i></button>
-      <button id="Move"><i class="material-icons">move_to_inbox</i></button>      
+      <!-- <button id="delete"><i class="material-icons">delete</i></button>
+      <button id="Move"><i class="material-icons">move_to_inbox</i></button>       -->
 
       <h1>{{mail.subject}}</h1>
     </div>   
-    <!-- <a v-for="attach in files" :key="attach.id" :href="attach"  download ="hhhh"></a> -->
     
     <div class="sender">{{"from : " + mail.sender}}</div>
     <h3>{{mail.body}}</h3>
@@ -37,6 +36,7 @@ export default {
   },
   methods:{
     async getMailContent(){
+
       console.log(this.id)
       await axios.get(apiUrl + "/openMail", {
         params:{
@@ -59,18 +59,15 @@ export default {
         path : encodeURI(this.mail.Attachments)
       }})
       .then(Response => {
-        let indices = Object.keys( Response.data )
-        for(let i = 0 ;i < indices.length ; i++){
-          let binaryString = window.atob(Response.data[0])
+        for(let i = 0 ;i < Response.data.length ; i++){
+          let binaryString = window.atob(Response.data[i])
           let binaryLen = binaryString.length;
           let bytes = new Uint8Array(binaryLen);
           for (let i = 0; i < binaryLen; i++) {
               bytes[i] = binaryString.charCodeAt(i);
           }
           var mime = require('mime-types')
-          let mimeType = mime.lookup(this.mail.Attachments[0]) 
-          console.log(mimeType)
-          // var  byte = this.base64ToArrayBuffer(Response.data);
+          let mimeType = mime.lookup(this.mail.Attachments[i]) 
           let blob = new Blob([bytes], {type: mimeType})  ;
           let link = document.createElement('a')
           link.href = window.URL.createObjectURL(blob)
@@ -85,7 +82,6 @@ export default {
 
   },
   mounted() {
-    console.log(this.mail)
   },
 }
 </script>
