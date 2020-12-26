@@ -1,30 +1,34 @@
-package com.example.mail_server.Model.Sort;
+package com.example.mail_server.Model.Sort.SortContact;
 
-import java.lang.Integer;
+import com.example.mail_server.Model.Contact;
+import com.example.mail_server.Model.Contact;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
 
-public class SortOmmElnumbers  {
-    //leih ??
-    public List<Integer> Sort(LinkedList<Integer> mails) {
+public abstract class SortContact implements ISortContact {
+    @Override
+    public List<Contact> Sort(LinkedList<Contact> mails){
         return divide(mails, 0, mails.size()-1);
     }
 
-    LinkedList<Integer> merge(LinkedList<Integer> list, int l, int m, int r) {
+    LinkedList<Contact> merge(LinkedList<Contact> list, int l, int m, int r) {
         /* Create temp lists */
-        List<Integer> L = new ArrayList<>(list.subList(l,m+1));
-        List<Integer> R = new ArrayList<>(list.subList(m+1,r+1));
+        List<Contact> L = new ArrayList<>(list.subList(l,m+1));
+        List<Contact> R = new ArrayList<>(list.subList(m+1,r+1));
         /*Copy data to temp lists*/
-        ListIterator<Integer> leftIterator = L.listIterator();
-        ListIterator<Integer> rightIterator = R.listIterator();
-        ListIterator<Integer> listIterator = list.listIterator(l);
+        ListIterator<Contact> leftIterator = L.listIterator();
+        ListIterator<Contact> rightIterator = R.listIterator();
+        ListIterator<Contact> listIterator = list.listIterator(l);
 
         /* Merge the temp lists */
         while (leftIterator.hasNext() && rightIterator.hasNext()) {
-            Integer left = leftIterator.next();
-            Integer right = rightIterator.next();
+            Contact left = leftIterator.next();
+            Contact right = rightIterator.next();
             listIterator.next();
-            if(left<right){
+            if(getStringAttribute(left).compareToIgnoreCase(getStringAttribute(right))<0){
                 listIterator.set(left);
                 rightIterator.previous();
             } else {
@@ -45,11 +49,12 @@ public class SortOmmElnumbers  {
             listIterator.set(rightIterator.next());
         }
         return list;
+
     }
 
     // Main function that sorts list[l..r] using
     // merge()
-    List<Integer> divide(LinkedList<Integer> list, int l, int r) {
+    List<Contact> divide(LinkedList<Contact> list, int l, int r) {
         if (l < r) {
             // Find the middle point
             int m = (l + r) / 2;
@@ -62,18 +67,7 @@ public class SortOmmElnumbers  {
             return merge(list, l, m, r);
         }
         //walla null ?
-        return null;
+        return new LinkedList<>();
     }
-
-//    public static void main(String[] args) {
-//        SortOmmElnumbers lala = new SortOmmElnumbers();
-//        List<Integer> haha = new LinkedList<>();
-//        for (int i = 10; i >= 0; i--) {
-//            haha.add(i);
-//        }
-//
-//        haha = lala.Sort((LinkedList<Integer>) haha);
-//        System.out.println(Arrays.toString(haha.toArray()));
-//
-//    }
+    abstract String getStringAttribute(Contact contact);
 }
