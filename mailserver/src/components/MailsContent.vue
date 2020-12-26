@@ -1,8 +1,8 @@
 <template>
   <div class="MailsContent" >
     <div class = "Menu">
-      <button id="delete"><i class="material-icons">delete</i></button>
-      <button id="Move"><i class="material-icons">move_to_inbox</i></button>      
+      <!-- <button id="delete"><i class="material-icons">delete</i></button>
+      <button id="Move"><i class="material-icons">move_to_inbox</i></button>       -->
 
       <h1>{{mail.subject}}</h1>
     </div>   
@@ -92,6 +92,7 @@ export default {
   background: linear-gradient(90deg,  #ffdde9 0%,white 100%);
   padding:0;
   height: 600px;
+  width: 100%;
 }
 .Menu{
   border: 0.1px solid rgb(253, 231, 246);
