@@ -72,6 +72,7 @@ public class FileManager {
         newMail.put("date", mail.getDate());
         newMail.put("body", mail.getBody());
         newMail.put("priority",mail.getPriority());
+        newMail.put("deleteDate", mail.getDeleteDate());
 
         JSONArray sortedBody = new JSONArray();
         for(Object word : mail.getSortedBody()){
@@ -97,7 +98,6 @@ public class FileManager {
 
         newMail.put("sortedBody",sortedBody);
         newMail.put("sortedSubject",sortedSubject);
-        newMail.put("deleteDate", mail.getDeleteDate());
         mails.add(newMail);
         addObjectToJson(path,mails);
 

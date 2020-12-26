@@ -96,7 +96,7 @@ public class Account {
             indexMail mail = new indexMail((String) obj.get("subject"),(String) obj.get("body"),
                     (String) obj.get("sender"),receiver,(String) obj.get("date"), ((Long) obj.get("priority")).intValue());
             mail.setId((String) obj.get("id"));
-
+            mail.setDeleteDate((String) obj.get("deleteDate"));
             JSONArray sortedBody = (JSONArray) obj.get("sortedBody");
             indexedWord[] sortedBodywow = new indexedWord[sortedBody.size()];
             int i=0;
