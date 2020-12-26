@@ -2,14 +2,12 @@ package com.example.mail_server.Model.Account;
 
 import com.example.mail_server.Model.Contact;
 import com.example.mail_server.Model.DataManagement.FileManager;
-import com.example.mail_server.Model.Search.searchMailsFacade;
+import com.example.mail_server.Model.Search.*;
 import com.example.mail_server.Model.Sort.SortContact.ISortContact;
 import com.example.mail_server.Model.Sort.SortContact.SortContactFactory;
 import com.example.mail_server.Model.Sort.SortMail.ISortMail;
-import com.example.mail_server.Model.Search.indexedWord;
 import com.example.mail_server.Model.Mail.indexMail;
 import com.example.mail_server.Model.Sort.SortMail.SortMailFactory;
-import com.example.mail_server.Model.Search.searchResults;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -33,7 +31,7 @@ public class Account {
 
 
     public Account(){
-        currentFolderindexMails=new LinkedList<indexMail>();
+        currentFolderindexMails= new LinkedList<>();
         contacts= new LinkedList<>();
         userFolders = new HashMap<>();
         fileManager = new FileManager();
@@ -147,10 +145,15 @@ public class Account {
         return contacts;
     }
 
-    public LinkedList<searchResults> searchFolder(String target){
+    public LinkedList<mailSearchResults> searchFolder(String target){
         searchMailsFacade Search = new searchMailsFacade();
         return  Search.search(getCurrentFolderMails(),target);
     }
+    public LinkedList<contactSearchResults> searchContacts(String target){
+        searchContacts Search = new searchContacts();
+        return  Search.search(contacts,target);
+    }
+
     public void addUserFolder(String folderName){}
 
     public LinkedList<indexMail> getUserFolder(String folderName) {

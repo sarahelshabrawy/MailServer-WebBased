@@ -1,6 +1,6 @@
 package com.example.mail_server.Model.Search;
 
-public class searchResults {
+public class mailSearchResults {
     Object source;
     Interval[] subjectOccurrences;
     Interval[] bodyOccurrences;
@@ -8,7 +8,7 @@ public class searchResults {
     Interval[] priorityOccurrences;
     Interval[] dateOccurrences;
 
-    public searchResults(Object source, Interval[] subjectOccurrences, Interval[] bodyOccurrences, Interval[] senderOccurrences, Interval[] priorityOccurrences, Interval[] dateOccurrences) {
+    public mailSearchResults(Object source, Interval[] subjectOccurrences, Interval[] bodyOccurrences, Interval[] senderOccurrences, Interval[] priorityOccurrences, Interval[] dateOccurrences) {
         this.source = source;
         this.subjectOccurrences = subjectOccurrences;
         this.bodyOccurrences = bodyOccurrences;

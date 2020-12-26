@@ -6,8 +6,8 @@ import com.example.mail_server.Model.Mail.indexMail;
 import java.util.LinkedList;
 
 public class searchMailsFacade {
-    public LinkedList<searchResults> search(LinkedList<indexMail> mails, String x){
-        LinkedList<searchResults> searchResults = new LinkedList<>();
+    public LinkedList<mailSearchResults> search(LinkedList<indexMail> mails, String x){
+        LinkedList<mailSearchResults> mailSearchResults = new LinkedList<>();
         BinarySearch binarySearch = new BinarySearch();
         LinearSearch linearSearch = new LinearSearch();
         for(indexMail mail : mails){
@@ -17,9 +17,9 @@ public class searchMailsFacade {
             Interval[] senderOccurrences = linearSearch.search(mail.getSender(),x);
             Interval[] dateOccurrences = linearSearch.search(mail.getDate(),x);
             if(subjectOccurrences!=null || bodyOccurrences!=null || priorityOccurrences!=null|| senderOccurrences!=null || dateOccurrences!=null)
-                searchResults.add(new searchResults(mail, subjectOccurrences, bodyOccurrences, senderOccurrences, priorityOccurrences, dateOccurrences));
+                mailSearchResults.add(new mailSearchResults(mail, subjectOccurrences, bodyOccurrences, senderOccurrences, priorityOccurrences, dateOccurrences));
         }
-        return searchResults;
+        return mailSearchResults;
     }
 
 }

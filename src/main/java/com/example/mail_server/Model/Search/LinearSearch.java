@@ -2,7 +2,7 @@ package com.example.mail_server.Model.Search;
 
 import java.util.LinkedList;
 
- class LinearSearch {
+public class LinearSearch {
     public Interval[] search(String source, String target){
         LinkedList<Interval> occurrences = new LinkedList<>();
         int index = source.indexOf(target);

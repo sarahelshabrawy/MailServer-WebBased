@@ -3,7 +3,7 @@ package com.example.mail_server.Model.Search;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
-class Interval {
+public class Interval {
     int start;
     int end;
 

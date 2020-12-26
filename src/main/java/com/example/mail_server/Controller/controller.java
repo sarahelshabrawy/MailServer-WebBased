@@ -6,7 +6,8 @@ import com.example.mail_server.Model.DataManagement.FileManager;
 import com.example.mail_server.Model.Mail.Mail;
 import com.example.mail_server.Model.Mail.MoveMails;
 import com.example.mail_server.Model.Mail.indexMail;
-import com.example.mail_server.Model.Search.searchResults;
+import com.example.mail_server.Model.Search.contactSearchResults;
+import com.example.mail_server.Model.Search.mailSearchResults;
 import org.json.simple.parser.ParseException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -139,18 +140,22 @@ public class controller {
     @CrossOrigin
     @RequestMapping("/searchMails")
     @ResponseBody
-    public LinkedList<searchResults> searchMails(@RequestParam(value = "target") String target) {
+    public LinkedList<mailSearchResults> searchMails(@RequestParam(value = "target") String target) {
         Account acc = user.getCurrentUser();
         return acc.searchFolder(target);
     }
-
-
+    @CrossOrigin
+    @RequestMapping("/searchContacts")
+    @ResponseBody
+    public LinkedList<contactSearchResults> searchContacts(@RequestParam(value = "target") String target) {
+        Account acc = user.getCurrentUser();
+        return acc.searchContacts(target);
+    }
     @CrossOrigin
     @RequestMapping("/filter")
     @ResponseBody
     public LinkedList<indexMail> getFilteredMails(@RequestParam(value = "sender") String senderField,@RequestParam(value = "subject") String subjectField) {
-      LinkedList<indexMail> mails= user.filter(senderField,subjectField);
-      return mails;
+        return user.filter(senderField,subjectField);
     }
 
 
