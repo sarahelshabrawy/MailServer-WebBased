@@ -1,6 +1,6 @@
 <template>
   <div id="controlBar">
-    <div id="mycheck"><input type="checkbox" value="all" id="selectAll">&nbsp;Select all</div>
+    <div id="mycheck"><input type="checkbox" value="all" @click="selectAll" id="selectAll">&nbsp;Select all</div>
     <div id="trash" @click="$emit('getCheckedMails', true)"><i class="fas fa-trash-alt"></i>&nbsp;Delete</div>
     <div id="move" @click="$emit('openMoveTo')"><i class="fas fa-folder-open"></i>&nbsp;Move E-mails</div>
   </div>
@@ -21,18 +21,31 @@ export default {
     
   },
   methods:{
-   
+    selectAll()
+    {
+      var all = document.getElementById("selectAll").checked;
+      console.log(all);
+      var array = document.getElementsByClassName("check-boxes");
+      for(var i=0; i<array.length; i++)
+      {
+        array[i].checked = all;
+      }
+    }
   }
 }
 </script>
 
 <style scoped>
+* {
+  margin: 0;
+  padding: 0;
+}
 #controlBar {
-  position: fixed;
+  position: relative;
   display: flex;
-  width:1500px;
+  width:100%;
   height:25px;
-  left: 15.8%;
+  left: 0;
   top: 20.6%;
   color: white;
   background-color: #6f6d72;

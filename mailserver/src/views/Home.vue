@@ -21,25 +21,24 @@
           <div id="sign-out"><router-link id="sign-out-link" to="/register">Sign out</router-link>&nbsp; <i class="fas fa-sign-out-alt"></i></div>
         </div>
     </div>
-    <div id="upper-bar"> 
+    <div id="upper-bar">
       <div id="sort">
         <div id="sortBy"><i class="fas fa-sort"></i>  SORT BY</div> <i class="fas fa-caret-down list-icon" id="list-icon"></i>
         <div id="mySortList">
-          <div id="first-item" @click="clickSort" v-if="component != 'contact-view'">Date</div>
-          <div id="first-item" @click="clickSort" v-if="component == 'contact-view'"></div>
+          <div id="first-item" @click="clickSort">Date</div>
           <ul id="sortList">
-            <li @click="clickItem" v-if="component != 'contact-view'">Senders</li>
-            <li @click="clickItem" v-if="component != 'contact-view'">Receivers</li>
-            <li @click="clickItem" v-if="component != 'contact-view'">Importance</li>
-            <li @click="clickItem" v-if="component != 'contact-view'">Subject</li>
-            <li @click="clickItem" v-if="component != 'contact-view'">Body</li>
-            <li @click="clickItem" v-if="component != 'contact-view'">Attachments</li>
+            <li @click="clickItem" v-if="component !== 'contact-view'">Senders</li>
+            <li @click="clickItem" v-if="component !== 'contact-view'">Receivers</li>
+            <li @click="clickItem" v-if="component !== 'contact-view'">Importance</li>
+            <li @click="clickItem" v-if="component !== 'contact-view'">Subject</li>
+            <li @click="clickItem" v-if="component !== 'contact-view'">Body</li>
+            <li @click="clickItem" v-if="component !== 'contact-view'">Attachments</li>
             <li @click="clickItem" v-if="component === 'contact-view'">Email</li>
             <li @click="clickItem" v-if="component === 'contact-view'">Name</li>
           </ul>
         </div>
       </div>
-      <div id="filtering" v-if="component != 'contact-view'">
+      <div id="filtering" v-if="component !== 'contact-view'">
         <div id="filter" @click="clickFilter">Filter Mails&nbsp;<i class="fas fa-caret-down check-icon" id="check-icon"></i></div>
         <div id="check-menu">
           <div>
@@ -58,6 +57,8 @@
         <i class="fas fa-search searching" v-on:click="search"></i>
       </div>
     </div>
+    <ControlBar  @getCheckedMails="getCheckedMails" @openMoveTo="openMoveTo" ></ControlBar>
+
     <a href="#" class="float" id = "compose" @click="component = 'compose'" v-on:click="hideComposeBtn" >
     <i class="fas fa-plus my-float"></i> Compose
     </a>
@@ -84,17 +85,16 @@
         </li>
         <div id="contacts-menu" v-if="openUserFolders === false">
           <div id="add-contact" @click="addContact = true"><i class="fas fa-user-plus icon"></i>  ADD CONTACT</div>
-          <div id="my-contacts" @click="component = 'contact-view'"><i class="fas fa-user-friends icon"></i>  MY CONTACTS</div>
+          <div id="my-contacts" @click="getContacts"><i class="fas fa-user-friends icon"></i>  MY CONTACTS</div>
         </div>
       </div>
       <AddFolder v-if="addFolder" @sendFolder="sendFolder"></AddFolder>
       <RenameFolder v-if="renameFolderPanel" @renameFolder="renameFolder"></RenameFolder>
       <MoveToFolder v-if="moveFolderPanel" @setMoveToFolder="setMoveToFolder"></MoveToFolder>
       <div id="content" >
-        <component :key="componentKey" :is="component" v-bind:maillist="Mails" :currentFolder="currentFolder" :searchResults="searchResults" @paging='setpage'></component>
+        <component :key="componentKey" :is="component" v-bind:maillist="Mails" :currentFolder="currentFolder" :searchResults="searchResults" :contactlist="contactlist" @paging='setpage'></component>
       </div>
     </div>
-    <ControlBar  @getCheckedMails="getCheckedMails" @openMoveTo="openMoveTo" ></ControlBar>
   </div>
 </template>
 
@@ -106,6 +106,8 @@ import AddFolder from '../components/Add Folder.vue'
 import RenameFolder from '../components/Rename Folder.vue'
 import ControlBar from '../components/Control Bar.vue'
 import MoveToFolder from '../components/Move To Folder.vue'
+import AddContact from '../components/Add Contact.vue'
+
 import axios from 'axios'
 let apiUrl = 'http://localhost:8085'
 let pageNumber=1;
@@ -119,6 +121,7 @@ export default {
     ControlBar,
     MoveToFolder,
     'contact-view':ContactView,
+    AddContact,
   },
   data()
   {
@@ -138,18 +141,17 @@ export default {
       folderForChecked: String,
       moveFolderPanel : false,
       contact:false,
-      componentKey : 0
+      contactlist:[],
       // addContact:false,
+      componentKey : 0,
+      addContact:false,
       // target:""
     }
   },
   beforeMount(){
     if(this.beforeMount)
       this.getMails()
-    if(this.component === 'contact-view')
-      this.contact = true
-    else
-      this.contact = false
+    this.contact = this.component === 'contact-view';
     console.log(this.contact)
   },
   methods : {
@@ -191,7 +193,7 @@ export default {
         else
           {
             this.moveChecked(checkedMails, this.folderForChecked);
-          }          
+          }
     },
     moveChecked(checkedMails, folderName)
     {
@@ -200,7 +202,7 @@ export default {
         var message = document.getElementById("message-folder-move")
         message.innerHTML = "";
       }
-      axios.post(apiUrl + "/move", 
+      axios.post(apiUrl + "/move",
       {
         id : checkedMails,
         folderName : folderName
@@ -301,10 +303,10 @@ export default {
           folderName : name
         }
       }).then(Response => {
-        if(Response.data == false)
+        if(Response.data === false)
         {
           message.innerHTML = "This folder name is invalid!"
-          return;
+
         }
         else{
           this.folderName = name;
@@ -345,7 +347,35 @@ updateMails(Response){
     }
     console.log(this.Mails[i])
   }
-},
+},updateContacts(Response){
+      this.contactlist = [];
+      let indices = Object.keys( Response.data )
+      for(let i = 0 ;i < indices.length ; i++){
+        this.contactlist[i] = {
+          emails : Response.data[indices[i]].email,
+          name:Response.data[indices[i]].name
+        }
+        console.log(this.Mails[i])
+      }
+      this.componentKey+=1;
+    }, async getContacts() {
+      console.log("HAAAA")
+      await axios.get(apiUrl + "/getContacts")
+          .then(Response => {
+            this.contactlist = [];
+            let indices = Object.keys(Response.data)
+            for (let i = 0; i < indices.length; i++) {
+              this.contactlist[i] = {
+                emails: Response.data[indices[i]].email,
+                name: Response.data[indices[i]].name
+              }
+              console.log(this.contactlist[i])
+              console.log(Response.data)
+            }
+          })
+      // this.beforeMount = false
+      this.component = 'contact-view'
+    },
  setpage(){
      var header = document.getElementById("pagination");
     var btns = header.getElementsByClassName("btn");
@@ -426,10 +456,15 @@ updateMails(Response){
       const firstItem = document.getElementById("first-item");
       e.target.innerHTML = firstItem.innerHTML;
       firstItem.innerHTML = listItem;
-      if(listItem!=="Date"){
+      if(listItem==="Date" || listItem==="Importance" || listItem==="Subject" || listItem==="Body" || listItem==="Attachments" ){
         axios.get(apiUrl + "/sortMails", {
           params:{ sort : listItem }
         }).then(Response =>this.updateMails(Response))
+      }
+      else if(listItem==="Email"||listItem==="Name"){
+        axios.get(apiUrl + "/sortContacts", {
+          params:{ sort : listItem }
+        }).then(Response =>this.updateContacts(Response))
       }
 
     },
@@ -645,7 +680,7 @@ updateMails(Response){
   background-color: white;
   height: 650px;
   width: 1500px;
-  padding-top: 25px;
+  padding-top: 0;
 }
 
 #sort {

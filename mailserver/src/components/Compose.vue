@@ -216,6 +216,6 @@ textarea:focus, input:focus{
   padding-top: 20px;
 }
 #formatBar{
- position: absolute;
+ position: relative;
 }
 </style>
