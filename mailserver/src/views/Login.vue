@@ -32,9 +32,9 @@ export default {
   },
   methods:{
     signIn(){
-      var password = document.getElementById("psw").value;
-      var email = document.getElementById("email").value;
-      var text = document.getElementById("message");
+      const password = document.getElementById("psw").value;
+      const email = document.getElementById("email").value;
+      const text = document.getElementById("message");
       if(password ==='' || email ==='')
       {
         text.innerHTML = "You should fill all fields!";

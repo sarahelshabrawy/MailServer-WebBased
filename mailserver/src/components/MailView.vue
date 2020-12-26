@@ -3,7 +3,7 @@
     
     <div id = "mails_view" class="Mails"  v-for="male in maillist" :key="male.id" >
       <!-- <mail-box  :mail= "male" :id= "male.id" ></mail-box>  -->
-      <component @click="component = 'mails-content'" :is="component" v-bind:id = "male.id" :mail="male" :currentFolder="currentFolder" ></component>
+      <component @click="component = 'mails-content'" :is="component" v-bind:id = "male.id" :mail="male" :currentFolder="currentFolder" v-bind:searchResults ="searchResults"></component>
     </div>
    
    <div id="pagination" @click="$emit('paging')" >
@@ -31,7 +31,8 @@ export default {
   name: 'MailView',
   props: {
     maillist: Array,
-    currentFolder:String
+    currentFolder:String,
+    searchResults:[]
   },
   data(){
     return{
@@ -43,12 +44,12 @@ export default {
  
   methods:{
    changePageNumber(num){
-     
-      var header = document.getElementById("pagination");
-      var btns = header.getElementsByClassName("btn");
-      console.log(btns.length)
-      for (var i = 0; i < btns.length; i++) {
-        if(btns[i].id=="1"&&num==-1){ break}
+
+     const header = document.getElementById("pagination");
+     const btns = header.getElementsByClassName("btn");
+     console.log(btns.length)
+      for (let i = 0; i < btns.length; i++) {
+        if(btns[i].id==="1"&&num===-1){ break}
        btns[i].innerHTML=String(parseInt(btns[i].innerHTML)+num);
        btns[i].id=String(parseInt(btns[i].id)+num);
        console.log(btns[i])

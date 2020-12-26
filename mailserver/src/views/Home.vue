@@ -81,7 +81,7 @@
       </div>
       <AddFolder v-if="addFolder" @sendFolder="sendFolder"></AddFolder>
       <div id="content" >
-        <component :is="component" v-bind:maillist="Mails" :currentFolder="currentFolder" @paging='setpage'></component>
+        <component :key="componentKey" :is="component" v-bind:maillist="Mails" :currentFolder="currentFolder" :searchResults="searchResults" @paging='setpage'></component>
       </div>
     </div>
     <div id="side-bar">
@@ -111,6 +111,7 @@ export default {
     return{
       component:'mail-view',
       Mails:[],
+      searchResults:[],
       prop:this.Mails,
       currentFolder:"inbox",
       beforeMount : true,
@@ -118,6 +119,7 @@ export default {
       folderName:String,
       userFoldersList:[],
       openUserFolders: false,
+      componentKey : 0
       // addContact:false,
       // target:""
     }
@@ -141,8 +143,7 @@ export default {
       })
       console.log(this.userFoldersList.toString())
       this.openUserFolders = true;
-    }
-    ,
+    },
     hideComposeBtn(e)
     {
       e.target.style.display = "none";
@@ -224,22 +225,60 @@ updateMails(Response){
       if(myvalue === "Search In Your Emails"){
         document.getElementById("targetText").value = "";
       }
-    },search(){
+    },async search() {
       console.log("HELLO SARSOURAAA")
       const target = document.getElementById("targetText").value;
-      axios.get(apiUrl + "/searchMails", {
-        params:{ target : target }
+      await axios.get(apiUrl + "/searchMails", {
+        params: {target: target}
       }).then(Response => {
-        // this.Mails = [];
-        // let indices = Object.keys( Response.data )
-        // for(let i = 0 ;i < indices.length ; i++){
-        //   this.Mails[i] = Response.data[indices[i]].source
-        //   this.bodyHighlights = Response.data[indices[i]].
-        //   console.log(this.Mails[i])
+        this.searchResults = []
+        // const searchResult = {
+        //   subjectOccurrences : [],
+        //   bodyOccurrences : [],
+        //   senderOccurrences : [],
+        //   importanceOccurrences : [] ,
+        //   priorityOccurrences : [],
+        //   dateOccurrences : []
         // }
-        console.log(Response)
+        let indices = Object.keys(Response.data)
+        for (let i = 0; i < indices.length; i++) {
+          this.Mails[i] = Response.data[indices[i]].source
+          this.searchResults[i] = {
+            subjectOccurrences: JSON.parse(JSON.stringify(Response.data[indices[i]].subjectOccurrences)),
+            bodyOccurrences: JSON.parse(JSON.stringify(Response.data[indices[i]].bodyOccurrences)),
+            senderOccurrences: JSON.parse(JSON.stringify(Response.data[indices[i]].senderOccurrences)),
+            priorityOccurrences: JSON.parse(JSON.stringify(Response.data[indices[i]].priorityOccurrences)),
+            dateOccurrences: JSON.parse(JSON.stringify(Response.data[indices[i]].dateOccurrences))
+          }
+          // console.log("subject")
+          // console.log(this.searchResults[i].subjectOccurrences)
+          // const temp = JSON.parse(JSON.stringify(this.searchResults[i].subjectOccurrences));
+          // console.log("TEMP")
+          // console.log(temp)
+          // console.log("FINISH")
+          // for(let i = 0 ;i < temp.length ; i++){
+          //   console.log("WOW")
+          //   console.log(temp[i].start)
+          //   console.log(temp[i].end)
+          //   console.log("WOW")
+          // }
+          // subjectOccurrences : JSON.parse(JSON.stringify(Response.data[indices[i]].subjectOccurrences)),
+          //     bodyOccurrences : JSON.parse(JSON.stringify(Response.data[indices[i]].bodyOccurrences)),
+          //     senderOccurrences : JSON.parse(JSON.stringify(Response.data[indices[i]].senderOccurrences)),
+          //     importanceOccurrences : JSON.parse(JSON.stringify(Response.data[indices[i]].importanceOccurrences)),
+          //     priorityOccurrences : JSON.parse(JSON.stringify(Response.data[indices[i]].priorityOccurrences)),
+          //     dateOccurrences : JSON.parse(JSON.stringify(Response.data[indices[i]].dateOccurrences))
+
+
+        }
+        console.log(this.searchResults)
+        console.log("6a")
+
       })
+      this.searchResults = JSON.parse(JSON.stringify(this.searchResults));
+      this.componentKey +=1;
     },
+
     clickItem(e){
       const listItem = e.target.innerHTML;
       const firstItem = document.getElementById("first-item");

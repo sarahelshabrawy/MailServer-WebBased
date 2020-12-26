@@ -28,7 +28,8 @@ export default {
   name: 'MailsContent',
   props: {
     id:String,
-    currentFolder:String
+    currentFolder:String,
+    searchResults:[]
   },
   data(){
     return{

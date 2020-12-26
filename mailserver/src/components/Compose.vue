@@ -4,7 +4,7 @@
 <div id="compose">
 
  <div>
-  <formatBar  @attach_file="setAttachment" @importance="setImportance()" @send_mail="setmail" ></formatBar>
+  <formatBar id="formatBar"  @attach_file="setAttachment" @importance="setImportance()" @send_mail="setmail" ></formatBar>
   </div>
 
   <div id="Subject_">
@@ -215,7 +215,7 @@ textarea:focus, input:focus{
 .format{
   padding-top: 20px;
 }
-formatBar{
+#formatBar{
  position: absolute;
 }
 </style>
