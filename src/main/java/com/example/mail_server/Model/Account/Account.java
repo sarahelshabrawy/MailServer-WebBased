@@ -1,6 +1,7 @@
 package com.example.mail_server.Model.Account;
 
 import com.example.mail_server.Model.Contact;
+import com.example.mail_server.Model.DataManagement.Directory;
 import com.example.mail_server.Model.DataManagement.FileManager;
 import com.example.mail_server.Model.Search.*;
 import com.example.mail_server.Model.Sort.SortContact.ISortContact;
@@ -12,8 +13,11 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 
+import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -153,7 +157,49 @@ public class Account {
         searchContacts Search = new searchContacts();
         return  Search.search(contacts,target);
     }
+    public LinkedList<indexMail> autoDelete(LinkedList<indexMail> indexMails) throws IOException {
+        Directory dir = new Directory();
+        FileManager file = new FileManager();
+        for(int i=0; i<indexMails.size();)
+        {
+            long days = getTimeDifference(indexMails.get(i).getDeleteDate());
+            if(days >= 30)
+            {
+                file.deleteFromIndex("./Accounts/"+getEmail()+"/"+getCurrentFolderName()+"/index.json",indexMails.get(i).getId());
+                dir.DeleteFolder(new File("./Accounts/"+getEmail()+"/"+getCurrentFolderName() +"/" + indexMails.get(i).getId()));
+                indexMails.remove(i);
+            }
+            else
+                i++;
+        }
+        return indexMails;
+    }
 
+    public long getTimeDifference(String date)
+    {
+        SimpleDateFormat formatter= new SimpleDateFormat("YYYY-MM-dd-HH-mm-ss");
+        Date now = new Date(System.currentTimeMillis());
+        long diffDays = 0;
+        try {
+            Date d1 = formatter.parse(date);
+            Date d2 = formatter.parse(formatter.format(now));
+            //in milliseconds
+            long diff = d2.getTime() - d1.getTime();
+            long diffSeconds = diff / 1000 % 60;
+            long diffMinutes = diff / (60 * 1000) % 60;
+            long diffHours = diff / (60 * 60 * 1000) % 24;
+            diffDays = diff / (24 * 60 * 60 * 1000);
+            System.out.print(diffDays + " days, ");
+            System.out.print(diffHours + " hours, ");
+            System.out.print(diffMinutes + " minutes, ");
+            System.out.print(diffSeconds + " seconds.");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return diffDays;
+    }
     public void addUserFolder(String folderName){}
 
     public LinkedList<indexMail> getUserFolder(String folderName) {

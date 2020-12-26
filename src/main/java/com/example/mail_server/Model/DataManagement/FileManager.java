@@ -17,7 +17,9 @@ import org.junit.Assert;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
+import java.util.Date;
 
 public class FileManager {
 
@@ -95,8 +97,10 @@ public class FileManager {
 
         newMail.put("sortedBody",sortedBody);
         newMail.put("sortedSubject",sortedSubject);
+        newMail.put("deleteDate", mail.getDeleteDate());
         mails.add(newMail);
         addObjectToJson(path,mails);
+
     }
 
 
@@ -111,7 +115,13 @@ public class FileManager {
         directory.createFolder(path);
         directory.CopyFolder(new File(sourcePath),new File(path),mail.getId());
         directory.DeleteFolder(new File(sourcePath));
-
+        if(folderName.equalsIgnoreCase("trash"))
+        {
+            SimpleDateFormat formatter= new SimpleDateFormat("YYYY-MM-dd-HH-mm-ss");
+            Date now = new Date(System.currentTimeMillis());
+            System.out.println("hellooooooooooooo");
+            mail.setDeleteDate(formatter.format(now));
+        }
 
         return true;
     }

@@ -16,6 +16,16 @@ public class indexMail {
     private Object[] sortedSubject;
     private IndicesSorting indicesSorting = new IndicesSorting();
 
+    public String getDeleteDate() {
+        return deleteDate;
+    }
+
+    public void setDeleteDate(String deleteDate) {
+        this.deleteDate = deleteDate;
+    }
+
+    private String deleteDate ;
+
     public indexMail(String subject, String body, String sender, String receiver, String date, int priority) {
         this.subject = subject;
         this.body = body;
