@@ -1,35 +1,95 @@
 package com.example.mail_server.Model.DataStructures;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class linkedlist<E> {
 
-    private doubleNode head;
-    private doubleNode tail;
+    private doubleNode<E> head;
+    private doubleNode<E> tail;
     private int size;
     public linkedlist() {
         size = 0;
-        head = new doubleNode(null, null, null);
-        tail = new doubleNode(null, null, head);
+        head = new doubleNode<E>(null, null, null);
+        tail = new doubleNode<E>(null, null, head);
         head.next=tail;
     }
 
 
-    private class doubleNode {
+    private static class doubleNode<E> {
         E element;
-        doubleNode next;
-        doubleNode prev;
+        doubleNode<E> next;
+        doubleNode<E> prev;
 
-        public doubleNode(E element, doubleNode next, doubleNode prev) {
+        public doubleNode(E element, doubleNode<E> next, doubleNode<E> prev) {
             this.element = element;
             this.next = next;
             this.prev = prev;
         }
-        public doubleNode() {
-        }
     }
 
-
+    private class iterator implements ListIterator<E> {
+        private linkedlist.doubleNode<E> next;
+        private linkedlist.doubleNode<E> previous;
+        int currentIndex ;
+        int fromIndex ;
+        public iterator(int from){
+            if(from == linkedlist.this.size){
+                next = linkedlist.this.tail.prev;
+            }else{
+                next = getNode(from);
+            }
+            if(from == 0)
+                previous = null;
+            else previous = next.prev;
+            currentIndex = fromIndex = from;
+        }
+        public boolean hasNext(){
+            return currentIndex < size;
+        }
+        public E next(){
+            if(!hasNext())
+                throw new IllegalStateException();
+            this.currentIndex ++;
+            E nextElement = next.element;
+            linkedlist.doubleNode<E> temp = next;
+            next = next.next;
+            previous = temp;
+            return nextElement;
+        }
+        //        public E current(){
+//            return current.element;
+//        }
+        public E previous(){
+            if(!hasPrevious())
+                throw new IllegalStateException();
+            this.currentIndex --;
+            E previousElement = previous.element;
+            next = previous;
+            previous = previous.prev;
+            return previousElement;
+        }
+        public boolean hasPrevious() {
+            return this.currentIndex > 0;
+        }
+        public void set(E e){
+            if (this.next == null) {
+                throw new IllegalStateException();
+            } else {
+                this.next.element = e;
+            }
+        }
+//        private void checkIteratorIndex(){
+//            if(this.currentIndex < fromIndex||this.currentIndex > size)
+//                throw new IllegalStateException();
+//        }
+    }
+    public ListIterator<E> listIterator(int index) {
+        checkIndex(index);
+        return new linkedlist<E>.iterator(index);
+    }
     public void add(int index, E element) {
-        doubleNode current = head.next;
+        doubleNode<E> current = head.next;
         if (index>size || index <0)
             throw new RuntimeException("Invalid Index !");
         else if (size == index)
@@ -37,7 +97,7 @@ public class linkedlist<E> {
         else {
             for (int i = 0; i < index; i++)
                 current = current.next;
-            doubleNode addedNode = new doubleNode(element, current, current.prev);
+            doubleNode<E> addedNode = new doubleNode<>(element, current, current.prev);
             current.prev.next = addedNode;
             current.prev = addedNode;//it was current.next.prev >> error
             size++;
@@ -45,16 +105,15 @@ public class linkedlist<E> {
     }
 
     public void add(E element) {
-        doubleNode addedNode = new doubleNode(element, tail, tail.prev); // three steps
+        doubleNode<E> addedNode = new doubleNode<>(element, tail, tail.prev); // three steps
         tail.prev.next = addedNode;
         tail.prev = addedNode;//You forgot this step..
         size++;
     }
 
     public E get(int index) {
-        if (index>=size || index <0)
-            throw new RuntimeException("Invalid Index !");
-        doubleNode current;
+        checkIndex(index);
+        doubleNode<E> current;
         if(index<size/2) {
             current = head.next;
             for (int i = 0; i < index; i++) {
@@ -70,11 +129,27 @@ public class linkedlist<E> {
         return current.element;
     }
 
+    private doubleNode<E> getNode(int index) {
+        checkIndex(index);
+        doubleNode<E> current;
+        if(index<size/2) {
+            current = head.next;
+            for (int i = 0; i < index; i++) {
+                current = current.next;
+            }
+        }
+        else{
+            current = tail.prev;
+            for (int i = size-1; i > index; i--) {
+                current = current.prev;
+            }
+        }
+        return current;
+    }
 
     public void set(int index, E element) {
-        if (index>=size || index <0)
-            throw new RuntimeException("Invalid Index !");
-        doubleNode current ;
+        checkIndex(index);
+        doubleNode<E> current ;
         if(index<size/2) {
             current = head.next;
             for (int i = 0; i < index; i++) {
@@ -106,9 +181,8 @@ public class linkedlist<E> {
 
 
     public void remove(int index) { // revise if you want to decide from where to start the loop depending of the index (nearer to tail or head)
-        if (index>=size || index <0)
-            throw new RuntimeException("Invalid Index !");
-        doubleNode deletedItem;
+        checkIndex(index);
+        doubleNode<E> deletedItem;
         if(index<size/2) {
             deletedItem = head.next;
             for (int i = 0; i < index; i++) {
@@ -134,26 +208,28 @@ public class linkedlist<E> {
         return size;
     }
 
-
-    public linkedlist<E> sublist(int fromIndex, int toIndex) {
-        doubleNode current = head.next;
+    private void checkIndex(int index){
+        if (index>=size || index <0)
+            throw new RuntimeException("Invalid Index !");
+    }
+    public linkedlist<E> sublistCopy(int fromIndex, int toIndex) {
+        doubleNode<E> current = head.next;
         linkedlist<E> sublist = new linkedlist<>();
-        if (fromIndex>=size || fromIndex <0 || toIndex >= size || toIndex < fromIndex )
+        if (fromIndex <0 || toIndex > size || toIndex < fromIndex )
             throw new RuntimeException("Invalid Index !");
         for ( int i = 0; i < fromIndex ; i++) {
             current = current.next;
         }
-        for ( int i = fromIndex; i <= toIndex ; i++) {
+        for ( int i = fromIndex; i < toIndex ; i++) {
             sublist.add(current.element);
             current = current.next;
         }
-
         return sublist;
     }
 
 
     public boolean contains(E o) {
-        doubleNode current = head.next;
+        doubleNode<E> current = head.next;
         for ( int i = 0; i < size; i++) {
             if(current.element==o)
                 return true;
@@ -162,35 +238,25 @@ public class linkedlist<E> {
         }
         return false;
     }
-    /*    public void print (){
-            doubleNode current = head.next;
-            System.out.println("PRINTING STARTS");
-            System.out.println("size is " + size());
-            for (int i = 0; i < size ; i++) {
-                System.out.println(current.element);
-                current = current.next;
-            }
-            System.out.println("PRINTING ENDSSSSSSSSSS !!!");
-    }
-        */
-/////////////////////////////////////////////////////////////////////////////
-    public linkedlist<E> Arraytolist (E[][] arr)
-    {
-        linkedlist<E> mylist = new linkedlist<>();
-        for (E[] ints : arr) {
-            for (int j = 0; j < arr[0].length; j++) {
-                mylist.add(ints[j]);
-            }
+
+    public void print (){
+        doubleNode<E> current = head.next;
+        System.out.println("STRAR");
+        for (int i = 0; i < size ; i++) {
+            System.out.print(current.element+" ");
+            current = current.next;
         }
-        return mylist;
+        System.out.println("END");
     }
-    public linkedlist<E> Arraytolist (E[] arr)
+
+
+    public linkedlist<E> ArrayToList (E[] arr)
     {
-        linkedlist<E> mylist = new linkedlist<>();
+        linkedlist<E> myList = new linkedlist<>();
         for (E ints : arr) {
-            mylist.add(ints);
+            myList.add(ints);
         }
-        return mylist;
+        return myList;
     }
     //enhanced listtoarray
 //    public E[][] listTo2DArray (){
@@ -204,18 +270,19 @@ public class linkedlist<E> {
 //        }
 //        return myarray;
 //    }
-//    public E[] listTo1DArray() {
-//        E[] myArray = new E[size];
-//        doubleNode current = head.next;
-//        for (int i = 0; i < size ; i++) {
-//            myArray[i] = current.element;
-//            current = current.next;
-//        }
-//        return myArray;
-//    }
+    public Object[] toArray() {
+        Object[] myArray = new Object[size];
+        doubleNode<E> current = head.next;
+        for (int i = 0; i < size ; i++) {
+            myArray[i] = current.element;
+            current = current.next;
+        }
+        return myArray;
+    }
+
     public void ReverseList(){
         linkedlist<E> reversedList = new linkedlist<>();
-        doubleNode current = tail.prev;
+        doubleNode<E> current = tail.prev;
         while (current!=head){
             reversedList.add(current.element);
             current = current.prev;
@@ -223,13 +290,30 @@ public class linkedlist<E> {
         head = reversedList.head;
     }
 
-	/*public static void main(String[] args) {
-		LinkedList trial = new LinkedList();
-		for (int i = 0; i <10 ; i++) {
-			trial.add(i);
-		}
-		 trial.ReverseList();
-		trial.print();
-	}
-*/
+    public static void main(String[] args) {
+        linkedlist<Integer> trial = new linkedlist<>();
+        for (int i = 0; i <10 ; i++) {
+            trial.add(i);
+        }
+//        linkedlist<Integer> trial1 = trial.
+//        linkedlist<Integer> trial = new linkedlist<>();
+        LinkedList<Integer> o= new LinkedList<Integer>();
+//		LinkedList<Integer> sun = o.subList(0,5);
+//		 trial.ReverseList();
+//		trial.print();
+
+
+        linkedlist p = new linkedlist();
+        p.add(3);
+        p.add(2);
+        p.add(1);
+        p.add(0);
+
+        linkedlist sublist = p.sublistCopy(1, 3);
+        sublist.set(0,1);
+        sublist.print();
+        p.print();
+        System.out.println(sublist.size);
+    }
+
 }

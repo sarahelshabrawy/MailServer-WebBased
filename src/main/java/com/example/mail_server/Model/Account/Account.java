@@ -2,10 +2,12 @@ package com.example.mail_server.Model.Account;
 
 import com.example.mail_server.Model.Contact;
 import com.example.mail_server.Model.DataManagement.FileManager;
+import com.example.mail_server.Model.Search.searchFacade;
 import com.example.mail_server.Model.Sort.ISortMail;
-import com.example.mail_server.Model.Sort.SortText.indexedWord;
-import com.example.mail_server.Model.indexMail;
+import com.example.mail_server.Model.Search.indexedWord;
+import com.example.mail_server.Model.Mail.indexMail;
 import com.example.mail_server.Model.Sort.SortFactory;
+import com.example.mail_server.Model.Search.searchResults;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -30,8 +32,8 @@ public class Account {
 
     public Account(){
         currentFolderindexMails=new LinkedList<indexMail>();
-        contacts=new LinkedList<Contact>();
-        userFolders = new HashMap<String,LinkedList<indexMail>>();
+        contacts= new LinkedList<>();
+        userFolders = new HashMap<>();
         fileManager = new FileManager();
     }
 
@@ -134,7 +136,10 @@ public class Account {
               currentFolderindexMails = (LinkedList<indexMail>) sortMail.Sort(currentFolderindexMails);
         return currentFolderindexMails;
     }
-
+    public LinkedList<searchResults> searchFolder(String target){
+        searchFacade Search = new searchFacade();
+        return  Search.search(getCurrentFolderMails(),target);
+    }
     public void addUserFolder(String folderName){}
 
     public LinkedList<indexMail> getUserFolder(String folderName) {

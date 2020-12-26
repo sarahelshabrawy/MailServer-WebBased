@@ -1,6 +1,6 @@
 package com.example.mail_server.Model.Sort.SortText;
 
-import com.example.mail_server.Model.indexMail;
+import com.example.mail_server.Model.Mail.indexMail;
 
 public class SortWithBody extends SortText {
 

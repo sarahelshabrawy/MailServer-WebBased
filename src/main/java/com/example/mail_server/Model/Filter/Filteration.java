@@ -1,7 +1,6 @@
 package com.example.mail_server.Model.Filter;
 
-import com.example.mail_server.Model.Mail;
-import com.example.mail_server.Model.indexMail;
+import com.example.mail_server.Model.Mail.indexMail;
 
 import java.util.LinkedList;
 

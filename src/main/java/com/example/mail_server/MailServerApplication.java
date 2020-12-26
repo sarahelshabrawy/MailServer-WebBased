@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 
 @SpringBootApplication
+
 public class MailServerApplication {
 
     public static void main(String[] args) throws IOException {
@@ -14,6 +15,7 @@ public class MailServerApplication {
         File folder_two = new File("./Accounts/Attachments");
         folder_two.mkdir();
         System.out.println( folder.mkdir() );
+//        System.setProperty("tomcat.util.http.parser.HttpParser.requestTargetAllow", "{}");
         SpringApplication.run(MailServerApplication.class, args);
     }
 
