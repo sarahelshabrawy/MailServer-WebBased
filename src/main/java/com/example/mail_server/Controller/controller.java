@@ -52,12 +52,14 @@ public class controller {
     @PostMapping("/compose")
     public boolean compose(@RequestBody Mail mail) throws IOException {
         System.out.println(mail.getBody());
+        mail.setAttachments(file);
         return user.Compose(mail);
     }
 
     @CrossOrigin
     @PostMapping("/attachment")
     public boolean attach(@RequestParam("file") MultipartFile[] file) throws IOException {
+        this.file.clear();
         for(MultipartFile file0 : file) {
 //            file0.transferTo(Paths.get(Objects.requireNonNull("./Accounts/Attachments/" + file0.getOriginalFilename())));
 //            File a = new File("./Accounts/Attachments/" + file0.getOriginalFilename() );
@@ -75,13 +77,15 @@ public class controller {
     @GetMapping("/sendAttachment")
     public LinkedList<byte[]> sendAttach(@RequestParam(value = "path") String[] paths) throws IOException {
         FileManager fileManager = new FileManager();
+        System.out.println(paths.length);
         LinkedList<byte[]> attachments = new LinkedList<byte[]>();
         for (String path : paths){
             path = URLDecoder.decode(path, StandardCharsets.UTF_8);
             File file = new File(path);
+            System.out.println(path);
+
             byte[] bArray = fileManager.readFileToByteArray(file);
             attachments.add(bArray);
-            System.out.println(path);
         }
 //        File file = new File(paths[0]);
 
@@ -198,9 +202,12 @@ public class controller {
     @ResponseBody
     public Mail openMail(@RequestParam(value = "id") String id, @RequestParam(value = "currentFolder") String currentFolder) throws IOException, ParseException, ParseException {
         String path = "./Accounts/" + user.getCurrentUser().getEmail() + "/" + currentFolder + "/" + id +"/"+id +".json";
-        System.out.println(i);
         FileManager fileManager = new FileManager();
         Mail mail = fileManager.getMailContent(path);
+        for(String attach : mail.getAttachments()){
+            System.out.println(attach);
+            System.out.println("tmaaam");
+        }
         return mail;
     }
 

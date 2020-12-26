@@ -127,6 +127,7 @@ public class User {
         json.saveJsonFile(mail, path);
 
         indexMail indexMail = new indexMail(mail.getSubject(),mail.getBody(),mail.getSender(),mail.getReceivers()[0],mail.getDate(),mail.getPriority());
+        indexMail.setId(mail.getId());
         json.addMailToIndex(indexMail, myPath);
     }
 
