@@ -207,7 +207,6 @@ public class controller {
     @ResponseBody
     public Mail openMail(@RequestParam(value = "id") String id, @RequestParam(value = "currentFolder") String currentFolder) throws IOException, ParseException, ParseException {
         String path = "./Accounts/" + user.getCurrentUser().getEmail() + "/" + currentFolder + "/" + id +"/"+id +".json";
-        System.out.println(i);
         FileManager fileManager = new FileManager();
         Mail mail = fileManager.getMailContent(path);
         return mail;
