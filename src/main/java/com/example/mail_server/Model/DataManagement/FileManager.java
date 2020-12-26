@@ -199,4 +199,17 @@ public class FileManager {
         JsonReader reader = new JsonReader(new FileReader(path));
         return gson.fromJson(reader, Mail.class);
     }
+
+    public static byte[] readFileToByteArray(File file){
+        FileInputStream fis = null;
+        byte[] bArray = new byte[(int) file.length()];
+        try{
+            fis = new FileInputStream(file);
+            fis.read(bArray);
+            fis.close();
+        }catch(IOException ioExp){
+            ioExp.printStackTrace();
+        }
+        return bArray;
+    }
 }
