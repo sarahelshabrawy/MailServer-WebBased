@@ -2,9 +2,10 @@
   <div id="con">
     
     <div id = "mails_view" class="Mails"  v-for="male in maillist" :key="male.id" >
-      <!-- <mail-box  :mail= "male" :id= "male.id" ></mail-box>  -->
-      <component @click="component = 'mails-content'" :is="component" v-bind:id = "male.id" :mail="male" :currentFolder="currentFolder" v-bind:searchResults ="searchResults"></component>
+      <mail-box v-if="mailContent == false"  :mail= "male" :id= "male.id" @click="setMail(male.id)" :searchResults ="searchResults"></mail-box> 
+      <!-- <component @click="component = 'mails-content'" :is="component" v-bind:id = "male.id" :mail="male" :currentFolder="currentFolder" v-bind:searchResults ="searchResults"></component> -->
     </div>
+    <mails-content v-if="mailContent" :currentFolder="currentFolder" :id="id"></mails-content>
    
    <div id="pagination" @click="$emit('paging')" >
     <button class="left" @click="changePageNumber(-1)" > &laquo;</button> 
@@ -36,13 +37,17 @@ export default {
   },
   data(){
     return{
-      
-      component:'mail-box',
+      id:'',
+      mailContent :false
 
     }
   },
  
   methods:{
+    setMail(id){
+      this.mailContent = true
+      this.id = id 
+    },
    changePageNumber(num){
 
      const header = document.getElementById("pagination");
