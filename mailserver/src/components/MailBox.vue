@@ -1,9 +1,6 @@
 <template>
   <div id ="hi">
     <div id = "new" class="MailBox">
-        <div>
-            <input type="checkbox" >
-        </div>
         <div id = "sender">{{mail.sender}}</div>
         <div id = "subject">{{mail.subject + "  - "}}</div>
         <div id = "content">{{ mail.body}}</div>
@@ -28,49 +25,53 @@ export default {
         }
     },
     methods:{
+      boxChecked()
+      {
+        console.log("hiiiiiiiiiiiii");
+      },
       highlight(element,keys){
-    const inputText = document.getElementById(element);
-    let innerHTML = inputText.innerHTML;
-    let newHTML = "";
-    console.log(innerHTML)
-    console.log("KEEEYSS")
-    console.log(keys)
-    let from = 0;
-    for(let i = 0 ;i < keys.length ; i++){
-      newHTML = newHTML + innerHTML.substring(from,keys[i].start) + "<span style='background-color: " + "yellow" + ";'>"
-          + innerHTML.substring(keys[i].start,keys[i].end+1) + "</span>"
-      from = keys[i].end+1
-    }
-    newHTML = newHTML + innerHTML.substring(from);
-    inputText.innerHTML = newHTML;
-    console.log(inputText.innerHTML)
-  },
-      showSearchResults() {
-        const temp = JSON.parse(JSON.stringify(this.searchResults));
-        const mySearchResults = temp[0];
-        if(!mySearchResults)
-          return
-        console.log(mySearchResults)
-        console.log("LALALA")
-        const subjectOccurrences = JSON.parse(JSON.stringify(mySearchResults.subjectOccurrences))
-        const bodyOccurrences = JSON.parse(JSON.stringify(mySearchResults.subjectOccurrences))
-        const senderOccurrences = JSON.parse(JSON.stringify(mySearchResults.subjectOccurrences))
-        const dateOccurrences = JSON.parse(JSON.stringify(mySearchResults.subjectOccurrences))
-        // const priorityOccurrences= JSON.parse(JSON.stringify(mySearchResults.subjectOccurrences))
-        console.log(subjectOccurrences)
-        if(subjectOccurrences)
-        this.highlight("subject",mySearchResults.subjectOccurrences)
-
-        if(bodyOccurrences)
-        this.highlight("content",mySearchResults.bodyOccurrences)
-
-        if(senderOccurrences)
-        this.highlight("sender",mySearchResults.senderOccurrences)
-
-        // this.highlight(temp.priorityOccurrences)
-        if(dateOccurrences)
-        this.highlight("date",mySearchResults.dateOccurrences)
+      const inputText = document.getElementById(element);
+      let innerHTML = inputText.innerHTML;
+      let newHTML = "";
+      console.log(innerHTML)
+      console.log("KEEEYSS")
+      console.log(keys)
+      let from = 0;
+      for(let i = 0 ;i < keys.length ; i++){
+        newHTML = newHTML + innerHTML.substring(from,keys[i].start) + "<span style='background-color: " + "yellow" + ";'>"
+            + innerHTML.substring(keys[i].start,keys[i].end+1) + "</span>"
+        from = keys[i].end+1
       }
+      newHTML = newHTML + innerHTML.substring(from);
+      inputText.innerHTML = newHTML;
+      console.log(inputText.innerHTML)
+    },
+        showSearchResults() {
+          const temp = JSON.parse(JSON.stringify(this.searchResults));
+          const mySearchResults = temp[0];
+          if(!mySearchResults)
+            return
+          console.log(mySearchResults)
+          console.log("LALALA")
+          const subjectOccurrences = JSON.parse(JSON.stringify(mySearchResults.subjectOccurrences))
+          const bodyOccurrences = JSON.parse(JSON.stringify(mySearchResults.subjectOccurrences))
+          const senderOccurrences = JSON.parse(JSON.stringify(mySearchResults.subjectOccurrences))
+          const dateOccurrences = JSON.parse(JSON.stringify(mySearchResults.subjectOccurrences))
+          // const priorityOccurrences= JSON.parse(JSON.stringify(mySearchResults.subjectOccurrences))
+          console.log(subjectOccurrences)
+          if(subjectOccurrences)
+          this.highlight("subject",mySearchResults.subjectOccurrences)
+
+          if(bodyOccurrences)
+          this.highlight("content",mySearchResults.bodyOccurrences)
+
+          if(senderOccurrences)
+          this.highlight("sender",mySearchResults.senderOccurrences)
+
+          // this.highlight(temp.priorityOccurrences)
+          if(dateOccurrences)
+          this.highlight("date",mySearchResults.dateOccurrences)
+        }
     },
     mounted() {
       const divh = document.getElementById("new");

@@ -86,15 +86,12 @@
       </div>
       <AddFolder v-if="addFolder" @sendFolder="sendFolder"></AddFolder>
       <RenameFolder v-if="renameFolderPanel" @renameFolder="renameFolder"></RenameFolder>
+      <MoveToFolder v-if="moveFolderPanel" @setMoveToFolder="setMoveToFolder"></MoveToFolder>
       <div id="content" >
         <component :key="componentKey" :is="component" v-bind:maillist="Mails" :currentFolder="currentFolder" :searchResults="searchResults" @paging='setpage'></component>
       </div>
     </div>
-    <div id="side-bar">
-        <div id="mycheck"><input type="checkbox" value="all" id="selectAll">&nbsp;Select all</div>
-        <div id="trash"><i class="fas fa-trash-alt"></i>&nbsp;Delete</div>
-        <div id="move"><i class="fas fa-folder-open"></i>&nbsp;Move E-mails</div>
-    </div>
+    <ControlBar  @getCheckedMails="getCheckedMails" @openMoveTo="openMoveTo" ></ControlBar>
   </div>
 </template>
 
@@ -103,6 +100,8 @@ import MailView from '../components/MailView.vue'
 import Compose from '../components/Compose.vue'
 import AddFolder from '../components/Add Folder.vue'
 import RenameFolder from '../components/Rename Folder.vue'
+import ControlBar from '../components/Control Bar.vue'
+import MoveToFolder from '../components/Move To Folder.vue'
 import axios from 'axios'
 let apiUrl = 'http://localhost:8085'
 let pageNumber=1;
@@ -112,7 +111,9 @@ export default {
     'mail-view':MailView,
     'compose':Compose,
     AddFolder,
-    RenameFolder
+    RenameFolder,
+    ControlBar,
+    MoveToFolder
   },
   data()
   {
@@ -129,7 +130,9 @@ export default {
       openUserFolders: false,
       renameFolderPanel:false,
       userFolderName : String,
-      componentKey : 0
+      componentKey : 0,
+      folderForChecked: String,
+      moveFolderPanel : false
       // addContact:false,
       // target:""
     }
@@ -139,6 +142,70 @@ export default {
       this.getMails()
   },
   methods : {
+    openMoveTo(){
+      this.moveFolderPanel = true;
+    },
+    setMoveToFolder(folder)
+    {
+      var message = document.getElementById("message-folder-move")
+      message.innerHTML = "";
+      if(folder === '')
+      {
+        this.moveFolderPanel = false;
+        return;
+      }
+      this.folderForChecked = folder;
+      this.getCheckedMails(false);
+    },
+     getCheckedMails(bool)
+    {
+        var checkedMails = [];
+        var count = 0;
+        var i = 0;
+        var checkBoxes = document.getElementsByClassName("check-boxes");
+        console.log(this.Mails)
+        for(i=0; i<this.Mails.length; i++){
+          console.log(checkBoxes[i])
+          var box = checkBoxes[i]
+            if(box.checked === true)
+            {
+              console.log("iiiiii:" + i + "  id : " + this.Mails[i]);
+              checkedMails[count] = this.Mails[i].id.toString();
+              console.log("hiiiiiii" +checkedMails[count]);
+              ++count;
+            }
+        }
+        if(bool)
+          this.moveChecked(checkedMails, "trash");
+        else
+          {
+            this.moveChecked(checkedMails, this.folderForChecked);
+          }          
+    },
+    moveChecked(checkedMails, folderName)
+    {
+      if(folderName !== "trash")
+      {
+        var message = document.getElementById("message-folder-move")
+        message.innerHTML = "";
+      }
+      axios.post(apiUrl + "/move", 
+      {
+        id : checkedMails,
+        folderName : folderName
+      }
+      ).then(Response => {
+          if(Response.data)
+          {
+            this.moveFolderPanel = false;
+            this.getMails();
+          }
+          else{
+            var message = document.getElementById("message-folder-move")
+            message.innerHTML = "Invalid Folder Name!"
+          }
+      })
+    },
     setRenameFolder(name)
     {
       this.renameFolderPanel = true;
@@ -185,7 +252,9 @@ export default {
           alert("faild to delete folder!");
         }
         else{
-          this.getUserFolders();
+          this.openUserFolders = false;
+          this.currentFolder = "inbox";
+          this.getMails();
         }
       })
     },
@@ -567,31 +636,7 @@ updateMails(Response){
   width: 1500px;
   padding-top: 25px;
 }
-#side-bar {
-  position: fixed;
-  display: flex;
-	width:1500px;
-	height:25px;
-  left: 15.8%;
-  top: 20.6%;
-  color: white;
-	background-color: #6f6d72;
-  font-family: 'Open sans', serif;
-}
-#side-bar > div {
-  position: absolute;
-}
-#trash {
-  cursor: pointer;
-  left: 300px;
-}
-#mycheck {
-  left: 50px;
-}
-#move {
-  left: 550px;
-  cursor: pointer;
-}
+
 #sort {
   transform: translate(100%, 20%);
   display: flex;
