@@ -44,4 +44,7 @@ export default {
 </script>
 
 <style scoped>
+.header {
+    padding-bottom: 20px;
+}
 </style>

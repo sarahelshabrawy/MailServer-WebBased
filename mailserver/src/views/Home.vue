@@ -62,7 +62,7 @@
         <div id="userFoldersList" v-if="openUserFolders">
         <div id="backToMenu" @click="openUserFolders = false"><i class="fas fa-arrow-alt-circle-left"></i>  Back</div>
         <li id="users-list" class="menu-styling" v-for="folder in userFoldersList" v-bind:key="folder">
-          <ul @click="setFolder(folder)"><span><i class="far fa-folder-open"></i>  {{folder}}</span>
+          <ul><span @click="setFolder(folder)"><i class="far fa-folder-open"></i>  {{folder}}</span>
           <div id="options-folder">
           <div @click="setRenameFolder(folder)" id="rename-folder">Rename</div>
           <div @click="deleteFolder(folder)" id="delete-folder">Delete</div>
@@ -141,22 +141,25 @@ export default {
     renameFolder(newfoldername)
     {
       var message = document.getElementById("message-folder-rename");
-      message.innerHTML = ""
+      message.innerHTML = "";
+      console.log(newfoldername);
+      console.log(this.userFolderName);
       if(newfoldername === '')
       {
         this.renameFolderPanel = false;
         console.log(this.userFolderName);
+        this.getUserFolders();
         return;
       }
       axios.get(apiUrl + "/renameFolder", {
         params:{
-          folderName : this.userfoldername,
+          folderName : this.userFolderName,
           newFolderName : newfoldername
         }
       }).then(Response => {
         if(Response.data == false)
         {
-          message.innerHTML = "This folder already exists"
+          message.innerHTML = "This folder name is invalid!"
           return;
         }
         else{
@@ -182,6 +185,7 @@ export default {
     },
     getUserFolders()
     {
+      this.userFoldersList = []
       axios.get(apiUrl + "/getUserFolders"
       ).then(Response => {
         let indices = Object.keys( Response.data )
@@ -214,7 +218,7 @@ export default {
       }).then(Response => {
         if(Response.data == false)
         {
-          message.innerHTML = "This folder already exists"
+          message.innerHTML = "This folder name is invalid!"
           return;
         }
         else{
@@ -631,7 +635,7 @@ export default {
   cursor: pointer;
 }
 #users-list > ul{
-  height: 55px;
+  height: 50%;
   margin-bottom: 0px;
   padding-bottom: 0;
   font-size: 20px;
