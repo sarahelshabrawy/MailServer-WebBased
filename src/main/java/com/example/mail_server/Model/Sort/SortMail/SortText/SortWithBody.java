@@ -1,4 +1,4 @@
-package com.example.mail_server.Model.Sort.SortText;
+package com.example.mail_server.Model.Sort.SortMail.SortText;
 
 import com.example.mail_server.Model.Mail.indexMail;
 

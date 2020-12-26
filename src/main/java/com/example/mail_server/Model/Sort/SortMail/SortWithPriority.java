@@ -1,4 +1,4 @@
-package com.example.mail_server.Model.Sort;
+package com.example.mail_server.Model.Sort.SortMail;
 
 import com.example.mail_server.Model.DataStructures.PriorityQueue;
 import com.example.mail_server.Model.Mail.indexMail;

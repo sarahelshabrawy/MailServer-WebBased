@@ -1,10 +1,11 @@
-package com.example.mail_server.Model.Sort;
+package com.example.mail_server.Model.Sort.SortMail;
 
-import com.example.mail_server.Model.Sort.SortText.SortWithBody;
-import com.example.mail_server.Model.Sort.SortText.SortWithSender;
-import com.example.mail_server.Model.Sort.SortText.SortWithSubject;
+import com.example.mail_server.Model.Sort.SortMail.SortText.SortWithBody;
+import com.example.mail_server.Model.Sort.SortMail.SortText.SortWithSender;
+import com.example.mail_server.Model.Sort.SortMail.SortText.SortWithSubject;
+import com.example.mail_server.Model.Sort.SortWithDate;
 
-public class SortFactory {
+public class SortMailFactory {
     public ISortMail sortMails(String sortAccordingTo){
         if(sortAccordingTo.equalsIgnoreCase("subject"))
             return new SortWithSubject();

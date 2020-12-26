@@ -3,10 +3,12 @@ package com.example.mail_server.Model.Account;
 import com.example.mail_server.Model.Contact;
 import com.example.mail_server.Model.DataManagement.FileManager;
 import com.example.mail_server.Model.Search.searchFacade;
-import com.example.mail_server.Model.Sort.ISortMail;
+import com.example.mail_server.Model.Sort.SortContact.ISortContact;
+import com.example.mail_server.Model.Sort.SortContact.SortContactFactory;
+import com.example.mail_server.Model.Sort.SortMail.ISortMail;
 import com.example.mail_server.Model.Search.indexedWord;
 import com.example.mail_server.Model.Mail.indexMail;
-import com.example.mail_server.Model.Sort.SortFactory;
+import com.example.mail_server.Model.Sort.SortMail.SortMailFactory;
 import com.example.mail_server.Model.Search.searchResults;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -130,12 +132,21 @@ public class Account {
     }
 
     public LinkedList<indexMail> sortFolder(String sort){
-        SortFactory sortFactory = new SortFactory();
-        ISortMail sortMail = sortFactory.sortMails(sort);
+        SortMailFactory sortMailFactory = new SortMailFactory();
+        ISortMail sortMail = sortMailFactory.sortMails(sort);
         if(currentFolderindexMails!=null && !currentFolderindexMails.isEmpty())
-              currentFolderindexMails = (LinkedList<indexMail>) sortMail.Sort(currentFolderindexMails);
+            currentFolderindexMails = (LinkedList<indexMail>) sortMail.Sort(currentFolderindexMails);
         return currentFolderindexMails;
     }
+
+    public LinkedList<Contact> sortContacts(String sort){
+        SortContactFactory sortContactFactory = new SortContactFactory();
+        ISortContact sortContact = sortContactFactory.sortContacts(sort);
+        if(contacts!=null && !contacts.isEmpty())
+            contacts = (LinkedList<Contact>) sortContact.Sort(contacts);
+        return contacts;
+    }
+
     public LinkedList<searchResults> searchFolder(String target){
         searchFacade Search = new searchFacade();
         return  Search.search(getCurrentFolderMails(),target);
