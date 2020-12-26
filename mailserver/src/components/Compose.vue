@@ -8,7 +8,7 @@
   </div>
 
   <div id="Subject_">
-   <label  for="subject">Subject: </label>
+   <label  for="subject">Subject:  </label>
   <input type="text" id="subject" name="subject"  @change="setSubject()"><br><br>
   </div>
   <div id="To_">
@@ -215,7 +215,8 @@ textarea:focus, input:focus{
 .format{
   padding-top: 20px;
 }
-#formatBar{
- position: relative;
-}
+/* #formatBar{
+ position: absolute;
+} */
+
 </style>
