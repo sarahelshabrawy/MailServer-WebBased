@@ -1,11 +1,11 @@
 package com.example.mail_server.Model.Sort.SortText;
 
-import com.example.mail_server.Model.Mail;
+import com.example.mail_server.Model.Mail.indexMail;
 
 public class SortWithBody extends SortText {
 
     @Override
-    String getStringAttribute(Mail mail) {
+    String getStringAttribute(indexMail mail) {
         return mail.getBody();
     }
 }

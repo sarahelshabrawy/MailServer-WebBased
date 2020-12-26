@@ -2,25 +2,37 @@ package com.example.mail_server.Model.DataManagement;
 
 import com.example.mail_server.Model.Account.Account;
 import com.example.mail_server.Model.Contact;
-import com.example.mail_server.Model.Mail;
-import com.example.mail_server.Model.Sort.SortText.IndicesSorting;
+import com.example.mail_server.Model.Mail.Mail;
+import com.example.mail_server.Model.Search.indexedWord;
+import com.example.mail_server.Model.Mail.indexMail;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import com.google.gson.stream.JsonReader;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.junit.Assert;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.Collections;
 
 public class FileManager {
 
+    public void removeContact(String path, String name) throws IOException {
+        JSONArray contacts = listJsonObjects(path);
+        System.out.println(contacts);
+        for (int i = 0 ; i < contacts.size() ;i++) {
+            JSONObject jsonobject = (JSONObject) contacts.get(i);
+            if(jsonobject.get("name").equals(name)){
+                contacts.remove(i);
+            }
+        }
+        System.out.println(contacts);
+        addObjectToJson(path,contacts);
+    }
 
     public void addContact(Contact contact,String path) throws IOException {
         JSONArray contacts = listJsonObjects(path);
@@ -48,12 +60,12 @@ public class FileManager {
 
 
 
-    public void addMailToIndex(Mail mail, String path) throws IOException {
+    public void addMailToIndex(indexMail mail, String path) throws IOException {
         JSONArray mails = listJsonObjects(path);
         JSONObject newMail = new JSONObject();
         newMail.put("id",mail.getId());
         newMail.put("sender",mail.getSender());
-        newMail.put("receiver", mail.getReceivers()[0]);
+        newMail.put("receiver", mail.getReceiver());
         newMail.put("subject", mail.getSubject());
         newMail.put("date", mail.getDate());
         newMail.put("body", mail.getBody());
@@ -62,7 +74,7 @@ public class FileManager {
         JSONArray sortedBody = new JSONArray();
         for(Object word : mail.getSortedBody()){
             JSONObject wordJson = new JSONObject();
-            IndicesSorting.indexedWord castedObject = (IndicesSorting.indexedWord)word ;
+            indexedWord castedObject = (indexedWord)word ;
             wordJson.put("word",castedObject.getWord());
             wordJson.put("start",castedObject.getStart());
             wordJson.put("end",castedObject.getEnd());
@@ -73,7 +85,7 @@ public class FileManager {
         JSONArray sortedSubject = new JSONArray();
         for(Object word : mail.getSortedSubject()){
             JSONObject wordJson = new JSONObject();
-            IndicesSorting.indexedWord castedObject = (IndicesSorting.indexedWord)word ;
+            indexedWord castedObject = (indexedWord)word ;
             wordJson.put("word",castedObject.getWord());
             wordJson.put("start",castedObject.getStart());
             wordJson.put("end",castedObject.getEnd());
@@ -88,12 +100,11 @@ public class FileManager {
     }
 
 
-
-    public boolean moveMail(String id,Account account,Mail mail,String folderName) throws IOException {
+    public boolean moveMail(String id,Account account,indexMail mail,String folderName) throws IOException {
         Directory directory=new Directory();
         String sourcePath="./Accounts/"+account.getEmail()+"/"+account.getCurrentFolderName()+"/"+id;
         String path="./Accounts/"+account.getEmail()+"/"+folderName+"/index.json";
-        this.setNewID(mail,path);
+        mail.setId(this.setNewID(path));
         this.addMailToIndex(mail,path);
         this.deleteFromIndex("./Accounts/"+account.getEmail()+"/"+account.getCurrentFolderName()+"/index.json",id);
         path="./Accounts/"+account.getEmail()+"/"+folderName+"/"+mail.getId();
@@ -163,31 +174,31 @@ public class FileManager {
             e.printStackTrace();
         }
     }
-    public void setNewID(Mail mail, String path) throws IOException {
+    public String setNewID(String path) throws IOException {
         //leih keda
         JSONArray list = listJsonObjects(path);
             if(list == null || list.size() == 0)
-            {
-            mail.setId("0");
-            return;
+            { return("0");
         }
         JSONObject lastMail = (JSONObject) list.get(list.size() - 1);
         long id = Long.parseLong((String)lastMail.get("id")) + 1;
-        mail.setId(Long.toString(id));
+        return (Long.toString(id));
     }
     public Mail getMailContent(String path) throws IOException, ParseException {
-        FileReader reader = new FileReader(path);
-        JSONParser parser = new JSONParser();
-        JSONObject jsonobject = (JSONObject) parser.parse(reader);
-        reader.close();
-        Mail mail = new Mail();
-        mail.setBody(jsonobject.get("body").toString());
-        mail.setSubject(jsonobject.get("subject").toString());
-        mail.setSender(jsonobject.get("sender").toString());
-        mail.setDate(jsonobject.get("date").toString());
-        mail.setId(jsonobject.get("id").toString());
-        mail.setPriority(((Long) jsonobject.get("priority")).intValue());
-//        mail.setAttachments(jsonobject.get(""));
-        return mail;
+//        FileReader reader = new FileReader(path);
+//        JSONParser parser = new JSONParser();
+//        JSONObject jsonobject = (JSONObject) parser.parse(reader);
+//        reader.close();
+//        Mail mail = new Mail();
+//        mail.setBody(jsonobject.get("body").toString());
+//        mail.setSubject(jsonobject.get("subject").toString());
+//        mail.setSender(jsonobject.get("sender").toString());
+//        mail.setDate(jsonobject.get("date").toString());
+//        mail.setId(jsonobject.get("id").toString());
+//        mail.setPriority(((Long) jsonobject.get("priority")).intValue());
+////        mail.setAttachments(jsonobject.get(""));
+        Gson gson = new Gson();
+        JsonReader reader = new JsonReader(new FileReader(path));
+        return gson.fromJson(reader, Mail.class);
     }
 }

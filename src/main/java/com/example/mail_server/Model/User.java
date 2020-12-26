@@ -9,6 +9,8 @@ import com.example.mail_server.Model.Filter.FilterField;
 import com.example.mail_server.Model.Filter.Filteration;
 import com.example.mail_server.Model.Filter.SenderField;
 import com.example.mail_server.Model.Filter.SubjectField;
+import com.example.mail_server.Model.Mail.Mail;
+import com.example.mail_server.Model.Mail.indexMail;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -72,51 +74,70 @@ public class User {
         return true;
     }
 
-    public LinkedList<Mail> filter(String senderField,String subjectField){
-        LinkedList<Mail> mails = currentUser.getCurrentFolderMails();
+    public LinkedList<indexMail> filter(String senderField, String subjectField){
+        LinkedList<indexMail> mails = currentUser.getCurrentFolderMails();
         FilterField sender= new SenderField();
         sender.setFilter(senderField);
         FilterField subject= new SubjectField();
         subject.setFilter(subjectField);
         FilterField totalFilter= new Filteration(sender,subject);
-        mails=totalFilter.filter(mails);
+        if(senderField==null){
+            mails=subject.filter(mails); }
+        else if(subjectField==null){
+            mails=sender.filter(mails); }
+        else{
+            mails=totalFilter.filter(mails); }
 
         return mails;
 
     }
+
+    public boolean draft(Mail mail) throws IOException {
+        mail.setSender(currentUser.getEmail());
+        this.saveMail(mail,currentUser.getEmail(),"draft");
+        return true;
+    }
+
     public boolean Compose(Mail mail) throws IOException {
-        Directory directory=new Directory();
+
+        if(!checkReceivers(mail)){return false;}
+        mail.setSender(currentUser.getEmail());
+        this.saveMail(mail,currentUser.getEmail(),"sent");
+        for (String receiver: mail.getReceivers()) {
+          this.saveMail(mail,receiver,"inbox");
+        }
+        return true;
+    }
+
+    public boolean checkReceivers(Mail mail){
         for (String receiver: mail.getReceivers()) {
             if(!proxy.checkEmail(receiver)){
                 return false;
             }
         }
-        mail.setSender(currentUser.getEmail());
-        FileManager json = new FileManager();
-        String myPath = "./Accounts/"+currentUser.getEmail()+"/sent/index.json";
-        json.setNewID(mail, myPath);
-        directory.createFolder("./Accounts/"+currentUser.getEmail()+"/sent/"+mail.getId());
-        String path="./Accounts/"+currentUser.getEmail()+"/sent/"+mail.getId()+"/"+mail.getId()+".json";
-        json.saveJsonFile(mail, path);
-        json.addMailToIndex(mail, myPath);
-        for (String receiver: mail.getReceivers()) {
-            myPath = "./Accounts/"+receiver+"/inbox/index.json";
-            json.setNewID(mail, myPath);
-            directory.createFolder("./Accounts/"+receiver+"/inbox/"+mail.getId());
-            path="./Accounts/"+receiver+"/inbox/"+mail.getId()+"/"+mail.getId()+".json";
-            json.saveJsonFile(mail,path);
-            json.addMailToIndex(mail, myPath);
-        }
         return true;
     }
-    public LinkedList<Mail> moveMail(String[] id,String folderName) throws IOException {
+    public void saveMail(Mail mail,String E_mail,String folder) throws IOException {
+        Directory directory=new Directory();
+        FileManager json = new FileManager();
+        String myPath = "./Accounts/"+E_mail+"/"+folder+"/index.json";
+        mail.setId(json.setNewID(myPath));
+        directory.createFolder("./Accounts/"+E_mail+"/"+folder+"/"+mail.getId());
+        String path="./Accounts/"+E_mail+"/"+folder+"/"+mail.getId()+"/"+mail.getId()+".json";
+        json.saveJsonFile(mail, path);
+
+        indexMail indexMail = new indexMail(mail.getSubject(),mail.getBody(),mail.getSender(),mail.getReceivers()[0],mail.getDate(),mail.getPriority());
+        json.addMailToIndex(indexMail, myPath);
+    }
+
+    public LinkedList<indexMail> moveMail(String[] id,String folderName) throws IOException {
         FileManager json=new FileManager();
-        LinkedList<Mail> mails=currentUser.getCurrentFolderMails();
-        for(int i=0;i<id.length;i++){
-            for(Mail mail: mails){
-                if(mail.getId().equalsIgnoreCase(id[i])){
+        LinkedList<indexMail> mails=currentUser.getCurrentFolderMails();
+        for (String s : id) {
+            for (indexMail mail : mails) {
+                if (mail.getId().equalsIgnoreCase(s)) {
                     mails.remove(mail);
-                    json.moveMail(id[i],currentUser,mail,folderName);
+                    json.moveMail(s, currentUser, mail, folderName);
 
                     break;
                 }

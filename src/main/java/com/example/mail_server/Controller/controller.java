@@ -1,20 +1,24 @@
 package com.example.mail_server.Controller;
 
+import com.example.mail_server.Model.*;
 import com.example.mail_server.Model.Account.Account;
-import com.example.mail_server.Model.Contact;
 import com.example.mail_server.Model.DataManagement.FileManager;
-import com.example.mail_server.Model.Mail;
-import com.example.mail_server.Model.User;
+import com.example.mail_server.Model.Mail.Mail;
+import com.example.mail_server.Model.Mail.indexMail;
+import com.example.mail_server.Model.Search.searchResults;
 import org.json.simple.parser.ParseException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.LinkedList;
+import java.util.Objects;
 
 @Configuration
 @Deprecated
@@ -34,22 +38,37 @@ class MyConfiguration {
 @CrossOrigin
 public class controller {
     private User user;
+    LinkedList<String> file;
+
 
 
     public controller(){
         user = User.getInstance();
-         /*   Account acc= new Account();
-            acc.setName("radwa");
-            acc.setEmail("tosahassan97@gmail.com");
-            acc.setPassword("123456");
-            user.setCurrentUser(acc);
-*/
+        file = new LinkedList<String>();
     }
     @CrossOrigin
     @PostMapping("/compose")
     public boolean compose(@RequestBody Mail mail) throws IOException {
         System.out.println(mail.getBody());
         return user.Compose(mail);
+    }
+
+    @CrossOrigin
+    @PostMapping("/attachment")
+    public boolean attach(@RequestParam("file") MultipartFile[] file) throws IOException {
+        for(MultipartFile file0 : file) {
+            file0.transferTo(Paths.get(Objects.requireNonNull("./Accounts/Attachments/" + file0.getOriginalFilename())));
+            this.file.add("./Accounts/Attachments/" + file0.getOriginalFilename());
+        }
+        return true;
+    }
+
+
+    @CrossOrigin
+    @PostMapping("/draft")
+    public boolean draft(@RequestBody Mail mail) throws IOException {
+        System.out.println(mail.getBody());
+        return user.draft(mail);
     }
 
     @CrossOrigin
@@ -68,26 +87,34 @@ public class controller {
     @CrossOrigin
     @RequestMapping("/getMails")
     @ResponseBody
-    public LinkedList<Mail> getListMails(@RequestParam(value = "folderName") String folderName) throws IOException {
+    public LinkedList<indexMail> getListMails(@RequestParam(value = "folderName") String folderName, @RequestParam(value = "pageNumber") int pageNumber) throws IOException {
         Account acc = user.getCurrentUser();
-        return acc.loadFolder(folderName);
+        return acc.loadFolder(folderName,pageNumber);
     }
 
     @CrossOrigin
     @RequestMapping("/sortMails")
     @ResponseBody
-    public LinkedList<Mail> sortMails(@RequestParam(value = "sort") String sort) {
+    public LinkedList<indexMail> sortMails(@RequestParam(value = "sort") String sort) {
         //new ??
         Account acc = user.getCurrentUser();
         return acc.sortFolder(sort);
+    }
+
+    @CrossOrigin
+    @RequestMapping("/searchMails")
+    @ResponseBody
+    public LinkedList<searchResults> searchMails(@RequestParam(value = "target") String target) {
+        Account acc = user.getCurrentUser();
+        return acc.searchFolder(target);
     }
 
 
     @CrossOrigin
     @RequestMapping("/filter")
     @ResponseBody
-    public LinkedList<Mail> getFilteredMails(@RequestParam(value = "sender") String senderField,@RequestParam(value = "subject") String subjectField) {
-      LinkedList<Mail> mails= user.filter(senderField,subjectField);
+    public LinkedList<indexMail> getFilteredMails(@RequestParam(value = "sender") String senderField,@RequestParam(value = "subject") String subjectField) {
+      LinkedList<indexMail> mails= user.filter(senderField,subjectField);
       return mails;
     }
 
@@ -98,6 +125,15 @@ public class controller {
         return user.addContact(contact);
     }
 
+    @CrossOrigin
+    @GetMapping("/removeContact")
+    public boolean  removeContact(@RequestParam (value = "id") String id ) throws IOException {
+        String path = "./Accounts/" + user.getCurrentUser().getEmail() + "/contacts.json";
+        System.out.println("HHHHHHHHHHHHH");
+        FileManager fileManager = new FileManager();
+        fileManager.removeContact(path,id);
+        return true;
+    }
 
     @CrossOrigin
     @RequestMapping("/getContacts")
@@ -110,9 +146,8 @@ public class controller {
     @CrossOrigin
     @PostMapping ("/move")
     @ResponseBody
-    public LinkedList<Mail> moveMails(@RequestBody String[] id,String folderName) throws IOException {
-
-           return user.moveMail(id,folderName);
+    public LinkedList<indexMail> moveMails(@RequestBody String[] id,String folderName) throws IOException {
+         return user.moveMail(id,folderName);
     }
 
     @CrossOrigin

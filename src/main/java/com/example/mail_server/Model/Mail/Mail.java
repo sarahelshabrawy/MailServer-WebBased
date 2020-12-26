@@ -1,6 +1,9 @@
-package com.example.mail_server.Model;
+package com.example.mail_server.Model.Mail;
 
-import com.example.mail_server.Model.Sort.SortText.IndicesSorting;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.LinkedList;
 
 public class Mail {
 
@@ -10,22 +13,19 @@ public class Mail {
     private String[] receivers;
     private String date;
     private int priority;
-    private String[] attachments;
+    private LinkedList<String> attachments;
     private String id = "0" ;
-    private Object[] sortedBody;
-    private Object[] sortedSubject;
-    private IndicesSorting indicesSorting = new IndicesSorting();
 
     public Mail(){}
 
-    public Mail(String subject, String body, String sender, String[] receivers, String date, int priority) {
+    public Mail(String subject, String body, String sender, String[] receivers, String date, int priority,LinkedList<String> attachments) {
         this.subject = subject;
         this.body = body;
         this.sender = sender;
         this.receivers = receivers;
         this.date = date;
         this.priority = priority;
-        //this.attachments = attachments;
+        this.attachments = attachments;
 
     }
 
@@ -34,7 +34,6 @@ public class Mail {
     }
 
     public void setSubject(String subject) {
-        this.sortedSubject = indicesSorting.sortMailContent(subject);
         this.subject = subject;
     }
 
@@ -43,7 +42,6 @@ public class Mail {
     }
 
     public void setBody(String body) {
-        this.sortedBody = indicesSorting.sortMailContent(body);
         this.body = body;
     }
 
@@ -79,11 +77,11 @@ public class Mail {
         this.priority = priority;
     }
 
-    public String[] getAttachments() {
+    public LinkedList<String> getAttachments() {
         return attachments;
     }
 
-    public void setAttachments(String[] attachments) {
+    public void setAttachments(LinkedList<String> attachments) throws IOException {
         this.attachments = attachments;
     }
 
@@ -93,22 +91,6 @@ public class Mail {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public Object[] getSortedBody() {
-        return sortedBody;
-    }
-
-    public Object[] getSortedSubject() {
-        return sortedSubject;
-    }
-
-    public void setSortedBody(Object[] sortedBody) {
-        this.sortedBody = sortedBody;
-    }
-
-    public void setSortedSubject(Object[] sortedSubject) {
-        this.sortedSubject = sortedSubject;
     }
 
 }
