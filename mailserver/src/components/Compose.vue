@@ -217,5 +217,6 @@ textarea:focus, input:focus{
 }
 #formatBar{
  position: absolute;
+ top:90%;
 }
 </style>

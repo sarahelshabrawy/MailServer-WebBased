@@ -96,6 +96,7 @@ export default {
   background: linear-gradient(90deg,  #ffdde9 0%,white 100%);
   padding:0;
   height: 600px;
+  width: 100%;
 }
 .Menu{
   border: 0.1px solid rgb(253, 231, 246);
