@@ -4,6 +4,7 @@ import com.example.mail_server.Model.*;
 import com.example.mail_server.Model.Account.Account;
 import com.example.mail_server.Model.DataManagement.FileManager;
 import com.example.mail_server.Model.Mail.Mail;
+import com.example.mail_server.Model.Mail.MoveMails;
 import com.example.mail_server.Model.Mail.indexMail;
 import com.example.mail_server.Model.Search.searchResults;
 import org.json.simple.parser.ParseException;
@@ -52,12 +53,14 @@ public class controller {
     @PostMapping("/compose")
     public boolean compose(@RequestBody Mail mail) throws IOException {
         System.out.println(mail.getBody());
+        mail.setAttachments(file);
         return user.Compose(mail);
     }
 
     @CrossOrigin
     @PostMapping("/attachment")
     public boolean attach(@RequestParam("file") MultipartFile[] file) throws IOException {
+        this.file.clear();
         for(MultipartFile file0 : file) {
 //            file0.transferTo(Paths.get(Objects.requireNonNull("./Accounts/Attachments/" + file0.getOriginalFilename())));
 //            File a = new File("./Accounts/Attachments/" + file0.getOriginalFilename() );
@@ -75,13 +78,15 @@ public class controller {
     @GetMapping("/sendAttachment")
     public LinkedList<byte[]> sendAttach(@RequestParam(value = "path") String[] paths) throws IOException {
         FileManager fileManager = new FileManager();
+        System.out.println(paths.length);
         LinkedList<byte[]> attachments = new LinkedList<byte[]>();
         for (String path : paths){
             path = URLDecoder.decode(path, StandardCharsets.UTF_8);
             File file = new File(path);
+            System.out.println(path);
+
             byte[] bArray = fileManager.readFileToByteArray(file);
             attachments.add(bArray);
-            System.out.println(path);
         }
 //        File file = new File(paths[0]);
 
@@ -185,8 +190,8 @@ public class controller {
     @CrossOrigin
     @PostMapping ("/move")
     @ResponseBody
-    public LinkedList<indexMail> moveMails(@RequestBody String[] id,String folderName) throws IOException {
-         return user.moveMail(id,folderName);
+    public boolean moveMails(@RequestBody MoveMails moveMail) throws IOException {
+         return user.moveMail(moveMail.getId(), moveMail.getFolderName());
     }
 
     @CrossOrigin
@@ -209,7 +214,26 @@ public class controller {
         String path = "./Accounts/" + user.getCurrentUser().getEmail() + "/" + currentFolder + "/" + id +"/"+id +".json";
         FileManager fileManager = new FileManager();
         Mail mail = fileManager.getMailContent(path);
+        for(String attach : mail.getAttachments()){
+            System.out.println(attach);
+            System.out.println("tmaaam");
+        }
         return mail;
+    }
+    @CrossOrigin
+    @RequestMapping("/renameFolder")
+    @ResponseBody
+    public boolean renameFolder(@RequestParam(value = "folderName") String folderName, @RequestParam(value = "newFolderName") String newFolderName){
+        System.out.println(folderName + "   " + newFolderName);
+        return User.getInstance().renameFolders(folderName, newFolderName);
+    }
+
+    @CrossOrigin
+    @RequestMapping("/deleteFolder")
+    @ResponseBody
+    public boolean deleteFolder(@RequestParam(value = "folderName") String folderName){
+        System.out.println(folderName);
+        return User.getInstance().deleteFolders(folderName);
     }
 
 }

@@ -25,7 +25,6 @@ public class indexMail {
         this.priority = priority;
         this.sortedBody = indicesSorting.sortMailContent(body);
         this.sortedSubject = indicesSorting.sortMailContent(subject);
-
         //this.attachments = attachments;
 
     }

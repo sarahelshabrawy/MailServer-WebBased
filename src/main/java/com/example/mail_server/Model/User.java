@@ -127,10 +127,14 @@ public class User {
         json.saveJsonFile(mail, path);
 
         indexMail indexMail = new indexMail(mail.getSubject(),mail.getBody(),mail.getSender(),mail.getReceivers()[0],mail.getDate(),mail.getPriority());
+        indexMail.setId(mail.getId());
         json.addMailToIndex(indexMail, myPath);
     }
 
-    public LinkedList<indexMail> moveMail(String[] id,String folderName) throws IOException {
+    public boolean moveMail(String[] id,String folderName) throws IOException {
+        Directory dir = new Directory();
+        if(!dir.checkFolderExistence(folderName, this.currentUser))
+            return false;
         FileManager json=new FileManager();
         LinkedList<indexMail> mails=currentUser.getCurrentFolderMails();
         for (String s : id) {
@@ -138,14 +142,11 @@ public class User {
                 if (mail.getId().equalsIgnoreCase(s)) {
                     mails.remove(mail);
                     json.moveMail(s, currentUser, mail, folderName);
-
                     break;
                 }
             }
-
         }
-
-        return mails;
+        return true;
     }
 
     public String[] getUserFoldersList()
@@ -161,6 +162,31 @@ public class User {
             }
         });
         return directories;
+    }
+    public boolean renameFolders(String folderName, String newFolderName)
+    {
+        Directory dir = new Directory();
+        String path = "./Accounts/" + currentUser.getEmail() + "/" + folderName;
+        String newPath = "./Accounts/" + currentUser.getEmail() + "/" + newFolderName;
+        if(newFolderName.charAt(newFolderName.length() - 1) == ' ')
+            return false;
+        if(!dir.folderNameIsValid(newPath, newFolderName))
+            return false;
+        File sourceFile = new File(path);
+        File destFile = new File(newPath);
+        if(destFile.exists())
+            return false;
+        boolean bool= dir.renameMyFolder(sourceFile,destFile);
+        if(!bool)
+            return bool;
+        dir.DeleteFolder(sourceFile);
+        return bool;
+    }
+    public boolean deleteFolders (String folderName)
+    {
+        Directory dir = new Directory();
+        String path = "./Accounts/" + this.currentUser.getEmail() + "/" + folderName;
+        return dir.DeleteFolder(new File(path));
     }
     public Account getCurrentUser() {
         return currentUser;
