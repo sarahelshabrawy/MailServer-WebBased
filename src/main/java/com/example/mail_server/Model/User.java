@@ -9,13 +9,13 @@ import com.example.mail_server.Model.Filter.FilterField;
 import com.example.mail_server.Model.Filter.Filteration;
 import com.example.mail_server.Model.Filter.SenderField;
 import com.example.mail_server.Model.Filter.SubjectField;
+import com.example.mail_server.Model.Mail.Mail;
+import com.example.mail_server.Model.Mail.indexMail;
 
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.LinkedList;
-import java.util.Objects;
 
 public class User {
 
@@ -74,7 +74,7 @@ public class User {
         return true;
     }
 
-    public LinkedList<indexMail> filter(String senderField,String subjectField){
+    public LinkedList<indexMail> filter(String senderField, String subjectField){
         LinkedList<indexMail> mails = currentUser.getCurrentFolderMails();
         FilterField sender= new SenderField();
         sender.setFilter(senderField);

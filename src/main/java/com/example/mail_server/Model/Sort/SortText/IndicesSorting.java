@@ -1,6 +1,6 @@
 package com.example.mail_server.Model.Sort.SortText;
 
-import com.example.mail_server.Model.Search;
+import com.example.mail_server.Model.Search.BinarySearch;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -86,7 +86,7 @@ public class IndicesSorting {
     public static void main(String[] args) {
         IndicesSorting h = new IndicesSorting();
         Object[] haha = h.sortMailContent("It is a long established fact");
-        Search hoho = new Search();
-        System.out.println(Arrays.toString(hoho.binarySearch(haha, 0, haha.length - 1, "fact")));
+        BinarySearch hoho = new BinarySearch();
+        System.out.println(Arrays.toString(hoho.search(haha, 0, haha.length - 1, "fact")));
     }
 }

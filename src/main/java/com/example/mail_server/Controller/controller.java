@@ -3,6 +3,9 @@ package com.example.mail_server.Controller;
 import com.example.mail_server.Model.*;
 import com.example.mail_server.Model.Account.Account;
 import com.example.mail_server.Model.DataManagement.FileManager;
+import com.example.mail_server.Model.Mail.Mail;
+import com.example.mail_server.Model.Mail.indexMail;
+import com.example.mail_server.Model.Search.searchResults;
 import org.json.simple.parser.ParseException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -84,7 +87,7 @@ public class controller {
     @CrossOrigin
     @RequestMapping("/getMails")
     @ResponseBody
-    public LinkedList<indexMail> getListMails(@RequestParam(value = "folderName") String folderName,@RequestParam(value = "pageNumber") int pageNumber) throws IOException {
+    public LinkedList<indexMail> getListMails(@RequestParam(value = "folderName") String folderName, @RequestParam(value = "pageNumber") int pageNumber) throws IOException {
         Account acc = user.getCurrentUser();
         return acc.loadFolder(folderName,pageNumber);
     }
@@ -101,7 +104,7 @@ public class controller {
     @CrossOrigin
     @RequestMapping("/searchMails")
     @ResponseBody
-    public LinkedList<Search.searchResults> searchMails(@RequestParam(value = "target") String target) {
+    public LinkedList<searchResults> searchMails(@RequestParam(value = "target") String target) {
         Account acc = user.getCurrentUser();
         return acc.searchFolder(target);
     }

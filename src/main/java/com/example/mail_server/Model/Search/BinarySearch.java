@@ -1,34 +1,13 @@
-package com.example.mail_server.Model;
+package com.example.mail_server.Model.Search;
 
 import com.example.mail_server.Model.Sort.SortText.indexedWord;
 
-import java.awt.*;
 import java.util.LinkedList;
 
-public class Search {
-
-    public static class searchResults{
-        Object source;
-        Interval[] occurrences;
-
-        public searchResults(Object source, Interval[] occurrences) {
-            this.source = source;
-            this.occurrences = occurrences;
-        }
-    }
-
-    public LinkedList<searchResults> search(LinkedList<indexMail> mails, String x){
-        LinkedList<searchResults> searchResults = new LinkedList<>();
-        for(indexMail mail : mails){
-            Interval[] occurrences = (Interval []) binarySearch(mail.getSortedSubject(),0,mail.getSortedSubject().length-1,x);
-            if(occurrences!=null)
-                searchResults.add(new searchResults(mail, occurrences));
-        }
-        return searchResults;
-    }
+class BinarySearch {
 
 
-    public Object[] binarySearch(Object[] arr, int l, int r, String x)
+    public Interval[] search(Object[] arr, int l, int r, String x)
     {
         if (r >= l) {
             int mid = l + (r - l) / 2;
@@ -42,11 +21,11 @@ public class Search {
             // If element is smaller than mid, then
             // it can only be present in left subarray
             if (castedElement.getWord().compareToIgnoreCase(x) > 0)
-                return binarySearch(arr, l, mid - 1, x);
+                return search(arr, l, mid - 1, x);
 
             // Else the element can only be present
             // in right subarray
-            return binarySearch(arr, mid + 1, r, x);
+            return search(arr, mid + 1, r, x);
         }
 
         // We reach here when element is not present
@@ -54,7 +33,7 @@ public class Search {
         return null;
     }
 
-    public Object[] findAllOccurrences  (Object[] arr,int mid,String x){
+    public Interval[] findAllOccurrences  (Object[] arr,int mid,String x){
         LinkedList<Interval> occurrencesIndices = new LinkedList<>();
         for (int i = mid; i < arr.length ; i++) {
             indexedWord castedElement = (indexedWord) arr[i];
@@ -68,17 +47,8 @@ public class Search {
                 occurrencesIndices.add(new Interval(castedElement.getStart(),castedElement.getEnd()));
             else break;
         }
-        return occurrencesIndices.toArray();
+        return Interval.toArray(occurrencesIndices);
     }
 
 
-    private static class Interval {
-        int start;
-        int end;
-
-        public Interval(int start, int end) {
-            this.start = start;
-            this.end = end;
-        }
-    }
 }

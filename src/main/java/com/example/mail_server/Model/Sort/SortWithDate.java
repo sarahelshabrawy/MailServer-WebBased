@@ -1,6 +1,6 @@
 package com.example.mail_server.Model.Sort;
 
-import com.example.mail_server.Model.indexMail;
+import com.example.mail_server.Model.Mail.indexMail;
 
 import java.text.DateFormat;
 import java.text.ParseException;
