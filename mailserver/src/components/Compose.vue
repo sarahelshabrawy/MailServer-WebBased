@@ -50,7 +50,7 @@ export default {
             importance:0,
             secondaryRecieversCount:0,
             file:new FormData(),
-            attachment : 0,
+            attachments : 0,
         }
     },
 
