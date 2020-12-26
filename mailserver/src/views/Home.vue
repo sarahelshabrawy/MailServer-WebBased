@@ -25,18 +25,21 @@
       <div id="sort">
         <div id="sortBy"><i class="fas fa-sort"></i>  SORT BY</div> <i class="fas fa-caret-down list-icon" id="list-icon"></i>
         <div id="mySortList">
-          <div id="first-item" @click="clickSort">Date</div>
+          <div id="first-item" @click="clickSort" v-if="component != 'contact-view'">Date</div>
+          <div id="first-item" @click="clickSort" v-if="component == 'contact-view'"></div>
           <ul id="sortList">
-            <li @click="clickItem">Senders</li>
-            <li @click="clickItem">Receivers</li>
-            <li @click="clickItem">Importance</li>
-            <li @click="clickItem">Subject</li>
-            <li @click="clickItem">Body</li>
-            <li @click="clickItem">Attachments</li>
+            <li @click="clickItem" v-if="component != 'contact-view'">Senders</li>
+            <li @click="clickItem" v-if="component != 'contact-view'">Receivers</li>
+            <li @click="clickItem" v-if="component != 'contact-view'">Importance</li>
+            <li @click="clickItem" v-if="component != 'contact-view'">Subject</li>
+            <li @click="clickItem" v-if="component != 'contact-view'">Body</li>
+            <li @click="clickItem" v-if="component != 'contact-view'">Attachments</li>
+            <li @click="clickItem" v-if="component === 'contact-view'">Email</li>
+            <li @click="clickItem" v-if="component === 'contact-view'">Name</li>
           </ul>
         </div>
       </div>
-      <div id="filtering">
+      <div id="filtering" v-if="component != 'contact-view'">
         <div id="filter" @click="clickFilter">Filter Mails&nbsp;<i class="fas fa-caret-down check-icon" id="check-icon"></i></div>
         <div id="check-menu">
           <div>
@@ -84,7 +87,7 @@
         <component :is="component" v-bind:maillist="Mails" :currentFolder="currentFolder" @paging='setpage'></component>
       </div>
     </div>
-    <div id="side-bar">
+    <div id="side-bar" v-if="component != 'contact-view'">
         <div id="mycheck"><input type="checkbox" value="all" id="selectAll">&nbsp;Select all</div>
         <div id="trash"><i class="fas fa-trash-alt"></i>&nbsp;Delete</div>
         <div id="move"><i class="fas fa-folder-open"></i>&nbsp;Move E-mails</div>
@@ -94,6 +97,7 @@
 
 <script>
 import MailView from '../components/MailView.vue'
+import ContactView from '../components/ContactView.vue'
 import Compose from '../components/Compose.vue'
 import AddFolder from '../components/Add Folder.vue'
 import axios from 'axios'
@@ -104,6 +108,7 @@ export default {
   components: {
     'mail-view':MailView,
     'compose':Compose,
+    'contact-view':ContactView,
     AddFolder
   },
   data()
@@ -118,12 +123,17 @@ export default {
       folderName:String,
       userFoldersList:[],
       openUserFolders: false,
-    
+      contact:false
     }
   },
   beforeMount(){
     if(this.beforeMount)
       this.getMails()
+    if(this.component === 'contact-view')
+      this.contact = true
+    else
+      this.contact = false
+    console.log(this.contact)
   },
   methods : {
 
