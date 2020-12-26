@@ -113,4 +113,13 @@ public class Directory{
         }
     }
 
+    public boolean checkFolderExistence(String name, Account acc)
+    {
+        String path = "./Accounts/" + acc.getEmail() + "/" + name;
+        File folder = new File(path);
+        if(folder.exists())
+            return true;
+        return false;
+    }
+
 }

@@ -127,10 +127,14 @@ public class User {
         json.saveJsonFile(mail, path);
 
         indexMail indexMail = new indexMail(mail.getSubject(),mail.getBody(),mail.getSender(),mail.getReceivers()[0],mail.getDate(),mail.getPriority());
+        indexMail.setId(mail.getId());
         json.addMailToIndex(indexMail, myPath);
     }
 
-    public LinkedList<indexMail> moveMail(String[] id,String folderName) throws IOException {
+    public boolean moveMail(String[] id,String folderName) throws IOException {
+        Directory dir = new Directory();
+        if(!dir.checkFolderExistence(folderName, this.currentUser))
+            return false;
         FileManager json=new FileManager();
         LinkedList<indexMail> mails=currentUser.getCurrentFolderMails();
         for (String s : id) {
@@ -138,14 +142,11 @@ public class User {
                 if (mail.getId().equalsIgnoreCase(s)) {
                     mails.remove(mail);
                     json.moveMail(s, currentUser, mail, folderName);
-
                     break;
                 }
             }
-
         }
-
-        return mails;
+        return true;
     }
 
     public String[] getUserFoldersList()

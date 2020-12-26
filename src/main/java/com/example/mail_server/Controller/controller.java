@@ -4,6 +4,7 @@ import com.example.mail_server.Model.*;
 import com.example.mail_server.Model.Account.Account;
 import com.example.mail_server.Model.DataManagement.FileManager;
 import com.example.mail_server.Model.Mail.Mail;
+import com.example.mail_server.Model.Mail.MoveMails;
 import com.example.mail_server.Model.Mail.indexMail;
 import com.example.mail_server.Model.Search.searchResults;
 import org.json.simple.parser.ParseException;
@@ -146,8 +147,8 @@ public class controller {
     @CrossOrigin
     @PostMapping ("/move")
     @ResponseBody
-    public LinkedList<indexMail> moveMails(@RequestBody String[] id,String folderName) throws IOException {
-         return user.moveMail(id,folderName);
+    public boolean moveMails(@RequestBody MoveMails moveMail) throws IOException {
+         return user.moveMail(moveMail.getId(), moveMail.getFolderName());
     }
 
     @CrossOrigin
