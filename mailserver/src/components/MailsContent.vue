@@ -3,18 +3,10 @@
     <div class = "Menu">
       <button id="delete"><i class="material-icons">delete</i></button>
       <button id="Move"><i class="material-icons">move_to_inbox</i></button>      
-      <!-- <div class="input_slider">
-        <label class="switch">
-        <input type="checkbox" checked>
-        <span class="slider round"></span>
-        </label>
-      </div>
-      <label class="important">Important:</label>  -->
+
       <h1>{{mail.subject}}</h1>
     </div>   
-    <a v-for="attach in mail.attachments" :key="attach.id" :href="attach" >
-      <img :src= "attach" :alt= "attach" download >
-    </a>
+    <!-- <a v-for="attach in files" :key="attach.id" :href="attach"  download ="hhhh"></a> -->
     
     <div class="sender">{{"from : " + mail.sender}}</div>
     <h3>{{mail.body}}</h3>
@@ -34,7 +26,9 @@ export default {
   data(){
     return{
       beforeMount:true,
-      mail:{}
+      mail:{},
+      files :[],
+      Type:"",
     }
   },
   beforeMount(){
@@ -42,23 +36,52 @@ export default {
       this.getMailContent()
   },
   methods:{
-    getMailContent(){
-      axios.get(apiUrl + "/openMail", {
+    async getMailContent(){
+      console.log(this.id)
+      await axios.get(apiUrl + "/openMail", {
         params:{
           id:this.id,
           currentFolder:this.currentFolder
         }
+        
       }).then(Response =>{
+        console.log(Response.data)
         this.mail = {
           subject : Response.data.subject,
           body : Response.data.body,
           Attachments : Response.data.attachments,
-          sender : Response.data.sender
+          sender : Response.data.sender,
+          priority : Response.data.priority
         }
-        console.log(this.mail)
+        console.log(this.mail.Attachments)
+      })
+      axios.get(apiUrl + "/sendAttachment" , {params:{
+        path : encodeURI(this.mail.Attachments)
+      }})
+      .then(Response => {
+        let indices = Object.keys( Response.data )
+        for(let i = 0 ;i < indices.length ; i++){
+          let binaryString = window.atob(Response.data[0])
+          let binaryLen = binaryString.length;
+          let bytes = new Uint8Array(binaryLen);
+          for (let i = 0; i < binaryLen; i++) {
+              bytes[i] = binaryString.charCodeAt(i);
+          }
+          var mime = require('mime-types')
+          let mimeType = mime.lookup(this.mail.Attachments[0]) 
+          console.log(mimeType)
+          // var  byte = this.base64ToArrayBuffer(Response.data);
+          let blob = new Blob([bytes], {type: mimeType})  ;
+          let link = document.createElement('a')
+          link.href = window.URL.createObjectURL(blob)
+          link.download = "Attachment" + i
+          link.click()
+          this.files.push(blob);
+        }
+
       })
       this.beforeMount = false
-    }
+    },
 
   },
   mounted() {
