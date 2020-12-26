@@ -54,8 +54,8 @@
         </div>
       </div>
       <div id="search">
-        <input key="text" id="text" value="Search In Your Emails" @click="searchBar">
-        <i class="fas fa-search searching"></i>
+        <input key="text" id="targetText" value="Search In Your Emails" @click="searchBar">
+        <i class="fas fa-search searching" v-on:click="search"></i>
       </div>
     </div>
     <a href="#" class="float" id = "compose" @click="component = 'compose'" v-on:click="hideComposeBtn" >
@@ -84,7 +84,7 @@
       </div>
       <AddFolder v-if="addFolder" @sendFolder="sendFolder"></AddFolder>
       <div id="content" >
-        <component :is="component" v-bind:maillist="Mails" :currentFolder="currentFolder" @paging='setpage'></component>
+        <component :key="componentKey" :is="component" v-bind:maillist="Mails" :currentFolder="currentFolder" :searchResults="searchResults" @paging='setpage'></component>
       </div>
     </div>
     <div id="side-bar" v-if="component != 'contact-view'">
@@ -116,6 +116,7 @@ export default {
     return{
       component:'mail-view',
       Mails:[],
+      searchResults:[],
       prop:this.Mails,
       currentFolder:"inbox",
       beforeMount : true,
@@ -123,7 +124,10 @@ export default {
       folderName:String,
       userFoldersList:[],
       openUserFolders: false,
-      contact:false
+      contact:false,
+      componentKey : 0
+      // addContact:false,
+      // target:""
     }
   },
   beforeMount(){
@@ -137,7 +141,7 @@ export default {
   },
   methods : {
 
- 
+
     getUserFolders()
     {
       axios.get(apiUrl + "/getUserFolders"
@@ -150,15 +154,14 @@ export default {
       })
       console.log(this.userFoldersList.toString())
       this.openUserFolders = true;
-    }
-    ,
+    },
     hideComposeBtn(e)
     {
       e.target.style.display = "none";
     },
     sendFolder(name)
     {
-      var message = document.getElementById("message-folder");
+      const message = document.getElementById("message-folder");
       message.innerHTML = ""
       if(name === '')
       {
@@ -170,11 +173,8 @@ export default {
           folderName : name
         }
       }).then(Response => {
-        if(Response.data == false)
-        {
+        if(Response.data === false)
           message.innerHTML = "This folder already exists"
-          return;
-        }
         else{
           this.folderName = name;
           this.addFolder = false;
@@ -185,7 +185,7 @@ export default {
     {
       this.currentFolder = folder;
       this.component = 'mail-view';
-      var btn = document.getElementById("compose");
+      const btn = document.getElementById("compose");
       btn.style.display = "block";
       this.getMails();
     },
@@ -197,55 +197,114 @@ export default {
           pageNumber :pageNumber
 
         }
-      }).then(Response => {
-        this.Mails = [];
-        let indices = Object.keys( Response.data )
-        for(let i = 0 ;i < indices.length ; i++){
-          this.Mails[i] = {
-            id : Response.data[indices[i]].id,
-            subject : Response.data[indices[i]].subject,
-            sender : Response.data[indices[i]].sender,
-            body : Response.data[indices[i]].body,
-            date : Response.data[indices[i]].date,
-            receiver : Response.data[indices[i]].receiver
-          }
-          console.log(this.Mails[i])
-        }
-      })
+      }).then(Response => this.updateMails(Response))
       this.beforeMount = false
     },
-
+updateMails(Response){
+  this.Mails = [];
+  let indices = Object.keys( Response.data )
+  for(let i = 0 ;i < indices.length ; i++){
+    this.Mails[i] = {
+      id : Response.data[indices[i]].id,
+      subject : Response.data[indices[i]].subject,
+      sender : Response.data[indices[i]].sender,
+      body : Response.data[indices[i]].body,
+      date : Response.data[indices[i]].date,
+      receiver : Response.data[indices[i]].receiver
+    }
+    console.log(this.Mails[i])
+  }
+},
  setpage(){
      var header = document.getElementById("pagination");
     var btns = header.getElementsByClassName("btn");
-    
+
      for (var i = 0; i < btns.length; i++) {
          btns[i].addEventListener("click", function() {
-            var current = document.getElementsByClassName("active");
-            current[0].className = current[0].className.replace(" active", "");
+           const current = document.getElementsByClassName("active");
+           current[0].className = current[0].className.replace(" active", "");
             this.className += " active";
             pageNumber=current[0].id;
             });
-            } 
+            }
 
-            this.getMails();   
+            this.getMails();
   },
 
     searchBar() {
-      var myvalue =  document.getElementById("text").value ;
-      if(myvalue == "Search In Your Emails"){
-        document.getElementById("text").value = "";
+      const myvalue = document.getElementById("targetText").value;
+      if(myvalue === "Search In Your Emails"){
+        document.getElementById("targetText").value = "";
       }
+    },async search() {
+      console.log("HELLO SARSOURAAA")
+      const target = document.getElementById("targetText").value;
+      await axios.get(apiUrl + "/searchMails", {
+        params: {target: target}
+      }).then(Response => {
+        this.searchResults = []
+        // const searchResult = {
+        //   subjectOccurrences : [],
+        //   bodyOccurrences : [],
+        //   senderOccurrences : [],
+        //   importanceOccurrences : [] ,
+        //   priorityOccurrences : [],
+        //   dateOccurrences : []
+        // }
+        let indices = Object.keys(Response.data)
+        for (let i = 0; i < indices.length; i++) {
+          this.Mails[i] = Response.data[indices[i]].source
+          this.searchResults[i] = {
+            subjectOccurrences: JSON.parse(JSON.stringify(Response.data[indices[i]].subjectOccurrences)),
+            bodyOccurrences: JSON.parse(JSON.stringify(Response.data[indices[i]].bodyOccurrences)),
+            senderOccurrences: JSON.parse(JSON.stringify(Response.data[indices[i]].senderOccurrences)),
+            priorityOccurrences: JSON.parse(JSON.stringify(Response.data[indices[i]].priorityOccurrences)),
+            dateOccurrences: JSON.parse(JSON.stringify(Response.data[indices[i]].dateOccurrences))
+          }
+          // console.log("subject")
+          // console.log(this.searchResults[i].subjectOccurrences)
+          // const temp = JSON.parse(JSON.stringify(this.searchResults[i].subjectOccurrences));
+          // console.log("TEMP")
+          // console.log(temp)
+          // console.log("FINISH")
+          // for(let i = 0 ;i < temp.length ; i++){
+          //   console.log("WOW")
+          //   console.log(temp[i].start)
+          //   console.log(temp[i].end)
+          //   console.log("WOW")
+          // }
+          // subjectOccurrences : JSON.parse(JSON.stringify(Response.data[indices[i]].subjectOccurrences)),
+          //     bodyOccurrences : JSON.parse(JSON.stringify(Response.data[indices[i]].bodyOccurrences)),
+          //     senderOccurrences : JSON.parse(JSON.stringify(Response.data[indices[i]].senderOccurrences)),
+          //     importanceOccurrences : JSON.parse(JSON.stringify(Response.data[indices[i]].importanceOccurrences)),
+          //     priorityOccurrences : JSON.parse(JSON.stringify(Response.data[indices[i]].priorityOccurrences)),
+          //     dateOccurrences : JSON.parse(JSON.stringify(Response.data[indices[i]].dateOccurrences))
+
+
+        }
+        console.log(this.searchResults)
+        console.log("6a")
+
+      })
+      this.searchResults = JSON.parse(JSON.stringify(this.searchResults));
+      this.componentKey +=1;
     },
+
     clickItem(e){
-      var listItem = e.target.innerHTML;
-      var firstItem = document.getElementById("first-item");
+      const listItem = e.target.innerHTML;
+      const firstItem = document.getElementById("first-item");
       e.target.innerHTML = firstItem.innerHTML;
       firstItem.innerHTML = listItem;
+      if(listItem!=="Date"){
+        axios.get(apiUrl + "/sortMails", {
+          params:{ sort : listItem }
+        }).then(Response =>this.updateMails(Response))
+      }
+
     },
     clickSort(){
-      var list = document.getElementById("sortList")
-      var icon = document.getElementById("list-icon")
+      const list = document.getElementById("sortList");
+      const icon = document.getElementById("list-icon");
       if(list.style.display === "none")
       {
         list.style.display = "block";
@@ -258,8 +317,8 @@ export default {
       }
     },
     clickFilter(){
-      var box = document.getElementById("check-menu");
-      var icon = document.getElementById("check-icon")
+      const box = document.getElementById("check-menu");
+      const icon = document.getElementById("check-icon");
       if(box.style.display === "none")
       {
         box.style.display = "block";
@@ -273,20 +332,20 @@ export default {
     },
     display()
     {
-      var acc = document.getElementById("account-info");
+      const acc = document.getElementById("account-info");
       acc.style.display = "block";
     },
     hide()
     {
-      var acc = document.getElementById("account-info");
+      const acc = document.getElementById("account-info");
       acc.style.display = "none";
     },
 
 
     getFilteredMail(){
-      var sender =document.getElementById("sender-filter").value;
-      var subject=document.getElementById("subject-filter").value;
-       axios.get(apiUrl + '/filter', {
+      const sender = document.getElementById("sender-filter").value;
+      const subject = document.getElementById("subject-filter").value;
+      axios.get(apiUrl + '/filter', {
         params:
         {
           sender: sender,
@@ -311,7 +370,7 @@ export default {
            
       })
      
-       
+
     }
   }
 }
@@ -429,7 +488,7 @@ export default {
 #search {
   transform: translate(200%, 20%);
 }
-#text {
+#targetText {
   width: 330px;
   height: 23px;
   border: 5px solid transparent;
@@ -498,8 +557,8 @@ export default {
   margin-top: 5px;
 }
 #sortList {
-  margin-top: 0px;
-  border: 2px, solid, transparent;
+  margin-top: 0;
+  border: 2px solid transparent;
   background-color: white;
   color: #081448;
   text-transform: uppercase;
@@ -535,7 +594,7 @@ export default {
   font-size: 17px;
   padding-left: 22px;
   padding-top: 5px;
-  border: 2px, solid, transparent;
+  border: 2px solid transparent;
   border-radius: 5px;
   cursor: pointer;
   width: 180px;
@@ -561,7 +620,7 @@ export default {
   color: white;
   padding-top: 3px;
   padding-left: 10px;
-  border: 1px, solid, transparent;
+  border: 1px solid transparent;
   border-radius: 50px;
   cursor: pointer;
 }
@@ -605,8 +664,7 @@ export default {
   letter-spacing: 1px;
   left: 70px;
   border: 1px solid white;
-  border-radius: 20px;
-  border-top-left-radius: 0;
+  border-radius: 0 20px 20px 20px;
   word-wrap: break-word;
   display: none;
   box-shadow: 2px 2px 3px #999;
@@ -644,7 +702,7 @@ export default {
 #users-list > ul{
   height: 20px;
   padding-bottom: 10px;
-  margin-bottom: 0px;
+  margin-bottom: 0;
   font-size: 20px;
 }
 .menu-styling ul > span:hover {
@@ -676,6 +734,9 @@ export default {
   margin-left: 180px;
   margin-top: 15px;
   font-size: 18px;
+  cursor: pointer;
+}
+.fas fa-search searching{
   cursor: pointer;
 }
 </style>

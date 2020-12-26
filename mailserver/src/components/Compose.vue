@@ -4,14 +4,14 @@
 <div id="compose">
 
  <div>
-  <formatBar  @attach_file="setAttachment" @importance="setImportance()" @send_mail="setmail" ></formatBar>
+  <formatBar id="formatBar"  @attach_file="setAttachment" @importance="setImportance()" @send_mail="setmail" ></formatBar>
   </div>
 
-  <div id="Subject">
+  <div id="Subject_">
    <label  for="subject">Subject: </label>
   <input type="text" id="subject" name="subject"  @change="setSubject()"><br><br>
   </div>
-  <div id="To">
+  <div id="To_">
     <span id="Recievers">
   <label for="to">To:</label>
   <input type="text" id="to" name="to" >
@@ -125,12 +125,12 @@ export default {
         receivers:this.Receivers,
         subject:this.subject,
         body:this.body,
-        attachments:this.file,
+        // attachments:this.file,
         date:this.date,
         priority:this.importance
       }
       console.log(mail)
-      
+
       await axios.post(apiUrl+"/attachment",this.file)
       .then(response => {
         console.log(response.data)
@@ -139,15 +139,16 @@ export default {
           console.log(error);
       });
 
-      axios.get(apiUrl+folder,{
-        params: {
-          receivers: encodeURI(this.Receivers),
-          subject: encodeURI(this.subject),
-          body: encodeURI(this.body),
-          date: encodeURI(this.date),
-          priority: encodeURI(this.importance)
-        }
-      })
+      axios.post(apiUrl+folder,mail)
+      // axios.get(apiUrl+folder,{
+      //   params: {
+      //     receivers: encodeURI(this.Receivers),
+      //     subject: encodeURI(this.subject),
+      //     body: encodeURI(this.body),
+      //     date: encodeURI(this.date),
+      //     priority: encodeURI(this.importance)
+      //   }
+      // })
       .then(response => {
         console.log(response.data)
       })
@@ -170,7 +171,7 @@ export default {
 #Recievers{
    display: inline-block;
 }
-#Subject{
+#Subject_{
 height: 40px;
 }
 #to{
@@ -214,7 +215,7 @@ textarea:focus, input:focus{
 .format{
   padding-top: 20px;
 }
-formatBar{
+#formatBar{
  position: absolute;
 }
 </style>
