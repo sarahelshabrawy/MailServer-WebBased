@@ -2,7 +2,7 @@ package com.example.mail_server.Model.Account;
 
 import com.example.mail_server.Model.Contact;
 import com.example.mail_server.Model.DataManagement.FileManager;
-import com.example.mail_server.Model.Search.searchFacade;
+import com.example.mail_server.Model.Search.searchMailsFacade;
 import com.example.mail_server.Model.Sort.SortContact.ISortContact;
 import com.example.mail_server.Model.Sort.SortContact.SortContactFactory;
 import com.example.mail_server.Model.Sort.SortMail.ISortMail;
@@ -148,7 +148,7 @@ public class Account {
     }
 
     public LinkedList<searchResults> searchFolder(String target){
-        searchFacade Search = new searchFacade();
+        searchMailsFacade Search = new searchMailsFacade();
         return  Search.search(getCurrentFolderMails(),target);
     }
     public void addUserFolder(String folderName){}

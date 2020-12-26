@@ -5,7 +5,7 @@ import com.example.mail_server.Model.Mail.indexMail;
 
 import java.util.LinkedList;
 
-public class searchFacade {
+public class searchMailsFacade {
     public LinkedList<searchResults> search(LinkedList<indexMail> mails, String x){
         LinkedList<searchResults> searchResults = new LinkedList<>();
         BinarySearch binarySearch = new BinarySearch();
