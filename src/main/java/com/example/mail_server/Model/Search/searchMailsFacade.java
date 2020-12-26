@@ -3,6 +3,7 @@ package com.example.mail_server.Model.Search;
 import com.example.mail_server.Model.Mail.Priority;
 import com.example.mail_server.Model.Mail.indexMail;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 
 public class searchMailsFacade {
@@ -16,9 +17,11 @@ public class searchMailsFacade {
              Interval[] priorityOccurrences = linearSearch.search(Priority.mapPriority(mail.getPriority()),x);
             Interval[] senderOccurrences = linearSearch.search(mail.getSender(),x);
             Interval[] dateOccurrences = linearSearch.search(mail.getDate(),x);
-            if(subjectOccurrences!=null || bodyOccurrences!=null || priorityOccurrences!=null|| senderOccurrences!=null || dateOccurrences!=null)
+            if((subjectOccurrences!=null&& subjectOccurrences.length>0 )|| (bodyOccurrences!=null&& bodyOccurrences.length>0 )|| (priorityOccurrences!=null && priorityOccurrences.length>0)|| (senderOccurrences!=null&&senderOccurrences.length>0) || (dateOccurrences!=null&&dateOccurrences.length>0))
                 mailSearchResults.add(new mailSearchResults(mail, subjectOccurrences, bodyOccurrences, senderOccurrences, priorityOccurrences, dateOccurrences));
         }
+        System.out.println("YARAAAB");
+        System.out.println(mailSearchResults.size());
         return mailSearchResults;
     }
 

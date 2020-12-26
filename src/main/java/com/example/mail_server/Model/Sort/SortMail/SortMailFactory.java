@@ -1,5 +1,6 @@
 package com.example.mail_server.Model.Sort.SortMail;
 
+import com.example.mail_server.Model.Sort.SortMail.SortText.SortWithAttachment;
 import com.example.mail_server.Model.Sort.SortMail.SortText.SortWithBody;
 import com.example.mail_server.Model.Sort.SortMail.SortText.SortWithSender;
 import com.example.mail_server.Model.Sort.SortMail.SortText.SortWithSubject;
@@ -17,6 +18,8 @@ public class SortMailFactory {
             return new SortWithDate();
         else if(sortAccordingTo.equalsIgnoreCase("priority"))
             return new SortWithPriority();
+        else if(sortAccordingTo.equalsIgnoreCase("attachments"))
+            return new SortWithAttachment();
         return null;
     }
 
