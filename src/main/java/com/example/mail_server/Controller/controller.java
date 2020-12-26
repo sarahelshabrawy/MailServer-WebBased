@@ -15,10 +15,12 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import java.io.IOException;
+import java.io.*;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.LinkedList;
-import java.util.Objects;
 
 @Configuration
 @Deprecated
@@ -58,10 +60,38 @@ public class controller {
     @PostMapping("/attachment")
     public boolean attach(@RequestParam("file") MultipartFile[] file) throws IOException {
         for(MultipartFile file0 : file) {
-            file0.transferTo(Paths.get(Objects.requireNonNull("./Accounts/Attachments/" + file0.getOriginalFilename())));
-            this.file.add("./Accounts/Attachments/" + file0.getOriginalFilename());
+//            file0.transferTo(Paths.get(Objects.requireNonNull("./Accounts/Attachments/" + file0.getOriginalFilename())));
+//            File a = new File("./Accounts/Attachments/" + file0.getOriginalFilename() );
+//            String absolute = a.getCanonicalPath();
+            byte[] bytes = file0.getBytes();
+            String path ="./Accounts/Attachments/" + file0.getOriginalFilename();
+            this.file.add(path);
+            Files.write(Paths.get(path),bytes);
+            System.out.println(bytes);
         }
         return true;
+    }
+
+    @CrossOrigin
+    @GetMapping("/sendAttachment")
+    public LinkedList<byte[]> sendAttach(@RequestParam(value = "path") String[] paths) throws IOException {
+        FileManager fileManager = new FileManager();
+        LinkedList<byte[]> attachments = new LinkedList<byte[]>();
+        for (String path : paths){
+            path = URLDecoder.decode(path, StandardCharsets.UTF_8);
+            File file = new File(path);
+            byte[] bArray = fileManager.readFileToByteArray(file);
+            attachments.add(bArray);
+            System.out.println(path);
+        }
+//        File file = new File(paths[0]);
+
+//        String path = URLDecoder.decode(paths[0], StandardCharsets.UTF_8);
+
+//        byte[] bArray = Files.readAllBytes(Path.of("./Accounts/Attachments/2011sm.jpg"));
+//        System.out.println(bArray);
+//        return ResponseEntity.ok().contentLength(bArray.length).header(HttpHeaders.CONTENT_DISPOSITION).body(bArray);
+        return attachments;
     }
 
 
@@ -161,6 +191,7 @@ public class controller {
     @ResponseBody
     public Mail openMail(@RequestParam(value = "id") String id, @RequestParam(value = "currentFolder") String currentFolder) throws IOException, ParseException, ParseException {
         String path = "./Accounts/" + user.getCurrentUser().getEmail() + "/" + currentFolder + "/" + id +"/"+id +".json";
+        System.out.println(i);
         FileManager fileManager = new FileManager();
         Mail mail = fileManager.getMailContent(path);
         return mail;
