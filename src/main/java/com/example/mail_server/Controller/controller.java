@@ -145,4 +145,12 @@ public class controller {
         return User.getInstance().renameFolders(folderName, newFolderName);
     }
 
+    @CrossOrigin
+    @RequestMapping("/deleteFolder")
+    @ResponseBody
+    public boolean deleteFolder(@RequestParam(value = "folderName") String folderName){
+        System.out.println(folderName);
+        return User.getInstance().deleteFolders(folderName);
+    }
+
 }

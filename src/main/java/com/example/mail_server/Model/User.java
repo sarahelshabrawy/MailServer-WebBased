@@ -143,7 +143,28 @@ public class User {
     }
     public boolean renameFolders(String folderName, String newFolderName)
     {
-        return false;
+        Directory dir = new Directory();
+        String path = "./Accounts/" + currentUser.getEmail() + "/" + folderName;
+        String newPath = "./Accounts/" + currentUser.getEmail() + "/" + newFolderName;
+        if(newFolderName.charAt(newFolderName.length() - 1) == ' ')
+            return false;
+        if(!dir.folderNameIsValid(newPath, newFolderName))
+            return false;
+        File sourceFile = new File(path);
+        File destFile = new File(newPath);
+        if(destFile.exists())
+            return false;
+        boolean bool= dir.renameMyFolder(sourceFile,destFile);
+        if(!bool)
+            return bool;
+        dir.DeleteFolder(sourceFile);
+        return bool;
+    }
+    public boolean deleteFolders (String folderName)
+    {
+        Directory dir = new Directory();
+        String path = "./Accounts/" + this.currentUser.getEmail() + "/" + folderName;
+        return dir.DeleteFolder(new File(path));
     }
     public Account getCurrentUser() {
         return currentUser;

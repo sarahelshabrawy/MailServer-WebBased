@@ -142,8 +142,10 @@ public class FileManager {
         JSONParser jsonParser = new JSONParser();
         System.out.println("YASARAAAH"+path);
         try {
-            JSONArray jsonArray= (JSONArray) jsonParser.parse( new FileReader(path) );
+            FileReader reader = new FileReader(path);
+            JSONArray jsonArray= (JSONArray) jsonParser.parse( reader );
             System.out.println(jsonArray);
+            reader.close();
             return jsonArray;
         }
         catch (IOException | ParseException e){

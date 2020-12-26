@@ -4,9 +4,7 @@ import com.example.mail_server.Model.Account.Account;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
 
 public class Directory{
 
@@ -50,7 +48,7 @@ public class Directory{
 
     }
 
-    public void DeleteFolder(File file) { // to delete folders and files but not txt
+    public boolean DeleteFolder(File file) { // to delete folders and files but not txt
         if (file.exists()) {
             for (File subFile : file.listFiles()) {
                 if (subFile.isDirectory()) {
@@ -60,20 +58,59 @@ public class Directory{
                 }
             }
             file.delete();
-
+            return true;
         } else {
-            throw new RuntimeException("Folder to be deleted doesn't exist");
+            return false;
         }
     }
 
     public boolean createUserFolder(String folderName, Account account)
     {
         String path = "./Accounts/" + account.getEmail() + "/" + folderName;
+        if(folderName.charAt(folderName.length() - 1) == ' ')
+            return false;
+        if(!folderNameIsValid(path, folderName))
+            return false;
         File folder = new File(path);
         if(folder.exists())
             return false;
-        folder.mkdir();
+        return folder.mkdir();
+    }
+    public boolean renameMyFolder(File source, File target)
+    {
+        try {
+            if (source.isDirectory()) {
+                rename(source, target);
+            } else {
+                Files.copy(source.toPath(), target.toPath());
+            }
+        }catch (Exception er) {
+            er.printStackTrace();
+            return false;
+        }
         return true;
+    }
+    public void rename(File source,File target) throws Exception{
+        if(source.exists()) {
+            if(!target.exists()) {
+                target.mkdir();
+            }
+            for(String child : source.list()) {
+                renameMyFolder(new File(source,child),new File(target,child));
+            }
+        }else {
+            throw new RuntimeException("File to be copied doesn't exist");
+        }
+    }
+    public boolean folderNameIsValid(String file, String name)
+    {
+        File f = new File(file);
+        try {
+            f.getCanonicalPath();
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
     }
 
 }
