@@ -1,7 +1,5 @@
 package com.example.mail_server.Model.Search;
 
-import com.example.mail_server.Model.Sort.SortText.indexedWord;
-
 import java.util.LinkedList;
 
 class BinarySearch {
@@ -30,7 +28,7 @@ class BinarySearch {
 
         // We reach here when element is not present
         // in array
-        return null;
+        return new Interval[0];
     }
 
     public Interval[] findAllOccurrences  (Object[] arr,int mid,String x){

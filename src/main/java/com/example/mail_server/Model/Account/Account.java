@@ -4,7 +4,7 @@ import com.example.mail_server.Model.Contact;
 import com.example.mail_server.Model.DataManagement.FileManager;
 import com.example.mail_server.Model.Search.searchFacade;
 import com.example.mail_server.Model.Sort.ISortMail;
-import com.example.mail_server.Model.Sort.SortText.indexedWord;
+import com.example.mail_server.Model.Search.indexedWord;
 import com.example.mail_server.Model.Mail.indexMail;
 import com.example.mail_server.Model.Sort.SortFactory;
 import com.example.mail_server.Model.Search.searchResults;

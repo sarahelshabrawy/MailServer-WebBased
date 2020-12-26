@@ -3,7 +3,7 @@ package com.example.mail_server.Model.DataManagement;
 import com.example.mail_server.Model.Account.Account;
 import com.example.mail_server.Model.Contact;
 import com.example.mail_server.Model.Mail.Mail;
-import com.example.mail_server.Model.Sort.SortText.indexedWord;
+import com.example.mail_server.Model.Search.indexedWord;
 import com.example.mail_server.Model.Mail.indexMail;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

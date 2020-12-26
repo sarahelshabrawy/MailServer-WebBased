@@ -1,6 +1,4 @@
-package com.example.mail_server.Model.Sort.SortText;
-
-import com.example.mail_server.Model.Search.BinarySearch;
+package com.example.mail_server.Model.Search;
 
 import java.util.ArrayList;
 import java.util.Arrays;

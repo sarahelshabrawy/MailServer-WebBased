@@ -5,16 +5,14 @@ public class searchResults {
     Interval[] subjectOccurrences;
     Interval[] bodyOccurrences;
     Interval[] senderOccurrences;
-    Interval[] importanceOccurrences ;
     Interval[] priorityOccurrences;
     Interval[] dateOccurrences;
 
-    public searchResults(Object source, Interval[] subjectOccurrences, Interval[] bodyOccurrences, Interval[] senderOccurrences, Interval[] importanceOccurrences, Interval[] priorityOccurrences, Interval[] dateOccurrences) {
+    public searchResults(Object source, Interval[] subjectOccurrences, Interval[] bodyOccurrences, Interval[] senderOccurrences, Interval[] priorityOccurrences, Interval[] dateOccurrences) {
         this.source = source;
         this.subjectOccurrences = subjectOccurrences;
         this.bodyOccurrences = bodyOccurrences;
         this.senderOccurrences = senderOccurrences;
-        this.importanceOccurrences = importanceOccurrences;
         this.priorityOccurrences = priorityOccurrences;
         this.dateOccurrences = dateOccurrences;
     }
@@ -49,14 +47,6 @@ public class searchResults {
 
     public void setSenderOccurrences(Interval[] senderOccurrences) {
         this.senderOccurrences = senderOccurrences;
-    }
-
-    public Interval[] getImportanceOccurrences() {
-        return importanceOccurrences;
-    }
-
-    public void setImportanceOccurrences(Interval[] importanceOccurrences) {
-        this.importanceOccurrences = importanceOccurrences;
     }
 
     public Interval[] getPriorityOccurrences() {
