@@ -1,8 +1,8 @@
 <template>
   <div class="MailsContent" >
     <div class = "Menu">
-      <button id="delete"><i class="material-icons">delete</i></button>
-      <button id="Move"><i class="material-icons">move_to_inbox</i></button>      
+      <!-- <button id="delete"><i class="material-icons">delete</i></button>
+      <button id="Move"><i class="material-icons">move_to_inbox</i></button>       -->
 
       <h1>{{mail.subject}}</h1>
     </div>   
