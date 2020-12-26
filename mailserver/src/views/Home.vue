@@ -53,7 +53,7 @@
         </div>
       </div>
       <div id="search">
-        <input key="text" id="targetText" value="Search In Your Emails" @click="searchBar">
+        <input key="text" id="targetText" value="Search..." @click="searchBar">
         <i class="fas fa-search searching" v-on:click="search"></i>
       </div>
     </div>
@@ -394,61 +394,54 @@ updateMails(Response){
 
     searchBar() {
       const myvalue = document.getElementById("targetText").value;
-      if(myvalue === "Search In Your Emails"){
+      if(myvalue === "Search..."){
         document.getElementById("targetText").value = "";
       }
     },async search() {
       console.log("HELLO SARSOURAAA")
       const target = document.getElementById("targetText").value;
-      await axios.get(apiUrl + "/searchMails", {
-        params: {target: target}
-      }).then(Response => {
-        this.searchResults = []
-        // const searchResult = {
-        //   subjectOccurrences : [],
-        //   bodyOccurrences : [],
-        //   senderOccurrences : [],
-        //   importanceOccurrences : [] ,
-        //   priorityOccurrences : [],
-        //   dateOccurrences : []
-        // }
-        let indices = Object.keys(Response.data)
-        for (let i = 0; i < indices.length; i++) {
-          this.Mails[i] = Response.data[indices[i]].source
-          this.searchResults[i] = {
-            subjectOccurrences: JSON.parse(JSON.stringify(Response.data[indices[i]].subjectOccurrences)),
-            bodyOccurrences: JSON.parse(JSON.stringify(Response.data[indices[i]].bodyOccurrences)),
-            senderOccurrences: JSON.parse(JSON.stringify(Response.data[indices[i]].senderOccurrences)),
-            priorityOccurrences: JSON.parse(JSON.stringify(Response.data[indices[i]].priorityOccurrences)),
-            dateOccurrences: JSON.parse(JSON.stringify(Response.data[indices[i]].dateOccurrences))
+      if(this.component !== 'contact-view') {
+        await axios.get(apiUrl + "/searchMails", {
+          params: {target: target}
+        }).then(Response => {
+          this.searchResults = []
+          this.Mails = []
+          let indices = Object.keys(Response.data)
+          for (let i = 0; i < indices.length; i++) {
+            this.Mails[i] = Response.data[indices[i]].source
+            this.searchResults[i] = {
+              subjectOccurrences: JSON.parse(JSON.stringify(Response.data[indices[i]].subjectOccurrences)),
+              bodyOccurrences: JSON.parse(JSON.stringify(Response.data[indices[i]].bodyOccurrences)),
+              senderOccurrences: JSON.parse(JSON.stringify(Response.data[indices[i]].senderOccurrences)),
+              priorityOccurrences: JSON.parse(JSON.stringify(Response.data[indices[i]].priorityOccurrences)),
+              dateOccurrences: JSON.parse(JSON.stringify(Response.data[indices[i]].dateOccurrences))
+            }
+
           }
-          // console.log("subject")
-          // console.log(this.searchResults[i].subjectOccurrences)
-          // const temp = JSON.parse(JSON.stringify(this.searchResults[i].subjectOccurrences));
-          // console.log("TEMP")
-          // console.log(temp)
-          // console.log("FINISH")
-          // for(let i = 0 ;i < temp.length ; i++){
-          //   console.log("WOW")
-          //   console.log(temp[i].start)
-          //   console.log(temp[i].end)
-          //   console.log("WOW")
-          // }
-          // subjectOccurrences : JSON.parse(JSON.stringify(Response.data[indices[i]].subjectOccurrences)),
-          //     bodyOccurrences : JSON.parse(JSON.stringify(Response.data[indices[i]].bodyOccurrences)),
-          //     senderOccurrences : JSON.parse(JSON.stringify(Response.data[indices[i]].senderOccurrences)),
-          //     importanceOccurrences : JSON.parse(JSON.stringify(Response.data[indices[i]].importanceOccurrences)),
-          //     priorityOccurrences : JSON.parse(JSON.stringify(Response.data[indices[i]].priorityOccurrences)),
-          //     dateOccurrences : JSON.parse(JSON.stringify(Response.data[indices[i]].dateOccurrences))
 
+        })
+        this.searchResults = JSON.parse(JSON.stringify(this.searchResults));
+      }else{
+        await axios.get(apiUrl + "/searchContacts", {
+          params: {target: target}
+        }).then(Response => {
+          this.searchResults = []
+          this.contactlist = []
+          let indices = Object.keys(Response.data)
+          for (let i = 0; i < indices.length; i++) {
+            this.contactlist[i] = Response.data[indices[i]].source
+            this.searchResults[i] = {
+              nameOccurrences: JSON.parse(JSON.stringify(Response.data[indices[i]].nameOccurrences)),
+              emailOccurrences: JSON.parse(JSON.stringify(Response.data[indices[i]].emailOccurrences)),
+            }
 
-        }
-        console.log(this.searchResults)
-        console.log("6a")
+          }
+        })
+      }
+      console.log(this.searchResults)
+      console.log("6a")
+      this.componentKey += 1;
 
-      })
-      this.searchResults = JSON.parse(JSON.stringify(this.searchResults));
-      this.componentKey +=1;
     },
 
     clickItem(e){
