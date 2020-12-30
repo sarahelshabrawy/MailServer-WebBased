@@ -6,7 +6,6 @@ import com.example.mail_server.Model.DataManagement.FileManager;
 import com.example.mail_server.Model.Mail.Mail;
 import com.example.mail_server.Model.Mail.MoveMails;
 import com.example.mail_server.Model.Mail.indexMail;
-import com.example.mail_server.Model.Search.contactSearchResults;
 import com.example.mail_server.Model.Search.mailSearchResults;
 import org.json.simple.parser.ParseException;
 import org.springframework.context.annotation.Bean;
@@ -22,6 +21,7 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.LinkedList;
 
 @Configuration
@@ -42,36 +42,35 @@ class MyConfiguration {
 @CrossOrigin
 public class controller {
     private User user;
-    LinkedList<String> file;
-
-
+    LinkedList<LinkedList<String>> file;
 
     public controller(){
         user = User.getInstance();
-        file = new LinkedList<String>();
+        file = new LinkedList<>();
     }
     @CrossOrigin
     @PostMapping("/compose")
     public boolean compose(@RequestBody Mail mail) throws IOException {
-        System.out.println(mail.getBody());
-        mail.setAttachments(file);
+        LinkedList<String> temp = file.peek();
+        if(temp != null)
+             mail.setAttachments(file.pop());
+        else mail.setAttachments(new LinkedList<>());
         return user.Compose(mail);
     }
 
     @CrossOrigin
     @PostMapping("/attachment")
     public boolean attach(@RequestParam("file") MultipartFile[] file) throws IOException {
-        this.file.clear();
+        LinkedList<String> attachments = new LinkedList<>();
         for(MultipartFile file0 : file) {
-//            file0.transferTo(Paths.get(Objects.requireNonNull("./Accounts/Attachments/" + file0.getOriginalFilename())));
-//            File a = new File("./Accounts/Attachments/" + file0.getOriginalFilename() );
-//            String absolute = a.getCanonicalPath();
             byte[] bytes = file0.getBytes();
             String path ="./Accounts/Attachments/" + file0.getOriginalFilename();
-            this.file.add(path);
+            attachments.add(path);
             Files.write(Paths.get(path),bytes);
-            System.out.println(bytes);
+            System.out.println("YARAb");
+            System.out.println(Arrays.toString(bytes));
         }
+        this.file.add(attachments);
         return true;
     }
 
@@ -79,12 +78,12 @@ public class controller {
     @GetMapping("/sendAttachment")
     public LinkedList<byte[]> sendAttach(@RequestParam(value = "path") String[] paths) throws IOException {
         FileManager fileManager = new FileManager();
-        System.out.println(paths.length);
-        LinkedList<byte[]> attachments = new LinkedList<byte[]>();
+//        System.out.println(paths.length);
+        LinkedList<byte[]> attachments = new LinkedList<>();
         for (String path : paths){
             path = URLDecoder.decode(path, StandardCharsets.UTF_8);
             File file = new File(path);
-            System.out.println(path);
+//            System.out.println(path);
 
             byte[] bArray = fileManager.readFileToByteArray(file);
             attachments.add(bArray);
@@ -103,7 +102,6 @@ public class controller {
     @CrossOrigin
     @PostMapping("/draft")
     public boolean draft(@RequestBody Mail mail) throws IOException {
-        System.out.println(mail.getBody());
         return user.draft(mail);
     }
 
@@ -147,7 +145,7 @@ public class controller {
     @CrossOrigin
     @RequestMapping("/searchContacts")
     @ResponseBody
-    public LinkedList<contactSearchResults> searchContacts(@RequestParam(value = "target") String target) {
+    public LinkedList<Contact> searchContacts(@RequestParam(value = "target") String target) {
         Account acc = user.getCurrentUser();
         return acc.searchContacts(target);
     }
@@ -178,7 +176,6 @@ public class controller {
     @GetMapping("/removeContact")
     public boolean  removeContact(@RequestParam (value = "id") String id ) throws IOException {
         String path = "./Accounts/" + user.getCurrentUser().getEmail() + "/contacts.json";
-        System.out.println("HHHHHHHHHHHHH");
         FileManager fileManager = new FileManager();
         fileManager.removeContact(path,id);
         return true;
@@ -219,10 +216,10 @@ public class controller {
         String path = "./Accounts/" + user.getCurrentUser().getEmail() + "/" + currentFolder + "/" + id +"/"+id +".json";
         FileManager fileManager = new FileManager();
         Mail mail = fileManager.getMailContent(path);
-        for(String attach : mail.getAttachments()){
-            System.out.println(attach);
-            System.out.println("tmaaam");
-        }
+//        for(String attach : mail.getAttachments()){
+//            System.out.println(attach);
+//            System.out.println("tmaaam");
+//        }
         return mail;
     }
     @CrossOrigin

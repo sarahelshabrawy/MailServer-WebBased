@@ -151,15 +151,12 @@ public class FileManager {
             writer = new FileWriter(index);
             writer.write(array.toJSONString());
             writer.close();
-            System.out.println("created xxxxxxxxxxxxxxxxxxxxxxxxxxx");
             return array;
         }
         JSONParser jsonParser = new JSONParser();
-        System.out.println("YASARAAAH"+path);
         try {
             FileReader reader = new FileReader(path);
             JSONArray jsonArray= (JSONArray) jsonParser.parse( reader );
-            System.out.println(jsonArray);
             reader.close();
             return jsonArray;
         }

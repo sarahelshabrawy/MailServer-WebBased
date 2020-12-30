@@ -1,13 +1,12 @@
 package com.example.mail_server.Model.Search;
 
+import com.example.mail_server.Model.Contact;
+
 import java.util.LinkedList;
 
 public class LinearSearch {
-    public Interval[] search(String source, String target){
-        LinkedList<Interval> occurrences = new LinkedList<>();
+    public boolean search(String source, String target) {
         int index = source.indexOf(target);
-        if(index!=-1)
-            occurrences.add(new Interval(index,index+target.length()));
-        return Interval.toArray(occurrences);
+        return index != -1;
     }
 }

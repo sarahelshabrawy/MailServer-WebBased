@@ -18,7 +18,6 @@ public class Directory{
             if(source.isDirectory()) {
                 copy(source,target,id);
             }else {
-                System.out.println(target.getName()+"&"+source.getParentFile().getName());
                 if(target.getName().equalsIgnoreCase(source.getParentFile().getName()+".json")){
                     target=new File(target.getParent()+"/"+id+".json");
                 }

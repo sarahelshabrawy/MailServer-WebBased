@@ -16,10 +16,7 @@ import org.json.simple.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.*;
 
 public class Account {
     private String name;
@@ -64,7 +61,6 @@ public class Account {
             contact.setName((String) obj.get("name"));
             JSONArray Emails = new JSONArray();
             Emails = (JSONArray) obj.get("email");
-            System.out.println(Emails.size());
             String[] Contact_Email = new String[Emails.size()];
             for (int j = 0; j < Emails.size(); j++) {
 
@@ -85,10 +81,7 @@ public class Account {
         int counter=1;
         this.currentFolderName=folderName;
         String path = "./Accounts/" + email + "/" + folderName + "/index.json";
-        System.out.println(path);
         JSONArray mails = fileManager.listJsonObjects(path);
-        System.out.println(mails.toJSONString());
-        System.out.println(mails.size()+"WWW");
         LinkedList<indexMail> mailList = new LinkedList<>();
         for (Object o : mails) {
             JSONObject obj = (JSONObject) o;
@@ -129,7 +122,6 @@ public class Account {
 
         }
         this.currentFolderindexMails=mailList;
-        System.out.println("MAMA"+Arrays.toString(mailList.toArray()));
         return this.currentFolderindexMails;
     }
 
@@ -153,7 +145,7 @@ public class Account {
         searchMailsFacade Search = new searchMailsFacade();
         return  Search.search(getCurrentFolderMails(),target);
     }
-    public LinkedList<contactSearchResults> searchContacts(String target){
+    public LinkedList<Contact> searchContacts(String target){
         searchContacts Search = new searchContacts();
         return  Search.search(contacts,target);
     }
@@ -184,15 +176,15 @@ public class Account {
             Date d1 = formatter.parse(date);
             Date d2 = formatter.parse(formatter.format(now));
             //in milliseconds
-            long diff = d2.getTime() - d1.getTime();
-            long diffSeconds = diff / 1000 % 60;
-            long diffMinutes = diff / (60 * 1000) % 60;
-            long diffHours = diff / (60 * 60 * 1000) % 24;
-            diffDays = diff / (24 * 60 * 60 * 1000);
-            System.out.print(diffDays + " days, ");
-            System.out.print(diffHours + " hours, ");
-            System.out.print(diffMinutes + " minutes, ");
-            System.out.print(diffSeconds + " seconds.");
+//            long diff = d2.getTime() - d1.getTime();
+//            long diffSeconds = diff / 1000 % 60;
+//            long diffMinutes = diff / (60 * 1000) % 60;
+//            long diffHours = diff / (60 * 60 * 1000) % 24;
+//            diffDays = diff / (24 * 60 * 60 * 1000);
+//            System.out.print(diffDays + " days, ");
+//            System.out.print(diffHours + " hours, ");
+//            System.out.print(diffMinutes + " minutes, ");
+//            System.out.print(diffSeconds + " seconds.");
 
         } catch (Exception e) {
             e.printStackTrace();
