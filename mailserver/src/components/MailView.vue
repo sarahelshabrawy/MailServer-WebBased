@@ -1,12 +1,16 @@
 <template>
   <div id="con">
     
-    <div id = "mails_view" class="Mails"  v-for="male in maillist" :key="male.id" >
-      <mail-box v-if="mailContent === false" :mail= "male" :id= "male.id" @click="setMail(male.id)" :searchResults ="searchResults"></mail-box>
-      <!-- <component @click="component = 'mails-content'" :is="component" v-bind:id = "male.id" :mail="male" :currentFolder="currentFolder" v-bind:searchResults ="searchResults"></component> -->
+    <div id = "mails_view" class="Mails"  v-for="male in maillist " :key="male.id" >
+      <div class="checkAndBox">
+      <input type="checkbox" v-if="mailContent === false" v-bind:value="male.id" class="check-boxes">
+        <mail-box v-if="mailContent === false" :mail= "male" :id= "male.id" @click="setMail(male.id)"
+                  :searchResults ="searchResults"></mail-box>
+      </div>
     </div>
+
     <mails-content v-if="mailContent" :currentFolder="currentFolder" :id="id"></mails-content>
-   
+
    <div id="pagination" @click="$emit('paging')" >
     <button class="left" @click="changePageNumber(-1)" > &laquo;</button> 
     <button id="1" class="btn active">1</button>
@@ -39,6 +43,7 @@ export default {
     return{
       id:'',
       mailContent :false
+      // component:'mail-box',
 
     }
   },
@@ -46,7 +51,7 @@ export default {
   methods:{
     setMail(id){
       this.mailContent = true
-      this.id = id 
+      this.id = id
     },
    changePageNumber(num){
 

@@ -84,23 +84,18 @@ export default {
     },
     setAttachment(file){
       console.log("helo")
+      this.file.append('file',file)
+      console.log(this.file)
       const attach = document.getElementById("contain")
       const div = document.createElement("div");
       div.style.borderRadius="12px";
       div.style.border= "2px solid #fabba2" ;
+      this.attachments+=1
       div.id= "Attachment"+ (parseInt(this.attachments));
-      div.innerHTML = file.name 
+      div.innerHTML = file.name
       attach.appendChild(div);
-
-      const button = document.createElement("button")
-      button.id = "attach" + this.attachment 
-      button.innerHTML = "<i class='material-icons'>delete</i>"
-      button.setAttribute("onclick", this.deletAttachment("Attachment" + this.attachment ))
-      div.append(button)
-
       this.file.append('file'+ this.attachment ,file)
       console.log(this.file)
-      this.attachment ++;
 
     },
     deletAttachment(id){
@@ -111,7 +106,8 @@ export default {
     },
     setDate(){
       this.date=new Date();
-      console.log(this.date)
+      console.log("DTTT")
+      console.log(this.date.toString())
       
     },
     setImportance(){
@@ -139,20 +135,24 @@ export default {
         receivers:this.Receivers,
         subject:this.subject,
         body:this.body,
-        // attachments:this.file,
-        date:this.date,
+        date:this.date.toString(),
         priority:this.importance
       }
-      console.log(mail)
-
-      await axios.post(apiUrl+"/attachment",this.file)
-      .then(response => {
-        console.log(response.data)
-      })
-      .catch(function (error) {
-          console.log(error);
-      });
-
+      alert("Message sent successfully")
+      console.log("AAA")
+      console.log(this.file)
+      if(this.attachments>0){
+        console.log(this.file)
+        await axios.post(apiUrl+"/attachment",this.file)
+            .then(response => {
+              console.log(response.data)
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+        this.file=new FormData()
+        this.attachments = 0
+      }
       axios.post(apiUrl+folder,mail)
       .then(response => {
         console.log(response.data)
@@ -160,7 +160,6 @@ export default {
       .catch(function (error) {
           console.log(error);
       });
-
     }
 }
 }

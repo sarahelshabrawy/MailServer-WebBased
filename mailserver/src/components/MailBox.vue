@@ -35,26 +35,28 @@ export default {
       let newHTML = "";
       let from = 0;
       for(let i = 0 ;i < keys.length ; i++){
+        if(!keys[i])
+          continue
         newHTML = newHTML + innerHTML.substring(from,keys[i].start) + "<span style='background-color: " + "yellow" + ";'>"
             + innerHTML.substring(keys[i].start,keys[i].end+1) + "</span>"
         from = keys[i].end+1
       }
       newHTML = newHTML + innerHTML.substring(from);
+      console.log(newHTML)
       inputText.innerHTML = newHTML;
     },
         showSearchResults() {
-          const temp = JSON.parse(JSON.stringify(this.searchResults));
-          const mySearchResults = temp[this.id];
+          const temp = JSON.parse(JSON.stringify(this.searchResults))
+          // console.log("ID")
+          // console.log(this.id)
+          let mySearchResults = temp[this.id];
           if(!mySearchResults)
             return
-          console.log(mySearchResults)
-          console.log("LALALA")
           const subjectOccurrences = JSON.parse(JSON.stringify(mySearchResults.subjectOccurrences))
           const bodyOccurrences = JSON.parse(JSON.stringify(mySearchResults.bodyOccurrences))
           const senderOccurrences = JSON.parse(JSON.stringify(mySearchResults.senderOccurrences))
           const dateOccurrences = JSON.parse(JSON.stringify(mySearchResults.dateOccurrences))
-          // const priorityOccurrences= JSON.parse(JSON.stringify(mySearchResults.subjectOccurrences))
-          console.log(subjectOccurrences)
+
           if(subjectOccurrences)
           this.highlight("subjectxx",mySearchResults.subjectOccurrences)
 
@@ -72,8 +74,6 @@ export default {
     mounted() {
       const divh = document.getElementById("new");
       divh.id = this.id
-      console.log("مرت سارة من هنا")
-        console.log(this.searchResults)
       this.showSearchResults()
     }
 }

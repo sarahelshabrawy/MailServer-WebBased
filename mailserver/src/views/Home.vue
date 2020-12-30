@@ -243,10 +243,10 @@ export default {
           newFolderName : newfoldername
         }
       }).then(Response => {
-        if(Response.data == false)
+        if(Response.data === false)
         {
           message.innerHTML = "This folder name is invalid!"
-          return;
+
         }
         else{
           this.renameFolderPanel= false;
@@ -318,6 +318,7 @@ export default {
     {
       this.currentFolder = folder;
       this.component = 'mail-view';
+      this.componentKey+=1
       const btn = document.getElementById("compose");
       btn.style.display = "block";
       this.getMails();
@@ -357,7 +358,6 @@ updateMails(Response){
         }
         console.log(this.Mails[i])
       }
-      this.componentKey+=1;
     }, async getContacts() {
       console.log("HAAAA")
       await axios.get(apiUrl + "/getContacts")
@@ -425,17 +425,9 @@ updateMails(Response){
         await axios.get(apiUrl + "/searchContacts", {
           params: {target: target}
         }).then(Response => {
-          this.searchResults = []
-          this.contactlist = []
-          let indices = Object.keys(Response.data)
-          for (let i = 0; i < indices.length; i++) {
-            const temp = JSON.parse(JSON.stringify(Response.data[indices[i]].contact))
-            this.contactlist[i] = JSON.parse(JSON.stringify(temp))
-            this.searchResults[i] = {
-              nameOccurrences: JSON.parse(JSON.stringify(Response.data[indices[i]].nameOccurrences)),
-              emailOccurrences: JSON.parse(JSON.stringify(Response.data[indices[i]].emailOccurrences)),
-            }
-          }
+      this.updateContacts(Response)
+      console.log("BABA")
+          console.log(this.contactlist)
         })
       }
       // console.log(this.searchResults)
