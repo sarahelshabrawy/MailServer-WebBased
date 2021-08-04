@@ -22,30 +22,34 @@ import java.util.LinkedList;
 public class User {
 
     private Account currentUser;
+
     private static AccountProxy proxy;
-    private static AccountBuilder builder;
+
     private static User firstInstance;
 
-    private User() {}
-    public static User getInstance()
-    {
-        if(firstInstance == null){
-            firstInstance = new User();
-            proxy = new AccountProxy();
-            builder = new AccountBuilder();
-        }
-        return firstInstance;
+    public User(String email) {
+        proxy = new AccountProxy();
+        currentUser = new Account();
+        currentUser.setEmail(email);
     }
-    public boolean signUp(String name, String email, String password) throws IOException {
+//    public static User getInstance()
+//    {
+//        if(firstInstance == null){
+//            firstInstance = new User();
+//
+//        }
+//        return firstInstance;
+//    }
+    public static boolean signUp(String name, String email, String password) throws IOException {
         if(proxy.checkEmail(email))
             return false;
-        currentUser = builder.build(name, email, password);
+        AccountBuilder builder = new AccountBuilder();
+        builder.build(name, email, password);
         return true;
     }
 
-    public boolean signIn(String email, String password) throws IOException {
-        currentUser = proxy.checkPassword(email, password);
-        return currentUser != null;
+    public static boolean signIn(String email, String password) throws IOException {
+        return proxy.checkPassword(email, password) != null;
     }
 
     public boolean createNewFolder(String folderName) throws IOException {

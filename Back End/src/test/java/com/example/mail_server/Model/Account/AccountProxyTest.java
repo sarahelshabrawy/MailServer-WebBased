@@ -21,8 +21,7 @@ public class AccountProxyTest  {
     @Test
     public void testCheckPassword() throws IOException {
         AccountProxy accountProxy = new AccountProxy();
-        User user = User.getInstance();
-        user.signUp("john","john@gmail.com","john");
+        User.signUp("john","john@gmail.com","john");
       Account accountTest = accountProxy.checkPassword("john@gmail.com","john");
         Assertions.assertEquals("john@gmail.com",accountTest.getEmail());
         Assertions.assertEquals("john",accountTest.getPassword());
